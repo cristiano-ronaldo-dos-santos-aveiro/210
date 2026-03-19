@@ -115,7 +115,7 @@ const TRANSLATIONS: Record<Language, Translations> = {
     hero: {
       headline: "Dunyo bo'ylab tayyor premium ko'rinishlar",
       subtext: "Biz tanlaymiz, uslublashtiramiz va original buyumlarni rasmiy import qilamiz",
-      rail: "2016-YILDA ASOS SOLINGAN — TOSHKENT"
+      rail: "2016-YILDA ASOS SOLINGAN"
     },
     looks: {
       shopLooks: "Ko'rinishlar",
@@ -139,8 +139,8 @@ const TRANSLATIONS: Record<Language, Translations> = {
     trust: {
       title: "Nima uchun ishonamiz",
       authentic: "100% original",
-      globalSourcing: "Turli mamlakatlardan yetkazib berish",
-      handpicked: "Qo'lda tanlangan kombinatsiyalar"
+      globalSourcing: "10 Yildan buyon faoliyat yuritamiz",
+      handpicked: "Dunyo bilan ham nafas"
     },
     newLooksDrop: {
       label: "Cheklangan drop",
@@ -154,14 +154,14 @@ const TRANSLATIONS: Record<Language, Translations> = {
       cta: "Shou-roomga tashrif buyuring"
     },
     newCollection: {
-      label: "Bahor 2025",
+      label: "Bahor 2026",
       title: "Yangi kolleksiya",
       cta: "Kolleksiyani ko'rish"
     },
     about: {
       label: "Brend haqida",
       title: "Faqat original. 2016-yildan beri.",
-      body: "Biz faqat haqiqiy sport va yarim klassik kiyimlarni tanlaymiz. Har bir buyum birinchi qo'ldan, sifat kafolati bilan. Kompromisslar qilmaydiganlar uchun."
+      body: "Biz oddiylikdan yiroqmiz. Har bir buyum birinchi qo'ldan, sifat kafolati bilan. Kompromisslar qilmaydiganlar uchun."
     },
     categories: {
       sportTitle: "Sport uslubi",
@@ -181,7 +181,7 @@ const TRANSLATIONS: Record<Language, Translations> = {
       desc: "Haqiqiy brend kiyimlari uchun manzilingiz. Biz sport va uslubni birlashtiramiz.",
       shop: "Do'kon",
       support: "Yordam",
-      rights: "© 2024 210 DO'KONI. BARCHA HUQUQLAR HIMOYA QILINGAN.",
+      rights: "© 2016 210 DO'KONI. BARCHA HUQUQLAR HIMOYA QILINGAN.",
       privacy: "Maxfiylik siyosati",
       terms: "Foydalanish shartlari",
       shipping: "Yetkazib berish va qaytarish",
