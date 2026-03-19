@@ -107,7 +107,7 @@ interface Translations {
   };
 }
 
-const HERO_BRANDS = ['FILA', 'ARCTERYX', 'ADIDAS', 'NIKE', 'WILSON', 'HERMES', 'PUMA', 'COLUMBIA', 'ON', 'FUSION', 'GUCCI', 'UA'];
+const HERO_BRANDS = ['FILA', 'ADIDAS', 'WILSON', 'PUMA', 'ON CLOUD', 'GUCCI', 'UNDER ARMOUR', 'HERMES', 'COLUMBIA', 'ARCTERYX'];
 
 const TRANSLATIONS: Record<Language, Translations> = {
   uz: {
@@ -433,7 +433,7 @@ const PRODUCTS: Product[] = [
   }
 ];
 
-const BRANDS = ["Nike", "Adidas", "Puma", "Ralph Lauren", "Tommy Hilfiger", "Lacoste", "Hugo Boss"];
+const BRANDS = ["FILA", "ADIDAS", "WILSON", "PUMA", "ON CLOUD", "GUCCI", "UNDER ARMOUR", "HERMES", "COLUMBIA", "ARCTERYX"];
 
 const LOOKS: Look[] = [
   {
@@ -623,7 +623,7 @@ const BrandMarquee = () => {
     <div className="py-8 bg-white border-y border-black/5 overflow-hidden whitespace-nowrap">
       <div className="flex animate-marquee">
         {[...BRANDS, ...BRANDS].map((brand, i) => (
-          <span key={i} className="mx-10 text-2xl md:text-4xl font-semibold uppercase text-black/10 hover:text-black/15 transition-colors cursor-default">
+          <span key={i} className="mx-10 text-2xl md:text-4xl font-semibold uppercase text-black hover:text-black/70 transition-colors cursor-default">
             {brand}
           </span>
         ))}
