@@ -3,6 +3,7 @@
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Space Grotesk", sans-serif;
+  --color-accent: #a3a3a3; /* neutral-400, premium gray accent */
 }
 
 @layer base {
