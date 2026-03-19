@@ -527,9 +527,12 @@ const Navbar = () => {
           </motion.a>
 
           <div className="hidden md:flex items-center space-x-8">
-            <motion.a href="#shop-looks" className="text-sm font-bold uppercase tracking-wider text-black border-b-2 border-black pb-0.5" whileHover={{ y: -1 }}>{t.shopLooks}</motion.a>
+            <motion.a href="#shop-looks" className="text-sm font-bold uppercase tracking-wider text-black border-b-2 border-black pb-0.5" whileHover={{ y: -2 }} transition={{ type: 'spring', stiffness: 400, damping: 25 }}>{t.shopLooks}</motion.a>
             {([t.new, t.sport, t.classic, t.brands] as const).map((label) => (
-              <motion.a key={label} href="#" className="text-sm font-semibold uppercase tracking-wider text-black/70 hover:text-black transition-colors" whileHover={{ y: -1 }}>{label}</motion.a>
+              <motion.a key={label} href="#" className="relative text-sm font-semibold uppercase tracking-wider text-black/60 hover:text-black transition-colors py-0.5 group/link" whileHover={{ y: -1 }}>
+                {label}
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-black group-hover/link:w-full transition-all duration-300" />
+              </motion.a>
             ))}
           </div>
 
@@ -577,24 +580,34 @@ const Navbar = () => {
 const Hero = () => {
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center bg-white overflow-hidden">
+      <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,rgba(0,0,0,0.02)_50%,transparent_100%)] pointer-events-none" />
       <div className="flex flex-col items-center justify-center px-4 text-center">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.96 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="mb-14"
-        >
-          <div className="flex items-center justify-center gap-8 md:gap-10">
+        <div className="flex items-center justify-center gap-8 md:gap-10 mb-14">
+          <motion.div
+            initial={{ opacity: 0, y: 40, filter: 'blur(8px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            transition={{ duration: 0.8, ease: [0.22, 0.61, 0.36, 1] }}
+          >
             <img
               src={LOGO_210_SRC}
               alt="210"
               className="h-40 md:h-52 lg:h-60 w-auto object-contain"
-              onError={(e) => {
-                const t = e.target as HTMLImageElement;
-                t.style.display = 'none';
-              }}
+              onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
             />
-            <span className="text-4xl md:text-6xl font-light text-black/50 select-none">|</span>
+          </motion.div>
+          <motion.span
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.25, duration: 0.5, ease: [0.22, 0.61, 0.36, 1] }}
+            className="text-4xl md:text-6xl font-light text-black/40 select-none"
+          >
+            |
+          </motion.span>
+          <motion.div
+            initial={{ opacity: 0, y: 40, filter: 'blur(8px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 0.61, 0.36, 1] }}
+          >
             <img
               src={LOGO_ANBA_SRC}
               alt="Anba"
@@ -603,13 +616,13 @@ const Hero = () => {
               decoding="async"
               referrerPolicy="no-referrer"
             />
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>
         <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5, duration: 0.5 }}
-          className="text-2xl md:text-3xl lg:text-4xl font-normal tracking-wide text-black/90 hero-tagline"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6, duration: 0.6, ease: [0.22, 0.61, 0.36, 1] }}
+          className="text-2xl md:text-3xl lg:text-4xl font-normal tracking-wide text-black/90 hero-tagline animate-float"
         >
           Biz oddiylidan yiroqmiz
         </motion.p>
@@ -620,12 +633,18 @@ const Hero = () => {
 
 const BrandMarquee = () => {
   return (
-    <div className="py-8 bg-black border-y border-white/10 overflow-hidden whitespace-nowrap">
+    <div className="relative py-8 bg-black border-y border-white/10 overflow-hidden whitespace-nowrap">
+      <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none" />
+      <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none" />
       <div className="flex animate-marquee">
         {[...BRANDS, ...BRANDS].map((brand, i) => (
-          <span key={i} className="mx-10 text-2xl md:text-4xl font-semibold uppercase text-white/70 hover:text-white/90 transition-colors cursor-default">
+          <motion.span
+            key={i}
+            className="mx-10 text-2xl md:text-4xl font-semibold uppercase text-white/60 hover:text-white transition-colors cursor-default"
+            whileHover={{ scale: 1.05 }}
+          >
             {brand}
-          </span>
+          </motion.span>
         ))}
       </div>
     </div>
@@ -638,38 +657,39 @@ const LookCard: React.FC<{ look: Look; onSelect: () => void }> = ({ look, onSele
 
   return (
     <motion.article
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-40px' }}
-      transition={{ duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] }}
+      whileHover={{ y: -12 }}
       className="group cursor-pointer"
       onClick={onSelect}
     >
-      <div className="relative aspect-[3/4] overflow-hidden bg-neutral-100 mb-4">
+      <motion.div
+        className="relative aspect-[3/4] overflow-hidden bg-neutral-200 mb-4 rounded-sm border border-black/5"
+        whileHover={{ borderColor: 'rgba(0,0,0,0.15)', boxShadow: '0 20px 40px -12px rgba(0,0,0,0.15)' }}
+        transition={{ duration: 0.35 }}
+      >
         <motion.img
           src={look.image}
           alt={look.name[lang]}
           loading="lazy"
           className="w-full h-full object-cover"
           referrerPolicy="no-referrer"
-          whileHover={{ scale: 1.04 }}
-          transition={{ duration: 0.5 }}
+          whileHover={{ scale: 1.08 }}
+          transition={{ duration: 0.6, ease: [0.22, 0.61, 0.36, 1] }}
         />
         <span className="absolute top-4 left-4 bg-black text-white text-[10px] font-bold uppercase px-2 py-1 tracking-widest">
           {t.fullSet}
         </span>
-        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-end justify-center pb-6 opacity-0 group-hover:opacity-100">
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/25 transition-colors duration-300 flex items-end justify-center pb-6">
           <motion.span
-            className="bg-white text-black px-8 py-4 font-bold uppercase text-sm tracking-widest inline-block"
-            whileHover={{ scale: 1.02 }}
+            className="bg-white text-black px-8 py-4 font-bold uppercase text-sm tracking-widest inline-block opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.98 }}
           >
             {t.viewLook}
           </motion.span>
         </div>
-      </div>
-      <h3 className="text-xl font-bold tracking-tight">{look.name[lang]}</h3>
-      <p className="text-sm text-black/60 mt-1">{look.totalPrice}</p>
+      </motion.div>
+      <h3 className="text-xl font-bold tracking-tight text-black">{look.name[lang]}</h3>
+      <p className="text-sm text-black/50 mt-1">{look.totalPrice}</p>
     </motion.article>
   );
 };
@@ -682,7 +702,8 @@ const LookPage: React.FC<{ look: Look; onClose: () => void }> = ({ look, onClose
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
+      exit={{ opacity: 0, transition: { duration: 0.25 } }}
+      transition={{ duration: 0.3 }}
       className="fixed inset-0 z-[100] bg-white overflow-y-auto"
     >
       <button
@@ -765,28 +786,26 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-40px' }}
-      transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-      whileHover={{ y: -6 }}
+      whileHover={{ y: -8 }}
       className="group cursor-pointer"
     >
-      <div className="relative aspect-[3/4] overflow-hidden bg-neutral-100 mb-4">
-        <img
+      <div className="relative aspect-[3/4] overflow-hidden bg-neutral-200 mb-4 rounded-sm border border-black/5 group-hover:border-black/10 group-hover:shadow-lg transition-all duration-300">
+        <motion.img
           src={product.image}
           alt={product.name[lang]}
           loading="lazy"
           decoding="async"
-          className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+          className="w-full h-full object-cover"
           referrerPolicy="no-referrer"
+          whileHover={{ scale: 1.06 }}
+          transition={{ duration: 0.5, ease: [0.22, 0.61, 0.36, 1] }}
         />
         <div className="absolute top-4 left-4 flex flex-col gap-2">
           <span className="bg-black text-white text-[10px] font-bold uppercase px-2 py-1 tracking-wider w-fit">
             {t.badge}
           </span>
           {hasSale && (
-            <span className="bg-red-600 text-white text-[10px] font-bold uppercase px-2 py-1 tracking-wider w-fit">
+            <span className="bg-neutral-600 text-white text-[10px] font-bold uppercase px-2 py-1 tracking-wider w-fit">
               {t.sale}
             </span>
           )}
@@ -816,10 +835,10 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
 
 const SectionReveal: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className = '' }) => (
   <motion.div
-    initial={{ opacity: 0, y: 32 }}
+    initial={{ opacity: 0, y: 48 }}
     whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, margin: '-60px' }}
-    transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+    viewport={{ once: true, margin: '-80px' }}
+    transition={{ type: 'spring', stiffness: 70, damping: 24 }}
     className={className}
   >
     {children}
@@ -837,7 +856,7 @@ const TrustSection = () => {
   ];
 
   return (
-    <section className="py-24 bg-neutral-50 border-y border-black/5">
+    <section className="py-24 bg-neutral-100 border-y border-black/5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionReveal>
           <p className="text-xs font-bold uppercase tracking-[0.3em] text-black/50 mb-6">{t.title}</p>
@@ -845,13 +864,14 @@ const TrustSection = () => {
             {items.map((item, i) => (
               <motion.div
                 key={item.key}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, y: 24, scale: 0.98 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.1, duration: 0.4 }}
+                transition={{ type: 'spring', stiffness: 90, damping: 22, delay: i * 0.1 }}
                 className="text-center md:text-left"
+                whileHover={{ y: -2 }}
               >
-                <span className="text-2xl md:text-3xl font-black uppercase tracking-tight text-black/90">{item.label}</span>
+                <span className="text-2xl md:text-3xl font-black uppercase tracking-tight text-black">{item.label}</span>
               </motion.div>
             ))}
           </div>
@@ -1094,11 +1114,19 @@ export default function App() {
                 <h2 className="text-5xl md:text-6xl font-black uppercase">{t.looks.shopLooks}</h2>
               </div>
             </SectionReveal>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16">
-              {LOOKS.map((look) => (
-                <LookCard key={look.id} look={look} onSelect={() => setSelectedLook(look)} />
+            <motion.div
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-60px' }}
+              variants={{ visible: { transition: { staggerChildren: 0.08 } } }}
+            >
+              {LOOKS.map((look, i) => (
+                <motion.div key={look.id} variants={{ hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 80, damping: 20 } } }}>
+                  <LookCard look={look} onSelect={() => setSelectedLook(look)} />
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           </section>
 
           <TrustSection />
@@ -1118,11 +1146,19 @@ export default function App() {
                 </div>
               </div>
             </SectionReveal>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12">
+            <motion.div
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-40px' }}
+              variants={{ visible: { transition: { staggerChildren: 0.06 } } }}
+            >
               {PRODUCTS.map((product) => (
-                <ProductCard key={product.id} product={product} />
+                <motion.div key={product.id} variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 80, damping: 22 } } }}>
+                  <ProductCard product={product} />
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
             <div className="mt-12 flex justify-center">
               <motion.button className="text-sm font-bold uppercase tracking-widest text-black/60 hover:text-black transition-colors" whileTap={{ scale: 0.98 }}>
                 {t.products.viewAll}
@@ -1155,7 +1191,6 @@ export default function App() {
 
         <Footer />
 
-        {/* Custom Styles for Marquee */}
         <style>{`
           @keyframes marquee {
             0% { transform: translateX(0); }
@@ -1164,6 +1199,13 @@ export default function App() {
           .animate-marquee {
             display: inline-flex;
             animation: marquee 30s linear infinite;
+          }
+          @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+          }
+          .animate-float {
+            animation: float 4s ease-in-out infinite;
           }
           .writing-vertical-rl {
             writing-mode: vertical-rl;
