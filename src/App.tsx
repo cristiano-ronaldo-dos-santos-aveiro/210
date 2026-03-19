@@ -620,10 +620,10 @@ const Hero = () => {
 
 const BrandMarquee = () => {
   return (
-    <div className="py-8 bg-white border-y border-black/5 overflow-hidden whitespace-nowrap">
+    <div className="py-8 bg-black border-y border-white/10 overflow-hidden whitespace-nowrap">
       <div className="flex animate-marquee">
         {[...BRANDS, ...BRANDS].map((brand, i) => (
-          <span key={i} className="mx-10 text-2xl md:text-4xl font-semibold uppercase text-black hover:text-black/70 transition-colors cursor-default">
+          <span key={i} className="mx-10 text-2xl md:text-4xl font-semibold uppercase text-white/70 hover:text-white/90 transition-colors cursor-default">
             {brand}
           </span>
         ))}
