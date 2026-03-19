@@ -582,23 +582,23 @@ const Hero = () => {
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="mb-12"
+          className="mb-14"
         >
-          <div className="flex items-center justify-center gap-6">
+          <div className="flex items-center justify-center gap-8 md:gap-10">
             <img
               src={LOGO_210_SRC}
               alt="210"
-              className="h-28 md:h-36 w-auto object-contain"
+              className="h-40 md:h-52 lg:h-60 w-auto object-contain"
               onError={(e) => {
                 const t = e.target as HTMLImageElement;
                 t.style.display = 'none';
               }}
             />
-            <span className="text-3xl md:text-5xl font-light text-black/50 select-none">|</span>
+            <span className="text-4xl md:text-6xl font-light text-black/50 select-none">|</span>
             <img
               src={LOGO_ANBA_SRC}
               alt="Anba"
-              className="h-28 md:h-36 w-auto object-contain"
+              className="h-40 md:h-52 lg:h-60 w-auto object-contain"
               loading="eager"
               decoding="async"
               referrerPolicy="no-referrer"
@@ -609,19 +609,10 @@ const Hero = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5, duration: 0.5 }}
-          className="text-sm md:text-base tracking-[0.2em] uppercase text-black/70 mb-14"
+          className="text-2xl md:text-3xl lg:text-4xl font-normal tracking-wide text-black/90 hero-tagline"
         >
-          210 | Anba
+          Biz oddiylidan yiroqmiz
         </motion.p>
-        <motion.a
-          href="#shop-looks"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8, duration: 0.4 }}
-          className="mt-16 text-[11px] font-medium tracking-[0.2em] uppercase text-black/40 hover:text-black/70 transition-colors"
-        >
-          Shop looks
-        </motion.a>
       </div>
     </section>
   );
