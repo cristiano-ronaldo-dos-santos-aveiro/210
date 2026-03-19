@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { ShoppingBag, Search, User, Menu, X, ArrowRight, Instagram, Facebook, Twitter, Globe, Eye } from 'lucide-react';
+import { ShoppingBag, Search, User, Menu, X, ArrowRight, Instagram, Facebook, Twitter, Globe, Eye, MapPin } from 'lucide-react';
 import { cn } from './lib/utils';
 
 // Scroll-based navbar background
@@ -20,18 +20,24 @@ type Language = 'ru' | 'uz';
 
 interface Translations {
   nav: {
+    shopLooks: string;
     new: string;
     sport: string;
     classic: string;
     brands: string;
   };
   hero: {
-    title1: string;
-    title2: string;
-    desc: string;
-    btnSport: string;
-    btnClassic: string;
+    headline: string;
+    subtext: string;
     rail: string;
+  };
+  looks: {
+    shopLooks: string;
+    fullSet: string;
+    viewLook: string;
+    buyFullLook: string;
+    addSeparately: string;
+    itemsInLook: string;
   };
   products: {
     badge: string;
@@ -40,8 +46,26 @@ interface Translations {
     sale: string;
     curated: string;
     featured: string;
+    individualPieces: string;
     all: string;
     viewAll: string;
+  };
+  trust: {
+    title: string;
+    authentic: string;
+    globalSourcing: string;
+    handpicked: string;
+  };
+  newLooksDrop: {
+    label: string;
+    title: string;
+    desc: string;
+    cta: string;
+  };
+  showroom: {
+    title: string;
+    address: string;
+    cta: string;
   };
   newCollection: {
     label: string;
@@ -83,14 +107,19 @@ interface Translations {
 
 const TRANSLATIONS: Record<Language, Translations> = {
   ru: {
-    nav: { new: "Новинки", sport: "Спорт", classic: "Полуклассика", brands: "Бренды" },
+    nav: { shopLooks: "Образы", new: "Новинки", sport: "Спорт", classic: "Полуклассика", brands: "Бренды" },
     hero: {
-      title1: "Только",
-      title2: "Оригинал.",
-      desc: "Оригинальные бренды. Спортивная и полуклассическая одежда для тех, кто ценит качество и традиции.",
-      btnSport: "Спорт",
-      btnClassic: "Классика",
-      rail: "ОСНОВАНО В 2016 — ПРЕМИАЛЬНОЕ КАЧЕСТВО"
+      headline: "Готовые премиальные образы со всего мира",
+      subtext: "Мы подбираем, стилизуем и официально ввозим оригинальные вещи",
+      rail: "ОСНОВАНО В 2016 — ТАШКЕНТ"
+    },
+    looks: {
+      shopLooks: "Образы",
+      fullSet: "Полный комплект",
+      viewLook: "Смотреть образ",
+      buyFullLook: "Купить весь образ",
+      addSeparately: "Добавить отдельно",
+      itemsInLook: "В образ входит"
     },
     products: {
       badge: "Оригинал",
@@ -99,8 +128,26 @@ const TRANSLATIONS: Record<Language, Translations> = {
       sale: "Скидка",
       curated: "Кураторская коллекция",
       featured: "Избранные товары",
+      individualPieces: "Отдельные вещи",
       all: "Все",
       viewAll: "Посмотреть все товары"
+    },
+    trust: {
+      title: "Почему нам доверяют",
+      authentic: "100% оригинал",
+      globalSourcing: "Поставки из разных стран",
+      handpicked: "Ручной подбор образов"
+    },
+    newLooksDrop: {
+      label: "Ограниченный дроп",
+      title: "Новые образы",
+      desc: "Эксклюзивные комплекты. Ограниченное количество.",
+      cta: "Смотреть образы"
+    },
+    showroom: {
+      title: "Шоурум",
+      address: "Ташкент",
+      cta: "Посетить шоурум"
     },
     newCollection: {
       label: "Весна 2025",
@@ -140,14 +187,19 @@ const TRANSLATIONS: Record<Language, Translations> = {
     }
   },
   uz: {
-    nav: { new: "Yangi kelganlar", sport: "Sport", classic: "Yarim klassika", brands: "Brendlar" },
+    nav: { shopLooks: "Ko'rinishlar", new: "Yangi kelganlar", sport: "Sport", classic: "Yarim klassika", brands: "Brendlar" },
     hero: {
-      title1: "Faqat",
-      title2: "Original.",
-      desc: "Original brendlar. Sifat va an'analarni qadrlaydiganlar uchun sport va yarim klassik kiyimlar to'plami.",
-      btnSport: "Sport",
-      btnClassic: "Klassika",
-      rail: "2024-YILDA ASOS SOLINGAN — PREMIUM SIFAT"
+      headline: "Dunyo bo'ylab tayyor premium ko'rinishlar",
+      subtext: "Biz tanlaymiz, uslublashtiramiz va original buyumlarni rasmiy import qilamiz",
+      rail: "2016-YILDA ASOS SOLINGAN — TOSHKENT"
+    },
+    looks: {
+      shopLooks: "Ko'rinishlar",
+      fullSet: "To'liq set",
+      viewLook: "Ko'rinishni ko'rish",
+      buyFullLook: "Butun obrazni sotib olish",
+      addSeparately: "Alohida qo'shish",
+      itemsInLook: "Obrazga kiradi"
     },
     products: {
       badge: "Original",
@@ -156,8 +208,26 @@ const TRANSLATIONS: Record<Language, Translations> = {
       sale: "Chegirma",
       curated: "Tanlangan to'plam",
       featured: "Saralangan mahsulotlar",
+      individualPieces: "Alohida buyumlar",
       all: "Hammasi",
       viewAll: "Barcha mahsulotlarni ko'rish"
+    },
+    trust: {
+      title: "Nima uchun ishonamiz",
+      authentic: "100% original",
+      globalSourcing: "Turli mamlakatlardan yetkazib berish",
+      handpicked: "Qo'lda tanlangan kombinatsiyalar"
+    },
+    newLooksDrop: {
+      label: "Cheklangan drop",
+      title: "Yangi ko'rinishlar",
+      desc: "Eksklyuziv setlar. Cheklangan miqdor.",
+      cta: "Ko'rinishlarni ko'rish"
+    },
+    showroom: {
+      title: "Shou-room",
+      address: "Toshkent",
+      cta: "Shou-roomga tashrif buyuring"
     },
     newCollection: {
       label: "Bahor 2025",
@@ -203,9 +273,27 @@ interface Product {
   name: Record<Language, string>;
   brand: string;
   price: string;
-  salePrice?: string; // optional discount
+  salePrice?: string;
   category: 'Sport' | 'Semi-Classic';
   image: string;
+}
+
+type LookItemType = 'jacket' | 'pants' | 'shoes' | 'accessories' | 'top';
+
+interface LookItem {
+  id: string;
+  name: Record<Language, string>;
+  brand: string;
+  price: string;
+  type: LookItemType;
+}
+
+interface Look {
+  id: number;
+  name: Record<Language, string>;
+  image: string;
+  totalPrice: string;
+  items: LookItem[];
 }
 
 // --- Mock Data ---
@@ -263,6 +351,55 @@ const PRODUCTS: Product[] = [
 
 const BRANDS = ["Nike", "Adidas", "Puma", "Ralph Lauren", "Tommy Hilfiger", "Lacoste", "Hugo Boss"];
 
+const LOOKS: Look[] = [
+  {
+    id: 1,
+    name: { ru: "Dubai Night", uz: "Dubai Night" },
+    image: "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&q=80&w=1200",
+    totalPrice: "4 200 000 UZS",
+    items: [
+      { id: "1-1", name: { ru: "Куртка оверсайз", uz: "Oversayz Kurtka" }, brand: "Fear of God", price: "1 800 000 UZS", type: "jacket" },
+      { id: "1-2", name: { ru: "Брюки карго", uz: "Cargo Shimlar" }, brand: "Nike", price: "950 000 UZS", type: "pants" },
+      { id: "1-3", name: { ru: "Кроссовки", uz: "Krossovkalar" }, brand: "New Balance", price: "1 200 000 UZS", type: "shoes" },
+      { id: "1-4", name: { ru: "Кепка", uz: "Kepka" }, brand: "Lacoste", price: "250 000 UZS", type: "accessories" }
+    ]
+  },
+  {
+    id: 2,
+    name: { ru: "Minimal Street", uz: "Minimal Street" },
+    image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=1200",
+    totalPrice: "3 850 000 UZS",
+    items: [
+      { id: "2-1", name: { ru: "Худи Tech Fleece", uz: "Tech Fleece Hudisi" }, brand: "Nike", price: "1 200 000 UZS", type: "top" },
+      { id: "2-2", name: { ru: "Спортивные брюки", uz: "Sport Shimlari" }, brand: "Adidas", price: "850 000 UZS", type: "pants" },
+      { id: "2-3", name: { ru: "Кроссовки Air Max", uz: "Air Max Krossovkalari" }, brand: "Nike", price: "1 500 000 UZS", type: "shoes" },
+      { id: "2-4", name: { ru: "Рюкзак", uz: "Ryukzak" }, brand: "Puma", price: "300 000 UZS", type: "accessories" }
+    ]
+  },
+  {
+    id: 3,
+    name: { ru: "Smart Casual", uz: "Smart Casual" },
+    image: "https://images.unsplash.com/photo-1596755094514-f87034a264c6?auto=format&fit=crop&q=80&w=1200",
+    totalPrice: "3 550 000 UZS",
+    items: [
+      { id: "3-1", name: { ru: "Рубашка Oxford", uz: "Oxford Ko'ylak" }, brand: "Ralph Lauren", price: "950 000 UZS", type: "top" },
+      { id: "3-2", name: { ru: "Брюки чинос", uz: "Chinos" }, brand: "Tommy Hilfiger", price: "1 100 000 UZS", type: "pants" },
+      { id: "3-3", name: { ru: "Лоферы", uz: "Loferlar" }, brand: "Hugo Boss", price: "1 500 000 UZS", type: "shoes" }
+    ]
+  },
+  {
+    id: 4,
+    name: { ru: "Weekend Vibes", uz: "Weekend Vibes" },
+    image: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&q=80&w=1200",
+    totalPrice: "2 900 000 UZS",
+    items: [
+      { id: "4-1", name: { ru: "Свитер меринос", uz: "Merinos Sviter" }, brand: "Lacoste", price: "1 400 000 UZS", type: "top" },
+      { id: "4-2", name: { ru: "Джинсы", uz: "Jinslar" }, brand: "Levi's", price: "1 000 000 UZS", type: "pants" },
+      { id: "4-3", name: { ru: "Кеды", uz: "Kedilar" }, brand: "Converse", price: "500 000 UZS", type: "shoes" }
+    ]
+  }
+];
+
 // --- Context for Language ---
 const LangContext = React.createContext<{ lang: Language; setLang: (l: Language) => void }>({ lang: 'ru', setLang: () => {} });
 
@@ -293,8 +430,9 @@ const Navbar = () => {
           </motion.a>
 
           <div className="hidden md:flex items-center space-x-8">
+            <motion.a href="#shop-looks" className="text-sm font-bold uppercase tracking-wider text-black border-b-2 border-black pb-0.5" whileHover={{ y: -1 }}>{t.shopLooks}</motion.a>
             {([t.new, t.sport, t.classic, t.brands] as const).map((label) => (
-              <motion.a key={label} href="#" className="text-sm font-semibold uppercase tracking-wider text-black/80 hover:text-black transition-colors" whileHover={{ y: -1 }}>{label}</motion.a>
+              <motion.a key={label} href="#" className="text-sm font-semibold uppercase tracking-wider text-black/70 hover:text-black transition-colors" whileHover={{ y: -1 }}>{label}</motion.a>
             ))}
           </div>
 
@@ -320,6 +458,7 @@ const Navbar = () => {
 
       {isOpen && (
         <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="md:hidden bg-white border-b border-black/5 px-4 pt-2 pb-6 space-y-4 overflow-hidden">
+          <a href="#shop-looks" className="block text-lg font-bold uppercase tracking-tight py-2 border-b border-black/10">{t.shopLooks}</a>
           <a href="#" className="block text-lg font-bold uppercase tracking-tight py-2">{t.new}</a>
           <a href="#" className="block text-lg font-bold uppercase tracking-tight py-2">{t.sport}</a>
           <a href="#" className="block text-lg font-bold uppercase tracking-tight py-2">{t.classic}</a>
@@ -333,52 +472,67 @@ const Navbar = () => {
   );
 };
 
-const heroVariants = {
-  hidden: { opacity: 0, y: 24 },
-  visible: (i: number) => ({ opacity: 1, y: 0, transition: { delay: i * 0.1, duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] } }),
-};
-
 const Hero = () => {
   const { lang } = React.useContext(LangContext);
   const t = TRANSLATIONS[lang].hero;
 
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden bg-black">
+    <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-neutral-900">
       <motion.div
-        initial={{ scale: 1.08 }}
-        animate={{ scale: 1 }}
-        transition={{ duration: 1.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-        className="absolute inset-0 opacity-60"
+        initial={{ scale: 1.05, opacity: 0.85 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 2.2, ease: [0.22, 0.61, 0.36, 1] }}
+        className="absolute inset-0"
       >
         <img
-          src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&q=80&w=1920"
-          alt="Hero"
+          src="https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&q=80&w=1920"
+          alt="Premium look"
           className="w-full h-full object-cover"
           referrerPolicy="no-referrer"
           fetchPriority="high"
         />
+        <div className="absolute inset-0 bg-black/40" />
       </motion.div>
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        <div className="max-w-2xl text-white">
-          <motion.h1 custom={0} variants={heroVariants} initial="hidden" animate="visible" className="text-7xl md:text-9xl font-black uppercase leading-[0.85] mb-6">
-            {t.title1} <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-white/50">{t.title2}</span>
-          </motion.h1>
-          <motion.p custom={1} variants={heroVariants} initial="hidden" animate="visible" className="text-lg md:text-xl font-medium text-white/80 mb-8 max-w-lg">
-            {t.desc}
-          </motion.p>
-          <motion.div custom={2} variants={heroVariants} initial="hidden" animate="visible" className="flex flex-wrap gap-4">
-            <motion.button className="bg-white text-black px-8 py-4 font-bold uppercase tracking-widest flex items-center gap-2" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              {t.btnSport} <ArrowRight size={18} />
-            </motion.button>
-            <motion.button className="border-2 border-white text-white px-8 py-4 font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-colors" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              {t.btnClassic}
-            </motion.button>
-          </motion.div>
-        </div>
+      <div className="relative z-10 flex flex-col items-center text-center px-4 sm:px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+          className="flex flex-col items-center mb-12"
+        >
+          <span className="text-5xl md:text-7xl font-black tracking-tighter leading-none text-white">210</span>
+          <span className="text-[10px] font-bold tracking-[0.35em] uppercase text-white/70 mt-1">Premium Looks</span>
+        </motion.div>
+        <motion.h1
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7, duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+          className="text-3xl md:text-5xl lg:text-6xl font-black uppercase leading-tight text-white max-w-4xl mb-6"
+        >
+          {t.headline}
+        </motion.h1>
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.1, duration: 0.7 }}
+          className="text-base md:text-lg text-white/80 max-w-xl mb-10"
+        >
+          {t.subtext}
+        </motion.p>
+        <motion.a
+          href="#shop-looks"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.4, duration: 0.5 }}
+          className="inline-flex items-center gap-2 bg-white text-black px-8 py-4 font-bold uppercase tracking-widest text-sm hover:bg-amber-50 transition-colors"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          {TRANSLATIONS[lang].looks.shopLooks} <ArrowRight size={18} />
+        </motion.a>
       </div>
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8, duration: 0.5 }} className="absolute right-8 bottom-24 hidden lg:block">
-        <span className="writing-vertical-rl rotate-180 text-[10px] font-bold uppercase tracking-[0.5em] text-white/40">{t.rail}</span>
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.6 }} className="absolute right-8 bottom-24 hidden lg:block">
+        <span className="writing-vertical-rl rotate-180 text-[10px] font-bold uppercase tracking-[0.5em] text-white/50">{t.rail}</span>
       </motion.div>
     </section>
   );
@@ -386,15 +540,141 @@ const Hero = () => {
 
 const BrandMarquee = () => {
   return (
-    <div className="py-12 bg-white border-y border-black/5 overflow-hidden whitespace-nowrap">
+    <div className="py-10 bg-[#f5f0e8] border-y border-black/5 overflow-hidden whitespace-nowrap">
       <div className="flex animate-marquee">
         {[...BRANDS, ...BRANDS].map((brand, i) => (
-          <span key={i} className="mx-12 text-3xl md:text-5xl font-black uppercase text-black/10 hover:text-black transition-colors cursor-default">
+          <span key={i} className="mx-12 text-3xl md:text-5xl font-black uppercase text-black/10 hover:text-black/20 transition-colors cursor-default">
             {brand}
           </span>
         ))}
       </div>
     </div>
+  );
+};
+
+const LookCard: React.FC<{ look: Look; onSelect: () => void }> = ({ look, onSelect }) => {
+  const { lang } = React.useContext(LangContext);
+  const t = TRANSLATIONS[lang].looks;
+
+  return (
+    <motion.article
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-40px' }}
+      transition={{ duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] }}
+      className="group cursor-pointer"
+      onClick={onSelect}
+    >
+      <div className="relative aspect-[3/4] overflow-hidden bg-neutral-100 mb-4">
+        <motion.img
+          src={look.image}
+          alt={look.name[lang]}
+          loading="lazy"
+          className="w-full h-full object-cover"
+          referrerPolicy="no-referrer"
+          whileHover={{ scale: 1.04 }}
+          transition={{ duration: 0.5 }}
+        />
+        <span className="absolute top-4 left-4 bg-black text-white text-[10px] font-bold uppercase px-2 py-1 tracking-widest">
+          {t.fullSet}
+        </span>
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-end justify-center pb-6 opacity-0 group-hover:opacity-100">
+          <motion.span
+            className="bg-white text-black px-8 py-4 font-bold uppercase text-sm tracking-widest inline-block"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            {t.viewLook}
+          </motion.span>
+        </div>
+      </div>
+      <h3 className="text-xl font-bold tracking-tight">{look.name[lang]}</h3>
+      <p className="text-sm text-black/60 mt-1">{look.totalPrice}</p>
+    </motion.article>
+  );
+};
+
+const LookPage: React.FC<{ look: Look; onClose: () => void }> = ({ look, onClose }) => {
+  const { lang } = React.useContext(LangContext);
+  const t = TRANSLATIONS[lang].looks;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[100] bg-white overflow-y-auto"
+    >
+      <button
+        onClick={onClose}
+        className="fixed top-6 right-6 z-10 w-12 h-12 flex items-center justify-center bg-black/5 hover:bg-black/10 transition-colors"
+        aria-label="Close"
+      >
+        <X size={24} />
+      </button>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+            className="relative aspect-[4/5] overflow-hidden bg-neutral-100"
+          >
+            <img src={look.image} alt={look.name[lang]} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+          </motion.div>
+          <div>
+            <motion.h1
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15, duration: 0.4 }}
+              className="text-4xl md:text-5xl font-black uppercase tracking-tight mb-2"
+            >
+              {look.name[lang]}
+            </motion.h1>
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.25 }}
+              className="text-lg text-black/60 mb-10"
+            >
+              {t.itemsInLook}
+            </motion.p>
+            <ul className="space-y-6 mb-12">
+              {look.items.map((item, i) => (
+                <motion.li
+                  key={item.id}
+                  initial={{ opacity: 0, x: 12 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.3 + i * 0.06 }}
+                  className="flex flex-wrap items-center justify-between gap-4 py-4 border-b border-black/10"
+                >
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-black/50">{item.brand}</p>
+                    <p className="font-bold">{item.name[lang]}</p>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <span className="font-bold">{item.price}</span>
+                    <button className="text-xs font-bold uppercase tracking-widest text-black/60 hover:text-black border-b border-transparent hover:border-black transition-colors">
+                      {t.addSeparately}
+                    </button>
+                  </div>
+                </motion.li>
+              ))}
+            </ul>
+            <motion.button
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+              className="w-full bg-black text-white py-5 font-black uppercase tracking-widest text-lg hover:bg-black/90 transition-colors"
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+            >
+              {t.buyFullLook} — {look.totalPrice}
+            </motion.button>
+          </div>
+        </div>
+      </div>
+    </motion.div>
   );
 };
 
@@ -466,20 +746,55 @@ const SectionReveal: React.FC<{ children: React.ReactNode; className?: string }>
   </motion.div>
 );
 
-const NewCollectionSection = () => {
+const TrustSection = () => {
   const { lang } = React.useContext(LangContext);
-  const t = TRANSLATIONS[lang].newCollection;
-  const featured = PRODUCTS[0];
+  const t = TRANSLATIONS[lang].trust;
+
+  const items = [
+    { label: t.authentic, key: 'authentic' },
+    { label: t.globalSourcing, key: 'sourcing' },
+    { label: t.handpicked, key: 'handpicked' }
+  ];
 
   return (
-    <section className="py-24 bg-neutral-50 border-y border-black/5">
+    <section className="py-24 bg-[#f5f0e8] border-y border-black/5">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <SectionReveal>
+          <p className="text-xs font-bold uppercase tracking-[0.3em] text-black/50 mb-6">{t.title}</p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
+            {items.map((item, i) => (
+              <motion.div
+                key={item.key}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1, duration: 0.4 }}
+                className="text-center md:text-left"
+              >
+                <span className="text-2xl md:text-3xl font-black uppercase tracking-tight text-black/90">{item.label}</span>
+              </motion.div>
+            ))}
+          </div>
+        </SectionReveal>
+      </div>
+    </section>
+  );
+};
+
+const NewLooksDropSection = () => {
+  const { lang } = React.useContext(LangContext);
+  const t = TRANSLATIONS[lang].newLooksDrop;
+  const featuredLook = LOOKS[0];
+
+  return (
+    <section className="py-24 bg-white border-y border-black/5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionReveal>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="relative aspect-[4/5] overflow-hidden rounded-sm">
+            <div className="relative aspect-[4/5] overflow-hidden bg-neutral-100">
               <motion.img
-                src={featured.image}
-                alt={featured.name[lang]}
+                src={featuredLook.image}
+                alt={featuredLook.name[lang]}
                 loading="lazy"
                 className="w-full h-full object-cover"
                 referrerPolicy="no-referrer"
@@ -491,12 +806,42 @@ const NewCollectionSection = () => {
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.3em] text-black/50 mb-4">{t.label}</p>
               <h2 className="text-5xl md:text-6xl font-black uppercase mb-6 leading-[0.95]">{t.title}</h2>
-              <p className="text-lg text-black/70 mb-8 max-w-md">{TRANSLATIONS[lang].hero.desc}</p>
-              <motion.button className="bg-black text-white px-10 py-4 font-bold uppercase tracking-widest flex items-center gap-2" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <p className="text-lg text-black/70 mb-8 max-w-md">{t.desc}</p>
+              <motion.a href="#shop-looks" className="inline-flex items-center gap-2 bg-black text-white px-10 py-4 font-bold uppercase tracking-widest" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                 {t.cta} <ArrowRight size={18} />
-              </motion.button>
+              </motion.a>
             </div>
           </div>
+        </SectionReveal>
+      </div>
+    </section>
+  );
+};
+
+const ShowroomSection = () => {
+  const { lang } = React.useContext(LangContext);
+  const t = TRANSLATIONS[lang].showroom;
+
+  return (
+    <section className="py-24 bg-black text-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <SectionReveal className="flex flex-col md:flex-row md:items-center md:justify-between gap-10">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.3em] text-white/50 mb-4">{t.title}</p>
+            <h2 className="text-4xl md:text-5xl font-black uppercase mb-4 flex items-center gap-3">
+              <MapPin size={28} className="text-[#c9a227]" />
+              {t.address}
+            </h2>
+            <p className="text-white/70 text-lg">{t.cta}</p>
+          </div>
+          <motion.a
+            href="#"
+            className="inline-flex items-center gap-2 border-2 border-white px-10 py-4 font-bold uppercase tracking-widest w-fit hover:bg-white hover:text-black transition-colors"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            {t.cta} <ArrowRight size={18} />
+          </motion.a>
         </SectionReveal>
       </div>
     </section>
@@ -614,6 +959,7 @@ const Footer = () => {
           <div>
             <h4 className="text-lg font-bold uppercase mb-6">{t.shop}</h4>
             <ul className="space-y-4 text-white/60">
+              <li><a href="#shop-looks" className="hover:text-white transition-colors">{TRANSLATIONS[lang].nav.shopLooks}</a></li>
               <li><a href="#" className="hover:text-white transition-colors">{TRANSLATIONS[lang].nav.new}</a></li>
               <li><a href="#" className="hover:text-white transition-colors">{TRANSLATIONS[lang].nav.sport}</a></li>
               <li><a href="#" className="hover:text-white transition-colors">{TRANSLATIONS[lang].nav.classic}</a></li>
@@ -646,46 +992,63 @@ const Footer = () => {
 
 export default function App() {
   const [lang, setLang] = React.useState<Language>('ru');
+  const [selectedLook, setSelectedLook] = useState<Look | null>(null);
   const t = TRANSLATIONS[lang];
 
   return (
     <LangContext.Provider value={{ lang, setLang }}>
-      <div className="min-h-screen">
+      <div className="min-h-screen bg-white">
         <Navbar />
-        
+        {selectedLook && <LookPage look={selectedLook} onClose={() => setSelectedLook(null)} />}
+
         <main>
           <Hero />
           <BrandMarquee />
 
-          <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <section id="shop-looks" className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-24">
             <SectionReveal>
-              <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+              <div className="mb-16">
+                <span className="text-xs font-bold uppercase tracking-[0.3em] text-black/50 mb-2 block">{t.looks.shopLooks}</span>
+                <h2 className="text-5xl md:text-6xl font-black uppercase">{t.looks.shopLooks}</h2>
+              </div>
+            </SectionReveal>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16">
+              {LOOKS.map((look) => (
+                <LookCard key={look.id} look={look} onSelect={() => setSelectedLook(look)} />
+              ))}
+            </div>
+          </section>
+
+          <TrustSection />
+          <NewLooksDropSection />
+          <AboutSection />
+          <CategorySection />
+
+          <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-black/5">
+            <SectionReveal>
+              <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-6">
                 <div>
                   <span className="text-xs font-bold uppercase tracking-[0.3em] text-black/40 mb-2 block">{t.products.curated}</span>
-                  <h2 className="text-5xl md:text-6xl font-black uppercase">{t.products.featured}</h2>
+                  <h2 className="text-3xl md:text-4xl font-black uppercase text-black/90">{t.products.individualPieces}</h2>
                 </div>
                 <div className="flex gap-4">
-                  <motion.button className="px-6 py-2 border border-black font-bold uppercase text-xs tracking-widest hover:bg-black hover:text-white transition-colors" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>{t.products.all}</motion.button>
-                  <motion.button className="px-6 py-2 border border-black/10 font-bold uppercase text-xs tracking-widest hover:border-black transition-colors" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>{t.nav.sport}</motion.button>
-                  <motion.button className="px-6 py-2 border border-black/10 font-bold uppercase text-xs tracking-widest hover:border-black transition-colors" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>{t.nav.classic}</motion.button>
+                  <motion.button className="px-5 py-2 border border-black/20 font-bold uppercase text-xs tracking-widest hover:bg-black hover:text-white transition-colors" whileTap={{ scale: 0.98 }}>{t.products.all}</motion.button>
                 </div>
               </div>
             </SectionReveal>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12">
               {PRODUCTS.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
-            <SectionReveal className="mt-16 flex justify-center">
-              <motion.button className="group flex items-center gap-4 text-xl font-black uppercase tracking-tighter" whileHover={{ gap: 24 }} whileTap={{ scale: 0.98 }}>
-                {t.products.viewAll} <ArrowRight size={24} />
+            <div className="mt-12 flex justify-center">
+              <motion.button className="text-sm font-bold uppercase tracking-widest text-black/60 hover:text-black transition-colors" whileTap={{ scale: 0.98 }}>
+                {t.products.viewAll}
               </motion.button>
-            </SectionReveal>
+            </div>
           </section>
 
-          <NewCollectionSection />
-          <AboutSection />
-          <CategorySection />
+          <ShowroomSection />
 
           <section className="py-24 bg-black text-white overflow-hidden">
             <SectionReveal className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
