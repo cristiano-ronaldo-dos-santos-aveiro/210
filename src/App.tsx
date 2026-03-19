@@ -4,6 +4,7 @@ import { ShoppingBag, Search, User, Menu, X, ArrowRight, Instagram, Facebook, Tw
 import { cn } from './lib/utils';
 
 const LOGO_210_SRC = new URL('../photo/photo_2026-03-19_10-13-51.jpg', import.meta.url).href;
+const LOGO_ANBA_SRC = new URL('../photo/anba-logo.png', import.meta.url).href;
 
 // Scroll-based navbar background
 const useScrollTop = () => {
@@ -508,9 +509,21 @@ const Navbar = () => {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
-          <motion.a href="#" className="flex-shrink-0 flex flex-col items-center" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-            <span className="text-4xl font-black tracking-tighter leading-none">210</span>
-            <span className="text-[10px] font-bold tracking-[0.2em] uppercase -mt-1 text-black/60">Sports Wear</span>
+          <motion.a
+            href="#"
+            className="flex-shrink-0 flex items-center"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            aria-label="210"
+          >
+            <img
+              src={LOGO_210_SRC}
+              alt="210"
+              className="h-10 md:h-11 w-auto object-contain"
+              loading="eager"
+              decoding="async"
+              referrerPolicy="no-referrer"
+            />
           </motion.a>
 
           <div className="hidden md:flex items-center space-x-8">
@@ -571,20 +584,26 @@ const Hero = () => {
           transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
           className="mb-12"
         >
+          <div className="flex items-center justify-center gap-6">
             <img
               src={LOGO_210_SRC}
               alt="210"
-            className="h-24 md:h-32 w-auto object-contain mx-auto"
-            onError={(e) => {
-              const t = e.target as HTMLImageElement;
-              if (t.nextElementSibling) return;
-              const fallback = document.createElement('div');
-              fallback.className = 'flex flex-col items-center';
-              fallback.innerHTML = '<span class="text-5xl md:text-7xl font-black tracking-tighter text-black">210</span><span class="text-[10px] font-bold tracking-[0.2em] uppercase text-black/60 mt-1">SPORTS WEAR</span>';
-              t.parentNode?.appendChild(fallback);
-              t.style.display = 'none';
-            }}
-          />
+              className="h-28 md:h-36 w-auto object-contain"
+              onError={(e) => {
+                const t = e.target as HTMLImageElement;
+                t.style.display = 'none';
+              }}
+            />
+            <span className="text-3xl md:text-5xl font-light text-black/50 select-none">|</span>
+            <img
+              src={LOGO_ANBA_SRC}
+              alt="Anba"
+              className="h-28 md:h-36 w-auto object-contain"
+              loading="eager"
+              decoding="async"
+              referrerPolicy="no-referrer"
+            />
+          </div>
         </motion.div>
         <motion.p
           initial={{ opacity: 0 }}
@@ -594,21 +613,11 @@ const Hero = () => {
         >
           210 | Anba
         </motion.p>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8, duration: 0.5 }}
-          className="flex flex-wrap justify-center gap-x-10 gap-y-6 text-[11px] md:text-xs font-medium tracking-[0.25em] uppercase text-black/50"
-        >
-          {HERO_BRANDS.map((brand) => (
-            <span key={brand} className="hover:text-black/70 transition-colors">{brand}</span>
-          ))}
-        </motion.div>
         <motion.a
           href="#shop-looks"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.2, duration: 0.4 }}
+          transition={{ delay: 0.8, duration: 0.4 }}
           className="mt-16 text-[11px] font-medium tracking-[0.2em] uppercase text-black/40 hover:text-black/70 transition-colors"
         >
           Shop looks
