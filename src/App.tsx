@@ -3,6 +3,8 @@ import { motion } from 'motion/react';
 import { ShoppingBag, Search, User, Menu, X, ArrowRight, Instagram, Facebook, Twitter, Globe, Eye, MapPin } from 'lucide-react';
 import { cn } from './lib/utils';
 
+const LOGO_210_SRC = new URL('../photo/photo_2026-03-19_10-13-51.jpg', import.meta.url).href;
+
 // Scroll-based navbar background
 const useScrollTop = () => {
   const [scrollTop, setScrollTop] = useState(0);
@@ -16,7 +18,7 @@ const useScrollTop = () => {
 };
 
 // --- Types ---
-type Language = 'ru' | 'uz';
+type Language = 'uz' | 'ru' | 'en';
 
 interface Translations {
   nav: {
@@ -105,7 +107,89 @@ interface Translations {
   };
 }
 
+const HERO_BRANDS = ['FILA', 'ARCTERYX', 'ADIDAS', 'NIKE', 'WILSON', 'HERMES', 'PUMA', 'COLUMBIA', 'ON', 'FUSION', 'GUCCI', 'UA'];
+
 const TRANSLATIONS: Record<Language, Translations> = {
+  uz: {
+    nav: { shopLooks: "Ko'rinishlar", new: "Yangi kelganlar", sport: "Sport", classic: "Yarim klassika", brands: "Brendlar" },
+    hero: {
+      headline: "Dunyo bo'ylab tayyor premium ko'rinishlar",
+      subtext: "Biz tanlaymiz, uslublashtiramiz va original buyumlarni rasmiy import qilamiz",
+      rail: "2016-YILDA ASOS SOLINGAN — TOSHKENT"
+    },
+    looks: {
+      shopLooks: "Ko'rinishlar",
+      fullSet: "To'liq set",
+      viewLook: "Ko'rinishni ko'rish",
+      buyFullLook: "Butun obrazni sotib olish",
+      addSeparately: "Alohida qo'shish",
+      itemsInLook: "Obrazga kiradi"
+    },
+    products: {
+      badge: "Original",
+      add: "Savatga qo'shish",
+      quickView: "Tezkor ko'rinish",
+      sale: "Chegirma",
+      curated: "Tanlangan to'plam",
+      featured: "Saralangan mahsulotlar",
+      individualPieces: "Alohida buyumlar",
+      all: "Hammasi",
+      viewAll: "Barcha mahsulotlarni ko'rish"
+    },
+    trust: {
+      title: "Nima uchun ishonamiz",
+      authentic: "100% original",
+      globalSourcing: "Turli mamlakatlardan yetkazib berish",
+      handpicked: "Qo'lda tanlangan kombinatsiyalar"
+    },
+    newLooksDrop: {
+      label: "Cheklangan drop",
+      title: "Yangi ko'rinishlar",
+      desc: "Eksklyuziv setlar. Cheklangan miqdor.",
+      cta: "Ko'rinishlarni ko'rish"
+    },
+    showroom: {
+      title: "Shou-room",
+      address: "Toshkent",
+      cta: "Shou-roomga tashrif buyuring"
+    },
+    newCollection: {
+      label: "Bahor 2025",
+      title: "Yangi kolleksiya",
+      cta: "Kolleksiyani ko'rish"
+    },
+    about: {
+      label: "Brend haqida",
+      title: "Faqat original. 2016-yildan beri.",
+      body: "Biz faqat haqiqiy sport va yarim klassik kiyimlarni tanlaymiz. Har bir buyum birinchi qo'ldan, sifat kafolati bilan. Kompromisslar qilmaydiganlar uchun."
+    },
+    categories: {
+      sportTitle: "Sport uslubi",
+      sportDesc: "Harakat uchun yaratilgan. Dunyoning yetakchi brendlaridan original ekipirovka.",
+      sportBtn: "Sportni kashf eting",
+      classicTitle: "Yarim klassika",
+      classicDesc: "Kundalik va rasmiy uslub o'rtasidagi mukammal muvozanat. Doimiy dolzarb kiyimlar.",
+      classicBtn: "Klassikani kashf eting"
+    },
+    newsletter: {
+      title: "Bizga qo'shiling.",
+      desc: "Yangi kolleksiyalar va yopiq savdolarga eksklyuziv kirish huquqini oling. Faqat «210» hamjamiyati uchun.",
+      placeholder: "EMAILINGIZNI KIRITING",
+      btn: "Obuna bo'lish"
+    },
+    footer: {
+      desc: "Haqiqiy brend kiyimlari uchun manzilingiz. Biz sport va uslubni birlashtiramiz.",
+      shop: "Do'kon",
+      support: "Yordam",
+      rights: "© 2024 210 DO'KONI. BARCHA HUQUQLAR HIMOYA QILINGAN.",
+      privacy: "Maxfiylik siyosati",
+      terms: "Foydalanish shartlari",
+      shipping: "Yetkazib berish va qaytarish",
+      sizeGuide: "O'lchamlar bo'yicha qo'llanma",
+      contact: "Biz bilan bog'lanish",
+      faq: "Ko'p beriladigan savollar"
+    }
+  },
   ru: {
     nav: { shopLooks: "Образы", new: "Новинки", sport: "Спорт", classic: "Полуклассика", brands: "Бренды" },
     hero: {
@@ -186,84 +270,84 @@ const TRANSLATIONS: Record<Language, Translations> = {
       faq: "Часто задаваемые вопросы"
     }
   },
-  uz: {
-    nav: { shopLooks: "Ko'rinishlar", new: "Yangi kelganlar", sport: "Sport", classic: "Yarim klassika", brands: "Brendlar" },
+  en: {
+    nav: { shopLooks: "Looks", new: "New", sport: "Sport", classic: "Semi-classic", brands: "Brands" },
     hero: {
-      headline: "Dunyo bo'ylab tayyor premium ko'rinishlar",
-      subtext: "Biz tanlaymiz, uslublashtiramiz va original buyumlarni rasmiy import qilamiz",
-      rail: "2016-YILDA ASOS SOLINGAN — TOSHKENT"
+      headline: "Ready-made premium looks from around the world",
+      subtext: "We curate, style, and officially import original pieces",
+      rail: "EST. 2016 — TASHKENT"
     },
     looks: {
-      shopLooks: "Ko'rinishlar",
-      fullSet: "To'liq set",
-      viewLook: "Ko'rinishni ko'rish",
-      buyFullLook: "Butun obrazni sotib olish",
-      addSeparately: "Alohida qo'shish",
-      itemsInLook: "Obrazga kiradi"
+      shopLooks: "Looks",
+      fullSet: "Full set",
+      viewLook: "View look",
+      buyFullLook: "Buy full look",
+      addSeparately: "Add separately",
+      itemsInLook: "This look includes"
     },
     products: {
       badge: "Original",
-      add: "Savatga qo'shish",
-      quickView: "Tezkor ko'rinish",
-      sale: "Chegirma",
-      curated: "Tanlangan to'plam",
-      featured: "Saralangan mahsulotlar",
-      individualPieces: "Alohida buyumlar",
-      all: "Hammasi",
-      viewAll: "Barcha mahsulotlarni ko'rish"
+      add: "Add to cart",
+      quickView: "Quick view",
+      sale: "Sale",
+      curated: "Curated collection",
+      featured: "Featured",
+      individualPieces: "Individual pieces",
+      all: "All",
+      viewAll: "View all products"
     },
     trust: {
-      title: "Nima uchun ishonamiz",
-      authentic: "100% original",
-      globalSourcing: "Turli mamlakatlardan yetkazib berish",
-      handpicked: "Qo'lda tanlangan kombinatsiyalar"
+      title: "Why trust us",
+      authentic: "100% authentic",
+      globalSourcing: "Global sourcing",
+      handpicked: "Handpicked combinations"
     },
     newLooksDrop: {
-      label: "Cheklangan drop",
-      title: "Yangi ko'rinishlar",
-      desc: "Eksklyuziv setlar. Cheklangan miqdor.",
-      cta: "Ko'rinishlarni ko'rish"
+      label: "Limited drop",
+      title: "New looks",
+      desc: "Exclusive sets. Limited quantity.",
+      cta: "View looks"
     },
     showroom: {
-      title: "Shou-room",
-      address: "Toshkent",
-      cta: "Shou-roomga tashrif buyuring"
+      title: "Showroom",
+      address: "Tashkent",
+      cta: "Visit our showroom"
     },
     newCollection: {
-      label: "Bahor 2025",
-      title: "Yangi kolleksiya",
-      cta: "Kolleksiyani ko'rish"
+      label: "Spring 2025",
+      title: "New collection",
+      cta: "View collection"
     },
     about: {
-      label: "Brend haqida",
-      title: "Faqat original. 2016-yildan beri.",
-      body: "Biz faqat haqiqiy sport va yarim klassik kiyimlarni tanlaymiz. Har bir buyum birinchi qo'ldan, sifat kafolati bilan. Kompromisslar qilmaydiganlar uchun."
+      label: "About",
+      title: "Original only. Since 2016.",
+      body: "We select only authentic sport and semi-classic wear. Every piece is first-hand, with quality guarantee. For those who don't compromise."
     },
     categories: {
-      sportTitle: "Sport uslubi",
-      sportDesc: "Harakat uchun yaratilgan. Dunyoning yetakchi brendlaridan original ekipirovka.",
-      sportBtn: "Sportni kashf eting",
-      classicTitle: "Yarim klassika",
-      classicDesc: "Kundalik va rasmiy uslub o'rtasidagi mukammal muvozanat. Doimiy dolzarb kiyimlar.",
-      classicBtn: "Klassikani kashf eting"
+      sportTitle: "Sport style",
+      sportDesc: "Built for movement. Original gear from leading global brands.",
+      sportBtn: "Explore sport",
+      classicTitle: "Semi-classic",
+      classicDesc: "The perfect balance between casual and formal. Timeless pieces.",
+      classicBtn: "Explore classic"
     },
     newsletter: {
-      title: "Bizga qo'shiling.",
-      desc: "Yangi kolleksiyalar va yopiq savdolarga eksklyuziv kirish huquqini oling. Faqat «210» hamjamiyati uchun.",
-      placeholder: "EMAILINGIZNI KIRITING",
-      btn: "Obuna bo'lish"
+      title: "Join us.",
+      desc: "Get exclusive access to new drops and private sales. For the 210 community only.",
+      placeholder: "YOUR EMAIL",
+      btn: "Subscribe"
     },
     footer: {
-      desc: "Haqiqiy brend kiyimlari uchun manzilingiz. Biz sport va uslubni birlashtiramiz.",
-      shop: "Do'kon",
-      support: "Yordam",
-      rights: "© 2024 210 DO'KONI. BARCHA HUQUQLAR HIMOYA QILINGAN.",
-      privacy: "Maxfiylik siyosati",
-      terms: "Foydalanish shartlari",
-      shipping: "Yetkazib berish va qaytarish",
-      sizeGuide: "O'lchamlar bo'yicha qo'llanma",
-      contact: "Biz bilan bog'lanish",
-      faq: "Ko'p beriladigan savollar"
+      desc: "Your destination for authentic brand wear. We bring together sport and style.",
+      shop: "Shop",
+      support: "Support",
+      rights: "© 2024 210. ALL RIGHTS RESERVED.",
+      privacy: "Privacy policy",
+      terms: "Terms of use",
+      shipping: "Shipping & returns",
+      sizeGuide: "Size guide",
+      contact: "Contact",
+      faq: "FAQ"
     }
   }
 };
@@ -300,7 +384,7 @@ interface Look {
 const PRODUCTS: Product[] = [
   {
     id: 1,
-    name: { ru: "Худи Tech Fleece", uz: "Tech Fleece Hudisi" },
+    name: { ru: "Худи Tech Fleece", uz: "Tech Fleece Hudisi", en: "Tech Fleece Hoodie" },
     brand: "Nike",
     price: "1 200 000 UZS",
     salePrice: "999 000 UZS",
@@ -309,7 +393,7 @@ const PRODUCTS: Product[] = [
   },
   {
     id: 2,
-    name: { ru: "Рубашка Oxford", uz: "Oxford Ko'ylagi" },
+    name: { ru: "Рубашка Oxford", uz: "Oxford Ko'ylagi", en: "Oxford Shirt" },
     brand: "Ralph Lauren",
     price: "950 000 UZS",
     category: 'Semi-Classic',
@@ -317,7 +401,7 @@ const PRODUCTS: Product[] = [
   },
   {
     id: 3,
-    name: { ru: "Спортивные брюки", uz: "Sport Shimlari" },
+    name: { ru: "Спортивные брюки", uz: "Sport Shimlari", en: "Sport Pants" },
     brand: "Adidas",
     price: "850 000 UZS",
     category: 'Sport',
@@ -325,7 +409,7 @@ const PRODUCTS: Product[] = [
   },
   {
     id: 4,
-    name: { ru: "Брюки Чинос", uz: "Chinos Shimlari" },
+    name: { ru: "Брюки Чинос", uz: "Chinos Shimlari", en: "Chinos" },
     brand: "Tommy Hilfiger",
     price: "1 100 000 UZS",
     category: 'Semi-Classic',
@@ -333,7 +417,7 @@ const PRODUCTS: Product[] = [
   },
   {
     id: 5,
-    name: { ru: "Кроссовки Air Max 270", uz: "Air Max 270 Krossovkalari" },
+    name: { ru: "Кроссовки Air Max 270", uz: "Air Max 270 Krossovkalari", en: "Air Max 270" },
     brand: "Nike",
     price: "1 500 000 UZS",
     category: 'Sport',
@@ -341,7 +425,7 @@ const PRODUCTS: Product[] = [
   },
   {
     id: 6,
-    name: { ru: "Свитер из шерсти мериноса", uz: "Merinos Junli Sviteri" },
+    name: { ru: "Свитер из шерсти мериноса", uz: "Merinos Junli Sviteri", en: "Merino Sweater" },
     brand: "Lacoste",
     price: "1 400 000 UZS",
     category: 'Semi-Classic',
@@ -354,54 +438,54 @@ const BRANDS = ["Nike", "Adidas", "Puma", "Ralph Lauren", "Tommy Hilfiger", "Lac
 const LOOKS: Look[] = [
   {
     id: 1,
-    name: { ru: "Dubai Night", uz: "Dubai Night" },
+    name: { ru: "Dubai Night", uz: "Dubai Night", en: "Dubai Night" },
     image: "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&q=80&w=1200",
     totalPrice: "4 200 000 UZS",
     items: [
-      { id: "1-1", name: { ru: "Куртка оверсайз", uz: "Oversayz Kurtka" }, brand: "Fear of God", price: "1 800 000 UZS", type: "jacket" },
-      { id: "1-2", name: { ru: "Брюки карго", uz: "Cargo Shimlar" }, brand: "Nike", price: "950 000 UZS", type: "pants" },
-      { id: "1-3", name: { ru: "Кроссовки", uz: "Krossovkalar" }, brand: "New Balance", price: "1 200 000 UZS", type: "shoes" },
-      { id: "1-4", name: { ru: "Кепка", uz: "Kepka" }, brand: "Lacoste", price: "250 000 UZS", type: "accessories" }
+      { id: "1-1", name: { ru: "Куртка оверсайз", uz: "Oversayz Kurtka", en: "Oversize Jacket" }, brand: "Fear of God", price: "1 800 000 UZS", type: "jacket" },
+      { id: "1-2", name: { ru: "Брюки карго", uz: "Cargo Shimlar", en: "Cargo Pants" }, brand: "Nike", price: "950 000 UZS", type: "pants" },
+      { id: "1-3", name: { ru: "Кроссовки", uz: "Krossovkalar", en: "Sneakers" }, brand: "New Balance", price: "1 200 000 UZS", type: "shoes" },
+      { id: "1-4", name: { ru: "Кепка", uz: "Kepka", en: "Cap" }, brand: "Lacoste", price: "250 000 UZS", type: "accessories" }
     ]
   },
   {
     id: 2,
-    name: { ru: "Minimal Street", uz: "Minimal Street" },
+    name: { ru: "Minimal Street", uz: "Minimal Street", en: "Minimal Street" },
     image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=1200",
     totalPrice: "3 850 000 UZS",
     items: [
-      { id: "2-1", name: { ru: "Худи Tech Fleece", uz: "Tech Fleece Hudisi" }, brand: "Nike", price: "1 200 000 UZS", type: "top" },
-      { id: "2-2", name: { ru: "Спортивные брюки", uz: "Sport Shimlari" }, brand: "Adidas", price: "850 000 UZS", type: "pants" },
-      { id: "2-3", name: { ru: "Кроссовки Air Max", uz: "Air Max Krossovkalari" }, brand: "Nike", price: "1 500 000 UZS", type: "shoes" },
-      { id: "2-4", name: { ru: "Рюкзак", uz: "Ryukzak" }, brand: "Puma", price: "300 000 UZS", type: "accessories" }
+      { id: "2-1", name: { ru: "Худи Tech Fleece", uz: "Tech Fleece Hudisi", en: "Tech Fleece Hoodie" }, brand: "Nike", price: "1 200 000 UZS", type: "top" },
+      { id: "2-2", name: { ru: "Спортивные брюки", uz: "Sport Shimlari", en: "Sport Pants" }, brand: "Adidas", price: "850 000 UZS", type: "pants" },
+      { id: "2-3", name: { ru: "Кроссовки Air Max", uz: "Air Max Krossovkalari", en: "Air Max" }, brand: "Nike", price: "1 500 000 UZS", type: "shoes" },
+      { id: "2-4", name: { ru: "Рюкзак", uz: "Ryukzak", en: "Backpack" }, brand: "Puma", price: "300 000 UZS", type: "accessories" }
     ]
   },
   {
     id: 3,
-    name: { ru: "Smart Casual", uz: "Smart Casual" },
+    name: { ru: "Smart Casual", uz: "Smart Casual", en: "Smart Casual" },
     image: "https://images.unsplash.com/photo-1596755094514-f87034a264c6?auto=format&fit=crop&q=80&w=1200",
     totalPrice: "3 550 000 UZS",
     items: [
-      { id: "3-1", name: { ru: "Рубашка Oxford", uz: "Oxford Ko'ylak" }, brand: "Ralph Lauren", price: "950 000 UZS", type: "top" },
-      { id: "3-2", name: { ru: "Брюки чинос", uz: "Chinos" }, brand: "Tommy Hilfiger", price: "1 100 000 UZS", type: "pants" },
-      { id: "3-3", name: { ru: "Лоферы", uz: "Loferlar" }, brand: "Hugo Boss", price: "1 500 000 UZS", type: "shoes" }
+      { id: "3-1", name: { ru: "Рубашка Oxford", uz: "Oxford Ko'ylak", en: "Oxford Shirt" }, brand: "Ralph Lauren", price: "950 000 UZS", type: "top" },
+      { id: "3-2", name: { ru: "Брюки чинос", uz: "Chinos", en: "Chinos" }, brand: "Tommy Hilfiger", price: "1 100 000 UZS", type: "pants" },
+      { id: "3-3", name: { ru: "Лоферы", uz: "Loferlar", en: "Loafers" }, brand: "Hugo Boss", price: "1 500 000 UZS", type: "shoes" }
     ]
   },
   {
     id: 4,
-    name: { ru: "Weekend Vibes", uz: "Weekend Vibes" },
+    name: { ru: "Weekend Vibes", uz: "Weekend Vibes", en: "Weekend Vibes" },
     image: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&q=80&w=1200",
     totalPrice: "2 900 000 UZS",
     items: [
-      { id: "4-1", name: { ru: "Свитер меринос", uz: "Merinos Sviter" }, brand: "Lacoste", price: "1 400 000 UZS", type: "top" },
-      { id: "4-2", name: { ru: "Джинсы", uz: "Jinslar" }, brand: "Levi's", price: "1 000 000 UZS", type: "pants" },
-      { id: "4-3", name: { ru: "Кеды", uz: "Kedilar" }, brand: "Converse", price: "500 000 UZS", type: "shoes" }
+      { id: "4-1", name: { ru: "Свитер меринос", uz: "Merinos Sviter", en: "Merino Sweater" }, brand: "Lacoste", price: "1 400 000 UZS", type: "top" },
+      { id: "4-2", name: { ru: "Джинсы", uz: "Jinslar", en: "Jeans" }, brand: "Levi's", price: "1 000 000 UZS", type: "pants" },
+      { id: "4-3", name: { ru: "Кеды", uz: "Kedilar", en: "Sneakers" }, brand: "Converse", price: "500 000 UZS", type: "shoes" }
     ]
   }
 ];
 
 // --- Context for Language ---
-const LangContext = React.createContext<{ lang: Language; setLang: (l: Language) => void }>({ lang: 'ru', setLang: () => {} });
+const LangContext = React.createContext<{ lang: Language; setLang: (l: Language) => void }>({ lang: 'uz', setLang: () => {} });
 
 // --- Components ---
 
@@ -437,9 +521,10 @@ const Navbar = () => {
           </div>
 
           <div className="hidden md:flex items-center space-x-6">
-            <div className="flex items-center bg-black/5 rounded-full p-1">
-              <button onClick={() => setLang('ru')} className={cn("px-3 py-1 text-[10px] font-bold rounded-full transition-all", lang === 'ru' ? "bg-black text-white" : "text-black/40")}>RU</button>
-              <button onClick={() => setLang('uz')} className={cn("px-3 py-1 text-[10px] font-bold rounded-full transition-all", lang === 'uz' ? "bg-black text-white" : "text-black/40")}>UZ</button>
+            <div className="flex items-center gap-0.5 text-[11px] font-medium text-black/70">
+              {(['uz', 'ru', 'en'] as const).map((l) => (
+                <button key={l} onClick={() => setLang(l)} className={cn("px-2.5 py-1 uppercase transition-colors hover:text-black", lang === l && "text-black font-semibold")}>{l}</button>
+              ))}
             </div>
             <motion.button className="p-2 hover:bg-black/5 rounded-full transition-colors" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}><Search size={20} /></motion.button>
             <motion.button className="p-2 hover:bg-black/5 rounded-full transition-colors" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}><User size={20} /></motion.button>
@@ -450,7 +535,11 @@ const Navbar = () => {
           </div>
 
           <div className="md:hidden flex items-center space-x-4">
-            <button onClick={() => setLang(lang === 'ru' ? 'uz' : 'ru')} className="p-2 bg-black/5 rounded-full"><Globe size={20} /></button>
+            <div className="flex gap-0.5 text-[10px] font-medium">
+              {(['uz', 'ru', 'en'] as const).map((l) => (
+                <button key={l} onClick={() => setLang(l)} className={cn("px-2 py-1 uppercase", lang === l && "font-bold text-black")}>{l}</button>
+              ))}
+            </div>
             <motion.button onClick={() => setIsOpen(!isOpen)} className="p-2" whileTap={{ scale: 0.9 }}>{isOpen ? <X size={24} /> : <Menu size={24} />}</motion.button>
           </div>
         </div>
@@ -473,77 +562,68 @@ const Navbar = () => {
 };
 
 const Hero = () => {
-  const { lang } = React.useContext(LangContext);
-  const t = TRANSLATIONS[lang].hero;
-
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-neutral-900">
-      <motion.div
-        initial={{ scale: 1.05, opacity: 0.85 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 2.2, ease: [0.22, 0.61, 0.36, 1] }}
-        className="absolute inset-0"
-      >
-        <img
-          src="https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&q=80&w=1920"
-          alt="Premium look"
-          className="w-full h-full object-cover"
-          referrerPolicy="no-referrer"
-          fetchPriority="high"
-        />
-        <div className="absolute inset-0 bg-black/40" />
-      </motion.div>
-      <div className="relative z-10 flex flex-col items-center text-center px-4 sm:px-6">
+    <section className="relative min-h-screen flex flex-col items-center justify-center bg-white overflow-hidden">
+      <div className="flex flex-col items-center justify-center px-4 text-center">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="flex flex-col items-center mb-12"
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
+          className="mb-12"
         >
-          <span className="text-5xl md:text-7xl font-black tracking-tighter leading-none text-white">210</span>
-          <span className="text-[10px] font-bold tracking-[0.35em] uppercase text-white/70 mt-1">Premium Looks</span>
+            <img
+              src={LOGO_210_SRC}
+              alt="210"
+            className="h-24 md:h-32 w-auto object-contain mx-auto"
+            onError={(e) => {
+              const t = e.target as HTMLImageElement;
+              if (t.nextElementSibling) return;
+              const fallback = document.createElement('div');
+              fallback.className = 'flex flex-col items-center';
+              fallback.innerHTML = '<span class="text-5xl md:text-7xl font-black tracking-tighter text-black">210</span><span class="text-[10px] font-bold tracking-[0.2em] uppercase text-black/60 mt-1">SPORTS WEAR</span>';
+              t.parentNode?.appendChild(fallback);
+              t.style.display = 'none';
+            }}
+          />
         </motion.div>
-        <motion.h1
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7, duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="text-3xl md:text-5xl lg:text-6xl font-black uppercase leading-tight text-white max-w-4xl mb-6"
-        >
-          {t.headline}
-        </motion.h1>
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.1, duration: 0.7 }}
-          className="text-base md:text-lg text-white/80 max-w-xl mb-10"
+          transition={{ delay: 0.5, duration: 0.5 }}
+          className="text-sm md:text-base tracking-[0.2em] uppercase text-black/70 mb-14"
         >
-          {t.subtext}
+          210 | Anba
         </motion.p>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8, duration: 0.5 }}
+          className="flex flex-wrap justify-center gap-x-10 gap-y-6 text-[11px] md:text-xs font-medium tracking-[0.25em] uppercase text-black/50"
+        >
+          {HERO_BRANDS.map((brand) => (
+            <span key={brand} className="hover:text-black/70 transition-colors">{brand}</span>
+          ))}
+        </motion.div>
         <motion.a
           href="#shop-looks"
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.4, duration: 0.5 }}
-          className="inline-flex items-center gap-2 bg-white text-black px-8 py-4 font-bold uppercase tracking-widest text-sm hover:bg-amber-50 transition-colors"
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.2, duration: 0.4 }}
+          className="mt-16 text-[11px] font-medium tracking-[0.2em] uppercase text-black/40 hover:text-black/70 transition-colors"
         >
-          {TRANSLATIONS[lang].looks.shopLooks} <ArrowRight size={18} />
+          Shop looks
         </motion.a>
       </div>
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.6 }} className="absolute right-8 bottom-24 hidden lg:block">
-        <span className="writing-vertical-rl rotate-180 text-[10px] font-bold uppercase tracking-[0.5em] text-white/50">{t.rail}</span>
-      </motion.div>
     </section>
   );
 };
 
 const BrandMarquee = () => {
   return (
-    <div className="py-10 bg-[#f5f0e8] border-y border-black/5 overflow-hidden whitespace-nowrap">
+    <div className="py-8 bg-white border-y border-black/5 overflow-hidden whitespace-nowrap">
       <div className="flex animate-marquee">
         {[...BRANDS, ...BRANDS].map((brand, i) => (
-          <span key={i} className="mx-12 text-3xl md:text-5xl font-black uppercase text-black/10 hover:text-black/20 transition-colors cursor-default">
+          <span key={i} className="mx-10 text-2xl md:text-4xl font-semibold uppercase text-black/10 hover:text-black/15 transition-colors cursor-default">
             {brand}
           </span>
         ))}
@@ -757,7 +837,7 @@ const TrustSection = () => {
   ];
 
   return (
-    <section className="py-24 bg-[#f5f0e8] border-y border-black/5">
+    <section className="py-24 bg-neutral-50 border-y border-black/5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionReveal>
           <p className="text-xs font-bold uppercase tracking-[0.3em] text-black/50 mb-6">{t.title}</p>
@@ -823,25 +903,27 @@ const ShowroomSection = () => {
   const t = TRANSLATIONS[lang].showroom;
 
   return (
-    <section className="py-24 bg-black text-white">
+    <section className="py-24 bg-white border-t border-black/5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <SectionReveal className="flex flex-col md:flex-row md:items-center md:justify-between gap-10">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[0.3em] text-white/50 mb-4">{t.title}</p>
-            <h2 className="text-4xl md:text-5xl font-black uppercase mb-4 flex items-center gap-3">
-              <MapPin size={28} className="text-[#c9a227]" />
-              {t.address}
-            </h2>
-            <p className="text-white/70 text-lg">{t.cta}</p>
+        <SectionReveal>
+          <p className="text-xs font-bold uppercase tracking-[0.3em] text-black/50 mb-4">{t.title}</p>
+          <h2 className="text-3xl md:text-4xl font-black uppercase mb-8 flex items-center gap-3 text-black">
+            <MapPin size={24} className="text-black/70" />
+            {t.address}
+          </h2>
+          <div className="aspect-[21/9] max-h-[320px] w-full bg-neutral-100 overflow-hidden">
+            <iframe
+              title="Store location Tashkent"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2994.415268264807!2d69.279278!3d41.311081!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38aef4d376395311%3A0x2f373e0e2b5c7b!2sTashkent%2C%20Uzbekistan!5e0!3m2!1sen!2s!4v1640000000000!5m2!1sen!2s"
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
           </div>
-          <motion.a
-            href="#"
-            className="inline-flex items-center gap-2 border-2 border-white px-10 py-4 font-bold uppercase tracking-widest w-fit hover:bg-white hover:text-black transition-colors"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            {t.cta} <ArrowRight size={18} />
-          </motion.a>
+          <p className="text-black/60 mt-6 text-sm">{t.cta}</p>
         </SectionReveal>
       </div>
     </section>
@@ -991,7 +1073,7 @@ const Footer = () => {
 // --- Main App ---
 
 export default function App() {
-  const [lang, setLang] = React.useState<Language>('ru');
+  const [lang, setLang] = React.useState<Language>('uz');
   const [selectedLook, setSelectedLook] = useState<Look | null>(null);
   const t = TRANSLATIONS[lang];
 
