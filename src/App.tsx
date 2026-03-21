@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { ShoppingBag, Search, Menu, X, ArrowRight, Instagram, Phone, MapPin } from 'lucide-react';
+import { ShoppingBag, Search, Menu, X, ArrowRight, Instagram, MapPin } from 'lucide-react';
 import { cn } from './lib/utils';
 
 /** PNG exports in /photo (210 stack + signature mark) */
@@ -12,7 +12,6 @@ const HERO_BG_IMAGE =
   'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&q=88&w=2400';
 
 /** Replace with your real contacts */
-const CONTACT_PHONE = '+998 90 123 45 67';
 const CONTACT_TELEGRAM = 'https://t.me/shop210';
 const CONTACT_INSTAGRAM = 'https://instagram.com/';
 
@@ -1000,16 +999,6 @@ const Footer = () => {
             whileTap={{ scale: 0.96 }}
           >
             <TelegramIcon size={26} />
-          </motion.a>
-          <motion.a
-            href={`tel:${CONTACT_PHONE.replace(/\s/g, '')}`}
-            aria-label="Phone"
-            className="text-white/75 hover:text-white transition-colors flex items-center gap-3 text-sm font-medium tracking-wide p-2"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <Phone size={26} strokeWidth={1.5} />
-            <span>{CONTACT_PHONE}</span>
           </motion.a>
         </div>
 
