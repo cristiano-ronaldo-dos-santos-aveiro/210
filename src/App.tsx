@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { ShoppingBag, Search, Menu, X, ArrowRight, Instagram, MapPin } from 'lucide-react';
+import { ShoppingBag, Search, Menu, X, Instagram, MapPin } from 'lucide-react';
 import { cn } from './lib/utils';
 
 /** PNG exports in /photo (210 stack + signature mark) */
@@ -63,12 +63,6 @@ interface Translations {
     addSeparately: string;
     itemsInLook: string;
   };
-  newLooksDrop: {
-    label: string;
-    title: string;
-    desc: string;
-    cta: string;
-  };
   newCollection: {
     label: string;
     title: string;
@@ -127,12 +121,6 @@ const TRANSLATIONS: Record<Language, Translations> = {
       addSeparately: "Alohida qo'shish",
       itemsInLook: "Obrazga kiradi"
     },
-    newLooksDrop: {
-      label: "Cheklangan drop",
-      title: "Yangi ko'rinishlar",
-      desc: "Eksklyuziv setlar. Cheklangan miqdor.",
-      cta: "Ko'rinishlarni ko'rish"
-    },
     newCollection: {
       label: "Bahor 2026",
       title: "Yangi kolleksiya",
@@ -187,12 +175,6 @@ const TRANSLATIONS: Record<Language, Translations> = {
       addSeparately: "Добавить отдельно",
       itemsInLook: "В образ входит"
     },
-    newLooksDrop: {
-      label: "Ограниченный дроп",
-      title: "Новые образы",
-      desc: "Эксклюзивные комплекты. Ограниченное количество.",
-      cta: "Смотреть образы"
-    },
     newCollection: {
       label: "Весна 2025",
       title: "Новая коллекция",
@@ -246,12 +228,6 @@ const TRANSLATIONS: Record<Language, Translations> = {
       buyFullLook: "Buy full look",
       addSeparately: "Add separately",
       itemsInLook: "This look includes"
-    },
-    newLooksDrop: {
-      label: "Limited drop",
-      title: "New looks",
-      desc: "Exclusive sets. Limited quantity.",
-      cta: "View looks"
     },
     newCollection: {
       label: "Spring 2025",
@@ -865,52 +841,6 @@ const SectionReveal: React.FC<{ children: React.ReactNode; className?: string }>
   </motion.div>
 );
 
-const NewLooksDropSection = () => {
-  const { lang } = React.useContext(LangContext);
-  const t = TRANSLATIONS[lang].newLooksDrop;
-  const featuredLook = LOOKS[0];
-
-  return (
-    <section className="py-10 md:py-14 bg-neutral-50 border-y border-black/[0.06]">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <SectionReveal>
-          <div className="flex flex-col md:flex-row md:items-center gap-8 md:gap-10">
-            <div className="flex justify-center md:justify-start shrink-0">
-              <div className="relative w-[min(100%,200px)] aspect-[9/16] max-h-[280px] rounded-[1.35rem] overflow-hidden bg-neutral-200 border border-black/10 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.18)] ring-1 ring-black/[0.04]">
-                <motion.img
-                  src={featuredLook.image}
-                  alt={featuredLook.name[lang]}
-                  loading="lazy"
-                  className="w-full h-full object-cover"
-                  referrerPolicy="no-referrer"
-                  whileHover={{ scale: 1.04 }}
-                  transition={{ duration: 0.45 }}
-                />
-                <span className="absolute top-3 left-3 bg-black text-white text-[9px] font-bold uppercase px-2 py-1 tracking-widest rounded-sm">
-                  {t.label}
-                </span>
-              </div>
-            </div>
-            <div className="flex-1 text-center md:text-left min-w-0">
-              <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-black/45 mb-2">{t.label}</p>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-black uppercase mb-3 leading-tight tracking-tight">{t.title}</h2>
-              <p className="text-sm md:text-base text-black/60 mb-6 max-w-md mx-auto md:mx-0 leading-relaxed">{t.desc}</p>
-              <motion.a
-                href="#shop-looks"
-                className="inline-flex items-center gap-2 bg-black text-white px-6 py-3 text-xs font-bold uppercase tracking-widest rounded-full"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                {t.cta} <ArrowRight size={16} />
-              </motion.a>
-            </div>
-          </div>
-        </SectionReveal>
-      </div>
-    </section>
-  );
-};
-
 const PhilosophySection = () => {
   const { lang } = React.useContext(LangContext);
   const t = TRANSLATIONS[lang].philosophy;
@@ -1050,8 +980,6 @@ export default function App() {
               ))}
             </motion.div>
           </section>
-
-          <NewLooksDropSection />
 
           <PhilosophySection />
           <BranchesSection />
