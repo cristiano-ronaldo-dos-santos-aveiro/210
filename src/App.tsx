@@ -88,8 +88,6 @@ interface Translations {
   };
 }
 
-const HERO_BRANDS = ['FILA', 'ADIDAS', 'WILSON', 'PUMA', 'ON CLOUD', 'GUCCI', 'UNDER ARMOUR', 'HERMES', 'COLUMBIA', 'ARCTERYX'];
-
 const TRANSLATIONS: Record<Language, Translations> = {
   uz: {
     nav: {
@@ -264,7 +262,19 @@ interface Look {
   items: LookItem[];
 }
 
-const BRANDS = ["FILA", "ADIDAS", "WILSON", "PUMA", "ON CLOUD", "GUCCI", "UNDER ARMOUR", "HERMES", "COLUMBIA", "ARCTERYX"];
+/** PNG logos: place files in /public/brands/{slug}.png (see public/brands/README.txt) */
+const BRAND_MARQUEE_ITEMS = [
+  { slug: 'fila', alt: 'FILA' },
+  { slug: 'adidas', alt: 'Adidas' },
+  { slug: 'wilson', alt: 'Wilson' },
+  { slug: 'puma', alt: 'Puma' },
+  { slug: 'on-cloud', alt: 'On Cloud' },
+  { slug: 'gucci', alt: 'Gucci' },
+  { slug: 'under-armour', alt: 'Under Armour' },
+  { slug: 'hermes', alt: 'Hermès' },
+  { slug: 'columbia', alt: 'Columbia' },
+  { slug: 'arcteryx', alt: "Arc'teryx" }
+] as const;
 
 const LOOKS: Look[] = [
   {
@@ -666,23 +676,45 @@ const Hero = () => {
   );
 };
 
+const BrandMarqueeLogo: React.FC<{ slug: string; alt: string }> = ({ slug, alt }) => {
+  const [failed, setFailed] = useState(false);
+  const src = `/brands/${slug}.png`;
+
+  if (failed) {
+    return (
+      <span className="inline-flex items-center mx-8 md:mx-12 text-xl md:text-3xl font-semibold uppercase text-white/55 tracking-tight whitespace-nowrap">
+        {alt}
+      </span>
+    );
+  }
+
+  return (
+    <motion.span className="inline-flex items-center mx-8 md:mx-12" whileHover={{ scale: 1.06 }}>
+      <img
+        src={src}
+        alt={alt}
+        className="h-9 md:h-11 w-auto max-w-[min(140px,28vw)] min-h-[28px] object-contain object-center opacity-90 hover:opacity-100 transition-opacity duration-300 drop-shadow-[0_0_1px_rgba(255,255,255,0.15)]"
+        loading="lazy"
+        decoding="async"
+        onError={() => setFailed(true)}
+      />
+    </motion.span>
+  );
+};
+
 const BrandMarquee = () => {
+  const loop = [...BRAND_MARQUEE_ITEMS, ...BRAND_MARQUEE_ITEMS];
+
   return (
     <div
       id="brand-marquee"
-      className="relative py-8 bg-black border-y border-white/10 overflow-hidden whitespace-nowrap scroll-mt-24"
+      className="relative py-7 md:py-9 bg-black border-y border-white/10 overflow-hidden scroll-mt-24"
     >
       <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none" />
       <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none" />
-      <div className="flex animate-marquee">
-        {[...BRANDS, ...BRANDS].map((brand, i) => (
-          <motion.span
-            key={i}
-            className="mx-10 text-2xl md:text-4xl font-semibold uppercase text-white/60 hover:text-white transition-colors cursor-default"
-            whileHover={{ scale: 1.05 }}
-          >
-            {brand}
-          </motion.span>
+      <div className="flex animate-marquee items-center w-max">
+        {loop.map((item, i) => (
+          <BrandMarqueeLogo key={`${item.slug}-${i}`} slug={item.slug} alt={item.alt} />
         ))}
       </div>
     </div>
