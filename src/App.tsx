@@ -406,16 +406,14 @@ const Navbar = () => {
             <span className="text-lg md:text-xl font-light text-black/35 select-none leading-none" aria-hidden>
               |
             </span>
-            <span className="inline-flex items-center justify-center rounded-md bg-black px-1.5 py-1 md:px-2 md:py-1.5">
-              <img
-                src={LOGO_ANBA_SRC}
-                alt="Anba"
-                className="h-7 md:h-8 w-auto max-h-8 object-contain"
-                loading="eager"
-                decoding="async"
-                referrerPolicy="no-referrer"
-              />
-            </span>
+            <img
+              src={LOGO_ANBA_SRC}
+              alt="Anba"
+              className="h-7 md:h-8 w-auto max-h-8 object-contain object-left"
+              loading="eager"
+              decoding="async"
+              referrerPolicy="no-referrer"
+            />
           </motion.a>
 
           <div className="hidden md:flex flex-1 items-center justify-center absolute left-1/2 -translate-x-1/2 pointer-events-none [&>*]:pointer-events-auto">
@@ -795,7 +793,7 @@ const Footer = () => {
             <img
               src={LOGO_210_SRC}
               alt="210 Sports Wear"
-              className="h-12 md:h-16 w-auto max-h-16 object-contain object-center opacity-95"
+              className="h-12 md:h-16 w-auto max-h-16 object-contain object-center"
               loading="lazy"
               decoding="async"
               referrerPolicy="no-referrer"
@@ -804,16 +802,14 @@ const Footer = () => {
               className="shrink-0 w-px h-11 md:h-14 bg-white/35 rounded-full"
               aria-hidden
             />
-            <span className="inline-flex items-center justify-center rounded-md bg-white px-2.5 py-2 md:px-3 md:py-2.5">
-              <img
-                src={LOGO_ANBA_SRC}
-                alt="Anba"
-                className="h-10 md:h-12 w-auto max-h-12 object-contain"
-                loading="lazy"
-                decoding="async"
-                referrerPolicy="no-referrer"
-              />
-            </span>
+            <img
+              src={LOGO_ANBA_SRC}
+              alt="Anba"
+              className="h-10 md:h-12 w-auto max-h-12 object-contain object-center"
+              loading="lazy"
+              decoding="async"
+              referrerPolicy="no-referrer"
+            />
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-24">
