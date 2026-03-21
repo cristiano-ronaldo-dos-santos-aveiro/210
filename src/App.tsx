@@ -262,18 +262,21 @@ interface Look {
   items: LookItem[];
 }
 
-/** PNG logos: place files in /public/brands/{slug}.png (see public/brands/README.txt) */
+/**
+ * Carousel: high-res favicons from brand sites (always loads real images).
+ * Optional: add matching PNGs under /public/brands/{slug}.png and set localSlug — those override the URL.
+ */
 const BRAND_MARQUEE_ITEMS = [
-  { slug: 'fila', alt: 'FILA' },
-  { slug: 'adidas', alt: 'Adidas' },
-  { slug: 'wilson', alt: 'Wilson' },
-  { slug: 'puma', alt: 'Puma' },
-  { slug: 'on-cloud', alt: 'On Cloud' },
-  { slug: 'gucci', alt: 'Gucci' },
-  { slug: 'under-armour', alt: 'Under Armour' },
-  { slug: 'hermes', alt: 'Hermès' },
-  { slug: 'columbia', alt: 'Columbia' },
-  { slug: 'arcteryx', alt: "Arc'teryx" }
+  { domain: 'fila.com', alt: 'FILA', localSlug: 'fila' as const },
+  { domain: 'adidas.com', alt: 'Adidas', localSlug: 'adidas' as const },
+  { domain: 'wilson.com', alt: 'Wilson', localSlug: 'wilson' as const },
+  { domain: 'puma.com', alt: 'Puma', localSlug: 'puma' as const },
+  { domain: 'on-running.com', alt: 'On', localSlug: 'on-cloud' as const },
+  { domain: 'gucci.com', alt: 'Gucci', localSlug: 'gucci' as const },
+  { domain: 'underarmour.com', alt: 'Under Armour', localSlug: 'under-armour' as const },
+  { domain: 'hermes.com', alt: 'Hermès', localSlug: 'hermes' as const },
+  { domain: 'columbia.com', alt: 'Columbia', localSlug: 'columbia' as const },
+  { domain: 'arcteryx.com', alt: "Arc'teryx", localSlug: 'arcteryx' as const }
 ] as const;
 
 const LOOKS: Look[] = [
@@ -676,9 +679,12 @@ const Hero = () => {
   );
 };
 
-const BrandMarqueeLogo: React.FC<{ slug: string; alt: string }> = ({ slug, alt }) => {
+const BrandMarqueeLogo: React.FC<{ domain: string; alt: string; localSlug: string }> = ({ domain, alt, localSlug }) => {
   const [failed, setFailed] = useState(false);
-  const src = `/brands/${slug}.png`;
+  const remoteSrc = `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=128`;
+  const localSrc = `/brands/${localSlug}.png`;
+  /** Remote first so carousel shows pictures even without /public/brands/*.png */
+  const [src, setSrc] = useState(remoteSrc);
 
   if (failed) {
     return (
@@ -693,10 +699,17 @@ const BrandMarqueeLogo: React.FC<{ slug: string; alt: string }> = ({ slug, alt }
       <img
         src={src}
         alt={alt}
-        className="h-9 md:h-11 w-auto max-w-[min(140px,28vw)] min-h-[28px] object-contain object-center opacity-90 hover:opacity-100 transition-opacity duration-300 drop-shadow-[0_0_1px_rgba(255,255,255,0.15)]"
+        className="h-10 md:h-12 w-10 md:w-12 md:min-w-[48px] object-contain object-center rounded-sm opacity-95 hover:opacity-100 transition-opacity duration-300"
         loading="lazy"
         decoding="async"
-        onError={() => setFailed(true)}
+        referrerPolicy="no-referrer"
+        onError={() => {
+          if (src === remoteSrc) {
+            setSrc(localSrc);
+          } else {
+            setFailed(true);
+          }
+        }}
       />
     </motion.span>
   );
@@ -714,7 +727,12 @@ const BrandMarquee = () => {
       <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none" />
       <div className="flex animate-marquee items-center w-max">
         {loop.map((item, i) => (
-          <BrandMarqueeLogo key={`${item.slug}-${i}`} slug={item.slug} alt={item.alt} />
+          <BrandMarqueeLogo
+            key={`${item.domain}-${i}`}
+            domain={item.domain}
+            alt={item.alt}
+            localSlug={item.localSlug}
+          />
         ))}
       </div>
     </div>

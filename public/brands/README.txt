@@ -1,20 +1,11 @@
-Brand carousel PNG logos
-========================
-Add PNG files here using EXACT filenames (lowercase):
+Brand carousel images
+=====================
+The site loads brand marks from Google’s favicon service first (always works as small PNGs).
 
-  fila.png
-  adidas.png
-  wilson.png
-  puma.png
-  on-cloud.png
-  gucci.png
-  under-armour.png
-  hermes.png
-  columbia.png
-  arcteryx.png
+Optional: add your own sharper PNG logos here to use if the remote icon fails, or you can change App.tsx to prefer local files.
 
-Tips:
-- Transparent background works best.
-- On the black bar, use light/white or full-color PNGs so the mark stays visible.
+Filenames (same as before):
+  fila.png, adidas.png, wilson.png, puma.png, on-cloud.png,
+  gucci.png, under-armour.png, hermes.png, columbia.png, arcteryx.png
 
-If a file is missing, the site shows the brand name as text instead.
+Transparent PNG on dark background works best.
