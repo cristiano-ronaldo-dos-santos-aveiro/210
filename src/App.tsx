@@ -1,10 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { ShoppingBag, Search, User, Menu, X, ArrowRight, Instagram, Facebook, Twitter, Globe, Eye, MapPin } from 'lucide-react';
+import { ShoppingBag, Search, Menu, X, ArrowRight, Instagram, Phone, MapPin } from 'lucide-react';
 import { cn } from './lib/utils';
 
-const LOGO_210_SRC = new URL('../photo/photo_2026-03-19_10-13-51.jpg', import.meta.url).href;
-const LOGO_ANBA_SRC = new URL('../photo/anba-logo.png', import.meta.url).href;
+const LOGO_210_SRC = new URL('../photo/logo-210.png', import.meta.url).href;
+const LOGO_ANBA_SRC = new URL('../photo/logo-anba.png', import.meta.url).href;
+
+/** Replace with your real contacts */
+const CONTACT_PHONE = '+998 90 123 45 67';
+const CONTACT_TELEGRAM = 'https://t.me/shop210';
+
+const TelegramIcon = ({ className, size = 22 }: { className?: string; size?: number }) => (
+  <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+    <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.863-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.831-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
+  </svg>
+);
 
 // Scroll-based navbar background
 const useScrollTop = () => {
@@ -41,23 +51,6 @@ interface Translations {
     buyFullLook: string;
     addSeparately: string;
     itemsInLook: string;
-  };
-  products: {
-    badge: string;
-    add: string;
-    quickView: string;
-    sale: string;
-    curated: string;
-    featured: string;
-    individualPieces: string;
-    all: string;
-    viewAll: string;
-  };
-  trust: {
-    title: string;
-    authentic: string;
-    globalSourcing: string;
-    handpicked: string;
   };
   newLooksDrop: {
     label: string;
@@ -126,23 +119,6 @@ const TRANSLATIONS: Record<Language, Translations> = {
       addSeparately: "Alohida qo'shish",
       itemsInLook: "Obrazga kiradi"
     },
-    products: {
-      badge: "Original",
-      add: "Savatga qo'shish",
-      quickView: "Tezkor ko'rinish",
-      sale: "Chegirma",
-      curated: "Tanlangan to'plam",
-      featured: "Saralangan mahsulotlar",
-      individualPieces: "Alohida buyumlar",
-      all: "Hammasi",
-      viewAll: "Barcha mahsulotlarni ko'rish"
-    },
-    trust: {
-      title: "Nima uchun ishonamiz",
-      authentic: "100% original",
-      globalSourcing: "10 Yildan buyon faoliyat yuritamiz",
-      handpicked: "Dunyo bilan ham nafas"
-    },
     newLooksDrop: {
       label: "Cheklangan drop",
       title: "Yangi ko'rinishlar",
@@ -205,23 +181,6 @@ const TRANSLATIONS: Record<Language, Translations> = {
       buyFullLook: "Купить весь образ",
       addSeparately: "Добавить отдельно",
       itemsInLook: "В образ входит"
-    },
-    products: {
-      badge: "Оригинал",
-      add: "В корзину",
-      quickView: "Быстрый просмотр",
-      sale: "Скидка",
-      curated: "Кураторская коллекция",
-      featured: "Избранные товары",
-      individualPieces: "Отдельные вещи",
-      all: "Все",
-      viewAll: "Посмотреть все товары"
-    },
-    trust: {
-      title: "Почему нам доверяют",
-      authentic: "100% оригинал",
-      globalSourcing: "Поставки из разных стран",
-      handpicked: "Ручной подбор образов"
     },
     newLooksDrop: {
       label: "Ограниченный дроп",
@@ -286,23 +245,6 @@ const TRANSLATIONS: Record<Language, Translations> = {
       addSeparately: "Add separately",
       itemsInLook: "This look includes"
     },
-    products: {
-      badge: "Original",
-      add: "Add to cart",
-      quickView: "Quick view",
-      sale: "Sale",
-      curated: "Curated collection",
-      featured: "Featured",
-      individualPieces: "Individual pieces",
-      all: "All",
-      viewAll: "View all products"
-    },
-    trust: {
-      title: "Why trust us",
-      authentic: "100% authentic",
-      globalSourcing: "Global sourcing",
-      handpicked: "Handpicked combinations"
-    },
     newLooksDrop: {
       label: "Limited drop",
       title: "New looks",
@@ -353,16 +295,6 @@ const TRANSLATIONS: Record<Language, Translations> = {
   }
 };
 
-interface Product {
-  id: number;
-  name: Record<Language, string>;
-  brand: string;
-  price: string;
-  salePrice?: string;
-  category: 'Sport' | 'Semi-Classic';
-  image: string;
-}
-
 type LookItemType = 'jacket' | 'pants' | 'shoes' | 'accessories' | 'top';
 
 interface LookItem {
@@ -380,59 +312,6 @@ interface Look {
   totalPrice: string;
   items: LookItem[];
 }
-
-// --- Mock Data ---
-const PRODUCTS: Product[] = [
-  {
-    id: 1,
-    name: { ru: "Худи Tech Fleece", uz: "Tech Fleece Hudisi", en: "Tech Fleece Hoodie" },
-    brand: "Nike",
-    price: "1 200 000 UZS",
-    salePrice: "999 000 UZS",
-    category: 'Sport',
-    image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&q=80&w=800"
-  },
-  {
-    id: 2,
-    name: { ru: "Рубашка Oxford", uz: "Oxford Ko'ylagi", en: "Oxford Shirt" },
-    brand: "Ralph Lauren",
-    price: "950 000 UZS",
-    category: 'Semi-Classic',
-    image: "https://images.unsplash.com/photo-1596755094514-f87034a264c6?auto=format&fit=crop&q=80&w=800"
-  },
-  {
-    id: 3,
-    name: { ru: "Спортивные брюки", uz: "Sport Shimlari", en: "Sport Pants" },
-    brand: "Adidas",
-    price: "850 000 UZS",
-    category: 'Sport',
-    image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=800"
-  },
-  {
-    id: 4,
-    name: { ru: "Брюки Чинос", uz: "Chinos Shimlari", en: "Chinos" },
-    brand: "Tommy Hilfiger",
-    price: "1 100 000 UZS",
-    category: 'Semi-Classic',
-    image: "https://images.unsplash.com/photo-1473966968600-fa804b8693ba?auto=format&fit=crop&q=80&w=800"
-  },
-  {
-    id: 5,
-    name: { ru: "Кроссовки Air Max 270", uz: "Air Max 270 Krossovkalari", en: "Air Max 270" },
-    brand: "Nike",
-    price: "1 500 000 UZS",
-    category: 'Sport',
-    image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=800"
-  },
-  {
-    id: 6,
-    name: { ru: "Свитер из шерсти мериноса", uz: "Merinos Junli Sviteri", en: "Merino Sweater" },
-    brand: "Lacoste",
-    price: "1 400 000 UZS",
-    category: 'Semi-Classic',
-    image: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&q=80&w=800"
-  }
-];
 
 const BRANDS = ["FILA", "ADIDAS", "WILSON", "PUMA", "ON CLOUD", "GUCCI", "UNDER ARMOUR", "HERMES", "COLUMBIA", "ARCTERYX"];
 
@@ -495,81 +374,146 @@ const Navbar = () => {
   const scrollTop = useScrollTop();
   const { lang, setLang } = React.useContext(LangContext);
   const t = TRANSLATIONS[lang].nav;
-  const isScrolled = scrollTop > 24;
+  const isScrolled = scrollTop > 16;
 
   return (
     <motion.nav
       initial={false}
       animate={{
-        backgroundColor: isScrolled ? 'rgba(255,255,255,0.98)' : 'rgba(255,255,255,0.8)',
-        boxShadow: isScrolled ? '0 1px 0 0 rgba(0,0,0,0.06)' : 'none'
+        backgroundColor: isScrolled ? 'rgba(255,255,255,0.92)' : 'rgba(255,255,255,0.72)',
+        boxShadow: isScrolled ? '0 1px 0 0 rgba(0,0,0,0.08)' : '0 0 0 0 rgba(0,0,0,0)',
       }}
-      transition={{ duration: 0.2 }}
-      className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b border-black/5"
+      transition={{ duration: 0.25 }}
+      className="fixed top-0 left-0 right-0 z-50 border-b border-black/[0.06] backdrop-blur-xl"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
+        <div className="flex items-center justify-between h-[4.25rem] md:h-[4.5rem] gap-4">
           <motion.a
             href="#"
-            className="flex-shrink-0 flex items-center"
-            whileHover={{ scale: 1.02 }}
+            className="flex-shrink-0 flex items-center gap-2 md:gap-3 z-10"
+            whileHover={{ opacity: 0.9 }}
             whileTap={{ scale: 0.98 }}
-            aria-label="210"
+            aria-label="210 × Anba"
           >
             <img
               src={LOGO_210_SRC}
               alt="210"
-              className="h-10 md:h-11 w-auto object-contain"
+              className="h-8 md:h-9 w-auto max-h-9 object-contain object-left"
               loading="eager"
               decoding="async"
               referrerPolicy="no-referrer"
             />
+            <span className="text-lg md:text-xl font-light text-black/35 select-none leading-none" aria-hidden>
+              |
+            </span>
+            <span className="inline-flex items-center justify-center rounded-md bg-black px-1.5 py-1 md:px-2 md:py-1.5">
+              <img
+                src={LOGO_ANBA_SRC}
+                alt="Anba"
+                className="h-7 md:h-8 w-auto max-h-8 object-contain"
+                loading="eager"
+                decoding="async"
+                referrerPolicy="no-referrer"
+              />
+            </span>
           </motion.a>
 
-          <div className="hidden md:flex items-center space-x-8">
-            <motion.a href="#shop-looks" className="text-sm font-bold uppercase tracking-wider text-black border-b-2 border-black pb-0.5" whileHover={{ y: -2 }} transition={{ type: 'spring', stiffness: 400, damping: 25 }}>{t.shopLooks}</motion.a>
-            {([t.new, t.sport, t.classic, t.brands] as const).map((label) => (
-              <motion.a key={label} href="#" className="relative text-sm font-semibold uppercase tracking-wider text-black/60 hover:text-black transition-colors py-0.5 group/link" whileHover={{ y: -1 }}>
-                {label}
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-black group-hover/link:w-full transition-all duration-300" />
-              </motion.a>
-            ))}
+          <div className="hidden md:flex flex-1 items-center justify-center absolute left-1/2 -translate-x-1/2 pointer-events-none [&>*]:pointer-events-auto">
+            <motion.a
+              href="#shop-looks"
+              className="relative text-[13px] font-semibold uppercase tracking-[0.12em] text-black py-1 group/link"
+              whileHover={{ y: -1 }}
+            >
+              {t.shopLooks}
+              <span className="absolute -bottom-0.5 left-0 w-full h-px bg-black" />
+            </motion.a>
           </div>
 
-          <div className="hidden md:flex items-center space-x-6">
-            <div className="flex items-center gap-0.5 text-[11px] font-medium text-black/70">
+          <div className="hidden md:flex items-center gap-2 z-10">
+            <div className="flex items-center rounded-full bg-neutral-100/90 p-0.5 border border-black/[0.06]">
               {(['uz', 'ru', 'en'] as const).map((l) => (
-                <button key={l} onClick={() => setLang(l)} className={cn("px-2.5 py-1 uppercase transition-colors hover:text-black", lang === l && "text-black font-semibold")}>{l}</button>
+                <button
+                  key={l}
+                  type="button"
+                  onClick={() => setLang(l)}
+                  className={cn(
+                    'px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider rounded-full transition-all duration-200',
+                    lang === l ? 'bg-black text-white shadow-sm' : 'text-black/50 hover:text-black'
+                  )}
+                >
+                  {l}
+                </button>
               ))}
             </div>
-            <motion.button className="p-2 hover:bg-black/5 rounded-full transition-colors" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}><Search size={20} /></motion.button>
-            <motion.button className="p-2 hover:bg-black/5 rounded-full transition-colors" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}><User size={20} /></motion.button>
-            <motion.button className="p-2 hover:bg-black/5 rounded-full transition-colors relative" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <ShoppingBag size={20} />
-              <span className="absolute top-0 right-0 bg-black text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">0</span>
+            <motion.button
+              type="button"
+              className="p-2.5 rounded-full text-black/70 hover:text-black hover:bg-black/[0.05] transition-colors"
+              whileTap={{ scale: 0.94 }}
+              aria-label="Search"
+            >
+              <Search size={20} strokeWidth={1.75} />
+            </motion.button>
+            <motion.button
+              type="button"
+              className="relative p-2.5 rounded-full text-black/70 hover:text-black hover:bg-black/[0.05] transition-colors"
+              whileTap={{ scale: 0.94 }}
+              aria-label="Cart"
+            >
+              <ShoppingBag size={20} strokeWidth={1.75} />
+              <span className="absolute top-1.5 right-1.5 min-w-[14px] h-[14px] px-0.5 flex items-center justify-center bg-black text-white text-[9px] font-bold rounded-full leading-none">
+                0
+              </span>
             </motion.button>
           </div>
 
-          <div className="md:hidden flex items-center space-x-4">
-            <div className="flex gap-0.5 text-[10px] font-medium">
+          <div className="md:hidden flex items-center gap-2">
+            <div className="flex rounded-full bg-neutral-100 p-0.5 border border-black/[0.06]">
               {(['uz', 'ru', 'en'] as const).map((l) => (
-                <button key={l} onClick={() => setLang(l)} className={cn("px-2 py-1 uppercase", lang === l && "font-bold text-black")}>{l}</button>
+                <button
+                  key={l}
+                  type="button"
+                  onClick={() => setLang(l)}
+                  className={cn(
+                    'px-2 py-1 text-[9px] font-semibold uppercase rounded-full',
+                    lang === l ? 'bg-black text-white' : 'text-black/50'
+                  )}
+                >
+                  {l}
+                </button>
               ))}
             </div>
-            <motion.button onClick={() => setIsOpen(!isOpen)} className="p-2" whileTap={{ scale: 0.9 }}>{isOpen ? <X size={24} /> : <Menu size={24} />}</motion.button>
+            <motion.button
+              type="button"
+              onClick={() => setIsOpen(!isOpen)}
+              className="p-2 rounded-full hover:bg-black/[0.05]"
+              whileTap={{ scale: 0.92 }}
+              aria-expanded={isOpen}
+              aria-label="Menu"
+            >
+              {isOpen ? <X size={22} strokeWidth={1.75} /> : <Menu size={22} strokeWidth={1.75} />}
+            </motion.button>
           </div>
         </div>
       </div>
 
       {isOpen && (
-        <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="md:hidden bg-white border-b border-black/5 px-4 pt-2 pb-6 space-y-4 overflow-hidden">
-          <a href="#shop-looks" className="block text-lg font-bold uppercase tracking-tight py-2 border-b border-black/10">{t.shopLooks}</a>
-          <a href="#" className="block text-lg font-bold uppercase tracking-tight py-2">{t.new}</a>
-          <a href="#" className="block text-lg font-bold uppercase tracking-tight py-2">{t.sport}</a>
-          <a href="#" className="block text-lg font-bold uppercase tracking-tight py-2">{t.classic}</a>
-          <a href="#" className="block text-lg font-bold uppercase tracking-tight py-2">{t.brands}</a>
-          <div className="flex space-x-6 pt-4 border-t border-black/5">
-            <Search size={20} /><User size={20} /><ShoppingBag size={20} />
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          exit={{ opacity: 0, height: 0 }}
+          className="md:hidden bg-white/98 backdrop-blur-xl border-t border-black/5 px-4 pt-4 pb-8 space-y-1 overflow-hidden"
+        >
+          <a href="#shop-looks" onClick={() => setIsOpen(false)} className="block text-[15px] font-semibold uppercase tracking-wide py-3 border-b border-black/5 text-black">
+            {t.shopLooks}
+          </a>
+          <div className="flex items-center gap-4 pt-6">
+            <button type="button" className="p-2 rounded-full border border-black/10 text-black/70" aria-label="Search">
+              <Search size={20} strokeWidth={1.75} />
+            </button>
+            <button type="button" className="relative p-2 rounded-full border border-black/10 text-black/70" aria-label="Cart">
+              <ShoppingBag size={20} strokeWidth={1.75} />
+              <span className="absolute top-1 right-1 min-w-[14px] h-[14px] flex items-center justify-center bg-black text-white text-[9px] font-bold rounded-full">0</span>
+            </button>
           </div>
         </motion.div>
       )}
@@ -579,50 +523,14 @@ const Navbar = () => {
 
 const Hero = () => {
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center bg-white overflow-hidden">
+    <section className="relative min-h-screen flex flex-col items-center justify-center bg-white overflow-hidden pt-[4.5rem] md:pt-[5rem]">
       <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,rgba(0,0,0,0.02)_50%,transparent_100%)] pointer-events-none" />
       <div className="flex flex-col items-center justify-center px-4 text-center">
-        <div className="flex items-center justify-center gap-8 md:gap-10 mb-14">
-          <motion.div
-            initial={{ opacity: 0, y: 40, filter: 'blur(8px)' }}
-            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-            transition={{ duration: 0.8, ease: [0.22, 0.61, 0.36, 1] }}
-          >
-            <img
-              src={LOGO_210_SRC}
-              alt="210"
-              className="h-40 md:h-52 lg:h-60 w-auto object-contain"
-              onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-            />
-          </motion.div>
-          <motion.span
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.25, duration: 0.5, ease: [0.22, 0.61, 0.36, 1] }}
-            className="text-4xl md:text-6xl font-light text-black/40 select-none"
-          >
-            |
-          </motion.span>
-          <motion.div
-            initial={{ opacity: 0, y: 40, filter: 'blur(8px)' }}
-            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-            transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 0.61, 0.36, 1] }}
-          >
-            <img
-              src={LOGO_ANBA_SRC}
-              alt="Anba"
-              className="h-40 md:h-52 lg:h-60 w-auto object-contain"
-              loading="eager"
-              decoding="async"
-              referrerPolicy="no-referrer"
-            />
-          </motion.div>
-        </div>
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 0.6, ease: [0.22, 0.61, 0.36, 1] }}
-          className="text-2xl md:text-3xl lg:text-4xl font-normal tracking-wide text-black/90 hero-tagline animate-float"
+          initial={{ opacity: 0, y: 28, filter: 'blur(6px)' }}
+          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+          transition={{ duration: 0.85, ease: [0.22, 0.61, 0.36, 1] }}
+          className="text-2xl md:text-3xl lg:text-4xl font-normal tracking-wide text-black/90 hero-tagline animate-float max-w-2xl"
         >
           Biz oddiylidan yiroqmiz
         </motion.p>
@@ -657,13 +565,13 @@ const LookCard: React.FC<{ look: Look; onSelect: () => void }> = ({ look, onSele
 
   return (
     <motion.article
-      whileHover={{ y: -12 }}
+      whileHover={{ y: -6 }}
       className="group cursor-pointer"
       onClick={onSelect}
     >
       <motion.div
-        className="relative aspect-[3/4] overflow-hidden bg-neutral-200 mb-4 rounded-sm border border-black/5"
-        whileHover={{ borderColor: 'rgba(0,0,0,0.15)', boxShadow: '0 20px 40px -12px rgba(0,0,0,0.15)' }}
+        className="relative w-full max-w-[240px] sm:max-w-none mx-auto sm:mx-0 aspect-[3/4] max-h-[300px] sm:max-h-[340px] overflow-hidden bg-neutral-200 mb-3 rounded-xl border border-black/5"
+        whileHover={{ borderColor: 'rgba(0,0,0,0.15)', boxShadow: '0 16px 32px -12px rgba(0,0,0,0.12)' }}
         transition={{ duration: 0.35 }}
       >
         <motion.img
@@ -688,8 +596,8 @@ const LookCard: React.FC<{ look: Look; onSelect: () => void }> = ({ look, onSele
           </motion.span>
         </div>
       </motion.div>
-      <h3 className="text-xl font-bold tracking-tight text-black">{look.name[lang]}</h3>
-      <p className="text-sm text-black/50 mt-1">{look.totalPrice}</p>
+      <h3 className="text-base md:text-lg font-bold tracking-tight text-black">{look.name[lang]}</h3>
+      <p className="text-xs md:text-sm text-black/50 mt-1">{look.totalPrice}</p>
     </motion.article>
   );
 };
@@ -779,60 +687,6 @@ const LookPage: React.FC<{ look: Look; onClose: () => void }> = ({ look, onClose
   );
 };
 
-const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
-  const { lang } = React.useContext(LangContext);
-  const t = TRANSLATIONS[lang].products;
-  const hasSale = !!product.salePrice;
-
-  return (
-    <motion.div
-      whileHover={{ y: -8 }}
-      className="group cursor-pointer"
-    >
-      <div className="relative aspect-[3/4] overflow-hidden bg-neutral-200 mb-4 rounded-sm border border-black/5 group-hover:border-black/10 group-hover:shadow-lg transition-all duration-300">
-        <motion.img
-          src={product.image}
-          alt={product.name[lang]}
-          loading="lazy"
-          decoding="async"
-          className="w-full h-full object-cover"
-          referrerPolicy="no-referrer"
-          whileHover={{ scale: 1.06 }}
-          transition={{ duration: 0.5, ease: [0.22, 0.61, 0.36, 1] }}
-        />
-        <div className="absolute top-4 left-4 flex flex-col gap-2">
-          <span className="bg-black text-white text-[10px] font-bold uppercase px-2 py-1 tracking-wider w-fit">
-            {t.badge}
-          </span>
-          {hasSale && (
-            <span className="bg-neutral-600 text-white text-[10px] font-bold uppercase px-2 py-1 tracking-wider w-fit">
-              {t.sale}
-            </span>
-          )}
-        </div>
-        <div className="absolute bottom-0 left-0 right-0 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-          <motion.button className="w-full bg-white/95 text-black py-3 font-bold uppercase text-xs tracking-widest flex items-center justify-center gap-2" whileHover={{ backgroundColor: 'rgba(255,255,255,1)' }} whileTap={{ scale: 0.98 }}>
-            <Eye size={14} /> {t.quickView}
-          </motion.button>
-          <motion.button className="w-full bg-black text-white py-4 font-bold uppercase text-sm" whileHover={{ backgroundColor: 'rgba(0,0,0,0.85)' }} whileTap={{ scale: 0.98 }}>
-            {t.add}
-          </motion.button>
-        </div>
-      </div>
-      <div className="flex justify-between items-start gap-2">
-        <div className="min-w-0">
-          <p className="text-[10px] font-bold text-black/50 uppercase tracking-widest mb-1">{product.brand}</p>
-          <h3 className="text-lg font-bold leading-tight truncate">{product.name[lang]}</h3>
-        </div>
-        <div className="flex flex-col items-end flex-shrink-0">
-          {hasSale && <span className="text-xs text-black/40 line-through">{product.price}</span>}
-          <span className="font-bold">{product.salePrice ?? product.price}</span>
-        </div>
-      </div>
-    </motion.div>
-  );
-};
-
 const SectionReveal: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className = '' }) => (
   <motion.div
     initial={{ opacity: 0, y: 48 }}
@@ -845,70 +699,43 @@ const SectionReveal: React.FC<{ children: React.ReactNode; className?: string }>
   </motion.div>
 );
 
-const TrustSection = () => {
-  const { lang } = React.useContext(LangContext);
-  const t = TRANSLATIONS[lang].trust;
-
-  const items = [
-    { label: t.authentic, key: 'authentic' },
-    { label: t.globalSourcing, key: 'sourcing' },
-    { label: t.handpicked, key: 'handpicked' }
-  ];
-
-  return (
-    <section className="py-24 bg-neutral-100 border-y border-black/5">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <SectionReveal>
-          <p className="text-xs font-bold uppercase tracking-[0.3em] text-black/50 mb-6">{t.title}</p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
-            {items.map((item, i) => (
-              <motion.div
-                key={item.key}
-                initial={{ opacity: 0, y: 24, scale: 0.98 }}
-                whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ type: 'spring', stiffness: 90, damping: 22, delay: i * 0.1 }}
-                className="text-center md:text-left"
-                whileHover={{ y: -2 }}
-              >
-                <span className="text-2xl md:text-3xl font-black uppercase tracking-tight text-black">{item.label}</span>
-              </motion.div>
-            ))}
-          </div>
-        </SectionReveal>
-      </div>
-    </section>
-  );
-};
-
 const NewLooksDropSection = () => {
   const { lang } = React.useContext(LangContext);
   const t = TRANSLATIONS[lang].newLooksDrop;
   const featuredLook = LOOKS[0];
 
   return (
-    <section className="py-24 bg-white border-y border-black/5">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-10 md:py-14 bg-neutral-50 border-y border-black/[0.06]">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionReveal>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="relative aspect-[4/5] overflow-hidden bg-neutral-100">
-              <motion.img
-                src={featuredLook.image}
-                alt={featuredLook.name[lang]}
-                loading="lazy"
-                className="w-full h-full object-cover"
-                referrerPolicy="no-referrer"
-                whileHover={{ scale: 1.03 }}
-                transition={{ duration: 0.6 }}
-              />
-              <span className="absolute top-6 left-6 bg-black text-white text-[10px] font-bold uppercase px-3 py-1.5 tracking-widest">{t.label}</span>
+          <div className="flex flex-col md:flex-row md:items-center gap-8 md:gap-10">
+            <div className="flex justify-center md:justify-start shrink-0">
+              <div className="relative w-[min(100%,200px)] aspect-[9/16] max-h-[280px] rounded-[1.35rem] overflow-hidden bg-neutral-200 border border-black/10 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.18)] ring-1 ring-black/[0.04]">
+                <motion.img
+                  src={featuredLook.image}
+                  alt={featuredLook.name[lang]}
+                  loading="lazy"
+                  className="w-full h-full object-cover"
+                  referrerPolicy="no-referrer"
+                  whileHover={{ scale: 1.04 }}
+                  transition={{ duration: 0.45 }}
+                />
+                <span className="absolute top-3 left-3 bg-black text-white text-[9px] font-bold uppercase px-2 py-1 tracking-widest rounded-sm">
+                  {t.label}
+                </span>
+              </div>
             </div>
-            <div>
-              <p className="text-xs font-bold uppercase tracking-[0.3em] text-black/50 mb-4">{t.label}</p>
-              <h2 className="text-5xl md:text-6xl font-black uppercase mb-6 leading-[0.95]">{t.title}</h2>
-              <p className="text-lg text-black/70 mb-8 max-w-md">{t.desc}</p>
-              <motion.a href="#shop-looks" className="inline-flex items-center gap-2 bg-black text-white px-10 py-4 font-bold uppercase tracking-widest" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                {t.cta} <ArrowRight size={18} />
+            <div className="flex-1 text-center md:text-left min-w-0">
+              <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-black/45 mb-2">{t.label}</p>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-black uppercase mb-3 leading-tight tracking-tight">{t.title}</h2>
+              <p className="text-sm md:text-base text-black/60 mb-6 max-w-md mx-auto md:mx-0 leading-relaxed">{t.desc}</p>
+              <motion.a
+                href="#shop-looks"
+                className="inline-flex items-center gap-2 bg-black text-white px-6 py-3 text-xs font-bold uppercase tracking-widest rounded-full"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                {t.cta} <ArrowRight size={16} />
               </motion.a>
             </div>
           </div>
@@ -923,11 +750,11 @@ const ShowroomSection = () => {
   const t = TRANSLATIONS[lang].showroom;
 
   return (
-    <section className="py-24 bg-white border-t border-black/5">
+    <section className="py-14 md:py-16 bg-white border-t border-black/5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionReveal>
-          <p className="text-xs font-bold uppercase tracking-[0.3em] text-black/50 mb-4">{t.title}</p>
-          <h2 className="text-3xl md:text-4xl font-black uppercase mb-8 flex items-center gap-3 text-black">
+          <p className="text-xs font-bold uppercase tracking-[0.3em] text-black/50 mb-3">{t.title}</p>
+          <h2 className="text-2xl md:text-3xl font-black uppercase mb-6 flex items-center gap-3 text-black">
             <MapPin size={24} className="text-black/70" />
             {t.address}
           </h2>
@@ -950,86 +777,6 @@ const ShowroomSection = () => {
   );
 };
 
-const AboutSection = () => {
-  const { lang } = React.useContext(LangContext);
-  const t = TRANSLATIONS[lang].about;
-
-  return (
-    <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <SectionReveal className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-[0.3em] text-black/50 mb-4">{t.label}</p>
-          <h2 className="text-4xl md:text-5xl font-black uppercase mb-6 leading-tight">{t.title}</h2>
-          <p className="text-lg text-black/70 leading-relaxed">{t.body}</p>
-        </div>
-        <div className="relative aspect-[4/3] overflow-hidden bg-neutral-100">
-          <img
-            src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=800"
-            alt="Store"
-            loading="lazy"
-            className="w-full h-full object-cover"
-            referrerPolicy="no-referrer"
-          />
-        </div>
-      </SectionReveal>
-    </section>
-  );
-};
-
-const CategorySection = () => {
-  const { lang } = React.useContext(LangContext);
-  const t = TRANSLATIONS[lang].categories;
-
-  return (
-    <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <SectionReveal>
-          <motion.div className="relative h-[600px] overflow-hidden group rounded-sm" whileHover="hover" initial="rest">
-            <motion.img
-              src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=1000"
-              alt="Sport"
-              loading="lazy"
-              className="w-full h-full object-cover"
-              referrerPolicy="no-referrer"
-              variants={{ rest: { scale: 1 }, hover: { scale: 1.05 } }}
-              transition={{ duration: 0.6 }}
-            />
-            <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
-            <div className="absolute inset-0 flex flex-col justify-end p-12 text-white">
-              <h2 className="text-5xl font-black uppercase mb-4">{t.sportTitle}</h2>
-              <p className="text-lg text-white/80 mb-6 max-w-sm">{t.sportDesc}</p>
-              <motion.button className="w-fit border-b-2 border-white pb-1 font-bold uppercase tracking-widest hover:text-white/70 hover:border-white/70 transition-colors" whileHover={{ x: 4 }} whileTap={{ scale: 0.98 }}>
-                {t.sportBtn}
-              </motion.button>
-            </div>
-          </motion.div>
-        </SectionReveal>
-        <SectionReveal>
-          <motion.div className="relative h-[600px] overflow-hidden group rounded-sm" whileHover="hover" initial="rest">
-            <motion.img
-              src="https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?auto=format&fit=crop&q=80&w=1000"
-              alt="Semi-Classic"
-              loading="lazy"
-              className="w-full h-full object-cover"
-              referrerPolicy="no-referrer"
-              variants={{ rest: { scale: 1 }, hover: { scale: 1.05 } }}
-              transition={{ duration: 0.6 }}
-            />
-            <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
-            <div className="absolute inset-0 flex flex-col justify-end p-12 text-white">
-              <h2 className="text-5xl font-black uppercase mb-4">{t.classicTitle}</h2>
-              <p className="text-lg text-white/80 mb-6 max-w-sm">{t.classicDesc}</p>
-              <motion.button className="w-fit border-b-2 border-white pb-1 font-bold uppercase tracking-widest hover:text-white/70 hover:border-white/70 transition-colors" whileHover={{ x: 4 }} whileTap={{ scale: 0.98 }}>
-                {t.classicBtn}
-              </motion.button>
-            </div>
-          </motion.div>
-        </SectionReveal>
-      </div>
-    </section>
-  );
-};
-
 const Footer = () => {
   const { lang } = React.useContext(LangContext);
   const t = TRANSLATIONS[lang].footer;
@@ -1043,29 +790,54 @@ const Footer = () => {
       className="bg-black text-white pt-24 pb-12"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-center mb-16 md:mb-20">
+          <div className="flex items-center gap-5 md:gap-8" aria-label="210 × Anba">
+            <img
+              src={LOGO_210_SRC}
+              alt="210 Sports Wear"
+              className="h-12 md:h-16 w-auto max-h-16 object-contain object-center opacity-95"
+              loading="lazy"
+              decoding="async"
+              referrerPolicy="no-referrer"
+            />
+            <span
+              className="shrink-0 w-px h-11 md:h-14 bg-white/35 rounded-full"
+              aria-hidden
+            />
+            <span className="inline-flex items-center justify-center rounded-md bg-white px-2.5 py-2 md:px-3 md:py-2.5">
+              <img
+                src={LOGO_ANBA_SRC}
+                alt="Anba"
+                className="h-10 md:h-12 w-auto max-h-12 object-contain"
+                loading="lazy"
+                decoding="async"
+                referrerPolicy="no-referrer"
+              />
+            </span>
+          </div>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-24">
           <div className="col-span-1 md:col-span-2">
-            <div className="flex flex-col items-start mb-8">
-              <span className="text-6xl font-black tracking-tighter leading-none">210</span>
-              <span className="text-xs font-bold tracking-[0.3em] uppercase -mt-1 text-white/60">Sports Wear</span>
-            </div>
             <p className="text-white/60 max-w-sm mb-8">
               {t.desc}
             </p>
-            <div className="flex space-x-6">
-              <motion.a href="#" aria-label="Instagram" whileHover={{ scale: 1.1, opacity: 0.8 }}><Instagram className="cursor-pointer" /></motion.a>
-              <motion.a href="#" aria-label="Facebook" whileHover={{ scale: 1.1, opacity: 0.8 }}><Facebook className="cursor-pointer" /></motion.a>
-              <motion.a href="#" aria-label="Twitter" whileHover={{ scale: 1.1, opacity: 0.8 }}><Twitter className="cursor-pointer" /></motion.a>
+            <div className="flex flex-wrap items-center gap-5">
+              <motion.a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-white/70 hover:text-white transition-colors" whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.96 }}>
+                <Instagram size={22} strokeWidth={1.5} />
+              </motion.a>
+              <motion.a href={CONTACT_TELEGRAM} target="_blank" rel="noopener noreferrer" aria-label="Telegram" className="text-white/70 hover:text-white transition-colors" whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.96 }}>
+                <TelegramIcon size={22} />
+              </motion.a>
+              <motion.a href={`tel:${CONTACT_PHONE.replace(/\s/g, '')}`} aria-label="Phone" className="text-white/70 hover:text-white transition-colors flex items-center gap-2 text-sm font-medium tracking-wide" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                <Phone size={22} strokeWidth={1.5} />
+                <span className="hidden sm:inline">{CONTACT_PHONE}</span>
+              </motion.a>
             </div>
           </div>
           <div>
             <h4 className="text-lg font-bold uppercase mb-6">{t.shop}</h4>
             <ul className="space-y-4 text-white/60">
               <li><a href="#shop-looks" className="hover:text-white transition-colors">{TRANSLATIONS[lang].nav.shopLooks}</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">{TRANSLATIONS[lang].nav.new}</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">{TRANSLATIONS[lang].nav.sport}</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">{TRANSLATIONS[lang].nav.classic}</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">{TRANSLATIONS[lang].nav.brands}</a></li>
             </ul>
           </div>
           <div>
@@ -1107,15 +879,15 @@ export default function App() {
           <Hero />
           <BrandMarquee />
 
-          <section id="shop-looks" className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-24">
+          <section id="shop-looks" className="py-16 md:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-24">
             <SectionReveal>
-              <div className="mb-16">
+              <div className="mb-10 md:mb-12">
                 <span className="text-xs font-bold uppercase tracking-[0.3em] text-black/50 mb-2 block">{t.looks.shopLooks}</span>
-                <h2 className="text-5xl md:text-6xl font-black uppercase">{t.looks.shopLooks}</h2>
+                <h2 className="text-4xl md:text-5xl font-black uppercase">{t.looks.shopLooks}</h2>
               </div>
             </SectionReveal>
             <motion.div
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10"
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: '-60px' }}
@@ -1129,42 +901,7 @@ export default function App() {
             </motion.div>
           </section>
 
-          <TrustSection />
           <NewLooksDropSection />
-          <AboutSection />
-          <CategorySection />
-
-          <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-black/5">
-            <SectionReveal>
-              <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-6">
-                <div>
-                  <span className="text-xs font-bold uppercase tracking-[0.3em] text-black/40 mb-2 block">{t.products.curated}</span>
-                  <h2 className="text-3xl md:text-4xl font-black uppercase text-black/90">{t.products.individualPieces}</h2>
-                </div>
-                <div className="flex gap-4">
-                  <motion.button className="px-5 py-2 border border-black/20 font-bold uppercase text-xs tracking-widest hover:bg-black hover:text-white transition-colors" whileTap={{ scale: 0.98 }}>{t.products.all}</motion.button>
-                </div>
-              </div>
-            </SectionReveal>
-            <motion.div
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: '-40px' }}
-              variants={{ visible: { transition: { staggerChildren: 0.06 } } }}
-            >
-              {PRODUCTS.map((product) => (
-                <motion.div key={product.id} variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 80, damping: 22 } } }}>
-                  <ProductCard product={product} />
-                </motion.div>
-              ))}
-            </motion.div>
-            <div className="mt-12 flex justify-center">
-              <motion.button className="text-sm font-bold uppercase tracking-widest text-black/60 hover:text-black transition-colors" whileTap={{ scale: 0.98 }}>
-                {t.products.viewAll}
-              </motion.button>
-            </div>
-          </section>
 
           <ShowroomSection />
 
