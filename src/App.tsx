@@ -43,7 +43,8 @@ interface Translations {
     sport: string;
     classic: string;
     brands: string;
-    showroom: string;
+    philosophy: string;
+    branches: string;
   };
   hero: {
     headline: string;
@@ -68,17 +69,17 @@ interface Translations {
     desc: string;
     cta: string;
   };
-  showroom: {
-    title: string;
-    address: string;
-    cta: string;
-  };
   newCollection: {
     label: string;
     title: string;
     cta: string;
   };
-  about: {
+  philosophy: {
+    label: string;
+    title: string;
+    body: string;
+  };
+  branches: {
     label: string;
     title: string;
     body: string;
@@ -90,12 +91,6 @@ interface Translations {
     classicTitle: string;
     classicDesc: string;
     classicBtn: string;
-  };
-  newsletter: {
-    title: string;
-    desc: string;
-    placeholder: string;
-    btn: string;
   };
   footer: {
     opened: string;
@@ -112,7 +107,8 @@ const TRANSLATIONS: Record<Language, Translations> = {
       sport: "Sport",
       classic: "Yarim klassika",
       brands: "Brendlar",
-      showroom: "Shou-room"
+      philosophy: "Falsafa",
+      branches: "Filiallar"
     },
     hero: {
       headline: "Dunyo bo'ylab tayyor premium ko'rinishlar",
@@ -137,20 +133,20 @@ const TRANSLATIONS: Record<Language, Translations> = {
       desc: "Eksklyuziv setlar. Cheklangan miqdor.",
       cta: "Ko'rinishlarni ko'rish"
     },
-    showroom: {
-      title: "Shou-room",
-      address: "Toshkent",
-      cta: "Shou-roomga tashrif buyuring"
-    },
     newCollection: {
       label: "Bahor 2026",
       title: "Yangi kolleksiya",
       cta: "Kolleksiyani ko'rish"
     },
-    about: {
-      label: "Brend haqida",
+    philosophy: {
+      label: "Falsafa",
       title: "Faqat original. 2016-yildan beri.",
-      body: "Biz oddiylikdan yiroqmiz. Har bir buyum birinchi qo'ldan, sifat kafolati bilan. Kompromisslar qilmaydiganlar uchun."
+      body: "210 — bu brend tarixi va qadriyatlar. Biz oddiylikdan yiroqmiz: har bir buyum birinchi qo'ldan, original va sifat kafolati bilan. Sport va uslubni birlashtirib, dunyo bo'ylab tanlangan ko'rinishlarni taklif qilamiz. Kompromiss qilmaydiganlar uchun do'kon — 2016-yildan beri."
+    },
+    branches: {
+      label: "Filiallar",
+      title: "Bizning filiallar",
+      body: "Markaziy savdo nuqtasi: Toshkent. Batafsil manzil, ish vaqti va boshqa shaharlar bo'yicha yangiliklar — Telegram orqali yozing."
     },
     categories: {
       sportTitle: "Sport uslubi",
@@ -159,12 +155,6 @@ const TRANSLATIONS: Record<Language, Translations> = {
       classicTitle: "Yarim klassika",
       classicDesc: "Kundalik va rasmiy uslub o'rtasidagi mukammal muvozanat. Doimiy dolzarb kiyimlar.",
       classicBtn: "Klassikani kashf eting"
-    },
-    newsletter: {
-      title: "Bizga qo'shiling.",
-      desc: "Yangi kolleksiyalar va yopiq savdolarga eksklyuziv kirish huquqini oling. Faqat «210» hamjamiyati uchun.",
-      placeholder: "EMAILINGIZNI KIRITING",
-      btn: "Obuna bo'lish"
     },
     footer: {
       opened: "2016 yilda ochildik"
@@ -177,7 +167,8 @@ const TRANSLATIONS: Record<Language, Translations> = {
       sport: "Спорт",
       classic: "Полуклассика",
       brands: "Бренды",
-      showroom: "Шоурум"
+      philosophy: "Философия",
+      branches: "Филиалы"
     },
     hero: {
       headline: "Готовые премиальные образы со всего мира",
@@ -202,20 +193,20 @@ const TRANSLATIONS: Record<Language, Translations> = {
       desc: "Эксклюзивные комплекты. Ограниченное количество.",
       cta: "Смотреть образы"
     },
-    showroom: {
-      title: "Шоурум",
-      address: "Ташкент",
-      cta: "Посетить шоурум"
-    },
     newCollection: {
       label: "Весна 2025",
       title: "Новая коллекция",
       cta: "Смотреть коллекцию"
     },
-    about: {
-      label: "О бренде",
+    philosophy: {
+      label: "Философия",
       title: "Только оригинал. С 2016 года.",
-      body: "Мы отбираем только подлинную спортивную и полуклассическую одежду. Каждая вещь — из первых рук, с гарантией качества. Для тех, кто не идёт на компромиссы."
+      body: "210 — это история бренда и ценности. Мы выше обыденности: каждая вещь из первых рук, оригинал и гарантия качества. Соединяем спорт и стиль, предлагаем курируемые образы со всего мира. Для тех, кто не идёт на компромиссы — с 2016 года."
+    },
+    branches: {
+      label: "Филиалы",
+      title: "Наши филиалы",
+      body: "Главная точка: Ташкент. Адрес, часы работы и открытие в других городах — напишите в Telegram."
     },
     categories: {
       sportTitle: "Спортивный стиль",
@@ -224,12 +215,6 @@ const TRANSLATIONS: Record<Language, Translations> = {
       classicTitle: "Полуклассика",
       classicDesc: "Идеальный баланс между повседневным и формальным стилем. Вневременные вещи.",
       classicBtn: "Исследовать классику"
-    },
-    newsletter: {
-      title: "Присоединяйся к нам.",
-      desc: "Получи эксклюзивный доступ к новым дропам и закрытым распродажам. Только для сообщества «210».",
-      placeholder: "ВВЕДИТЕ ВАШ EMAIL",
-      btn: "Подписаться"
     },
     footer: {
       opened: "Открылись в 2016"
@@ -242,7 +227,8 @@ const TRANSLATIONS: Record<Language, Translations> = {
       sport: "Sport",
       classic: "Semi-classic",
       brands: "Brands",
-      showroom: "Showroom"
+      philosophy: "Philosophy",
+      branches: "Branches"
     },
     hero: {
       headline: "Ready-made premium looks from around the world",
@@ -267,20 +253,20 @@ const TRANSLATIONS: Record<Language, Translations> = {
       desc: "Exclusive sets. Limited quantity.",
       cta: "View looks"
     },
-    showroom: {
-      title: "Showroom",
-      address: "Tashkent",
-      cta: "Visit our showroom"
-    },
     newCollection: {
       label: "Spring 2025",
       title: "New collection",
       cta: "View collection"
     },
-    about: {
-      label: "About",
+    philosophy: {
+      label: "Philosophy",
       title: "Original only. Since 2016.",
-      body: "We select only authentic sport and semi-classic wear. Every piece is first-hand, with quality guarantee. For those who don't compromise."
+      body: "210 is our story and our values. Beyond the ordinary: every piece is first-hand, authentic, and quality-guaranteed. We blend sport and style with curated looks from around the world. For those who don't compromise — since 2016."
+    },
+    branches: {
+      label: "Branches",
+      title: "Our branches",
+      body: "Flagship: Tashkent. For full address, hours, and new cities — message us on Telegram."
     },
     categories: {
       sportTitle: "Sport style",
@@ -289,12 +275,6 @@ const TRANSLATIONS: Record<Language, Translations> = {
       classicTitle: "Semi-classic",
       classicDesc: "The perfect balance between casual and formal. Timeless pieces.",
       classicBtn: "Explore classic"
-    },
-    newsletter: {
-      title: "Join us.",
-      desc: "Get exclusive access to new drops and private sales. For the 210 community only.",
-      placeholder: "YOUR EMAIL",
-      btn: "Subscribe"
     },
     footer: {
       opened: "Open since 2016"
@@ -445,7 +425,7 @@ const Navbar = () => {
           <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 pointer-events-none [&>*]:pointer-events-auto">
             <div
               className={cn(
-                'flex items-center rounded-full border px-1.5 py-1.5 pl-5 lg:pl-6 gap-4 lg:gap-6 backdrop-blur-xl',
+                'flex items-center rounded-full border px-1.5 py-1.5 pl-4 lg:pl-5 gap-3 lg:gap-5 backdrop-blur-xl',
                 lightNav ? 'border-black/10 bg-black/[0.04]' : 'border-white/10 bg-white/[0.07]'
               )}
             >
@@ -459,13 +439,22 @@ const Navbar = () => {
                 {t.shopLooks}
               </a>
               <a
-                href="#showroom"
+                href="#philosophy"
                 className={cn(
                   'text-[10px] font-semibold uppercase tracking-[0.2em] transition-colors',
                   lightNav ? 'text-black/55 hover:text-black' : 'text-white/70 hover:text-white'
                 )}
               >
-                {t.showroom}
+                {t.philosophy}
+              </a>
+              <a
+                href="#branches"
+                className={cn(
+                  'text-[10px] font-semibold uppercase tracking-[0.2em] transition-colors',
+                  lightNav ? 'text-black/55 hover:text-black' : 'text-white/70 hover:text-white'
+                )}
+              >
+                {t.branches}
               </a>
               <a
                 href="#brand-marquee"
@@ -590,14 +579,24 @@ const Navbar = () => {
             {t.shopLooks}
           </a>
           <a
-            href="#showroom"
+            href="#philosophy"
             onClick={() => setIsOpen(false)}
             className={cn(
               'block text-[14px] font-semibold uppercase tracking-[0.12em] py-3 border-b',
               lightNav ? 'border-black/8 text-black' : 'border-white/10 text-white'
             )}
           >
-            {t.showroom}
+            {t.philosophy}
+          </a>
+          <a
+            href="#branches"
+            onClick={() => setIsOpen(false)}
+            className={cn(
+              'block text-[14px] font-semibold uppercase tracking-[0.12em] py-3 border-b',
+              lightNav ? 'border-black/8 text-black' : 'border-white/10 text-white'
+            )}
+          >
+            {t.branches}
           </a>
           <a
             href="#brand-marquee"
@@ -912,32 +911,37 @@ const NewLooksDropSection = () => {
   );
 };
 
-const ShowroomSection = () => {
+const PhilosophySection = () => {
   const { lang } = React.useContext(LangContext);
-  const t = TRANSLATIONS[lang].showroom;
+  const t = TRANSLATIONS[lang].philosophy;
 
   return (
-    <section id="showroom" className="py-14 md:py-16 bg-white border-t border-black/5 scroll-mt-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="philosophy" className="py-16 md:py-20 bg-neutral-50 border-t border-black/5 scroll-mt-24">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionReveal>
-          <p className="text-xs font-bold uppercase tracking-[0.3em] text-black/50 mb-3">{t.title}</p>
-          <h2 className="text-2xl md:text-3xl font-black uppercase mb-6 flex items-center gap-3 text-black">
-            <MapPin size={24} className="text-black/70" />
-            {t.address}
+          <p className="text-xs font-bold uppercase tracking-[0.3em] text-black/45 mb-3">{t.label}</p>
+          <h2 className="text-3xl md:text-4xl font-black uppercase text-black mb-6 leading-tight">{t.title}</h2>
+          <p className="text-base md:text-lg text-black/65 leading-relaxed">{t.body}</p>
+        </SectionReveal>
+      </div>
+    </section>
+  );
+};
+
+const BranchesSection = () => {
+  const { lang } = React.useContext(LangContext);
+  const t = TRANSLATIONS[lang].branches;
+
+  return (
+    <section id="branches" className="py-16 md:py-20 bg-white border-t border-black/5 scroll-mt-24">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <SectionReveal>
+          <p className="text-xs font-bold uppercase tracking-[0.3em] text-black/45 mb-3">{t.label}</p>
+          <h2 className="text-3xl md:text-4xl font-black uppercase text-black mb-6 leading-tight flex items-center gap-3">
+            <MapPin size={28} className="text-black/55 shrink-0" strokeWidth={1.75} />
+            {t.title}
           </h2>
-          <div className="aspect-[21/9] max-h-[320px] w-full bg-neutral-100 overflow-hidden">
-            <iframe
-              title="Store location Tashkent"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2994.415268264807!2d69.279278!3d41.311081!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38aef4d376395311%3A0x2f373e0e2b5c7b!2sTashkent%2C%20Uzbekistan!5e0!3m2!1sen!2s!4v1640000000000!5m2!1sen!2s"
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            />
-          </div>
-          <p className="text-black/60 mt-6 text-sm">{t.cta}</p>
+          <p className="text-base md:text-lg text-black/65 leading-relaxed">{t.body}</p>
         </SectionReveal>
       </div>
     </section>
@@ -1049,27 +1053,8 @@ export default function App() {
 
           <NewLooksDropSection />
 
-          <ShowroomSection />
-
-          <section className="py-24 bg-black text-white overflow-hidden">
-            <SectionReveal className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-              <div className="absolute -top-24 -right-24 text-[200px] font-black text-white/5 select-none pointer-events-none">210</div>
-              <div className="max-w-2xl relative">
-                <h2 className="text-6xl md:text-8xl font-black uppercase mb-8 leading-none">{t.newsletter.title}</h2>
-                <p className="text-xl text-white/60 mb-12">{t.newsletter.desc}</p>
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <input
-                    type="email"
-                    placeholder={t.newsletter.placeholder}
-                    className="bg-white/10 border border-white/20 px-6 py-4 flex-grow font-bold uppercase tracking-widest focus:outline-none focus:border-white transition-colors placeholder:text-white/40"
-                  />
-                  <motion.button className="bg-white text-black px-12 py-4 font-black uppercase tracking-widest shrink-0" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                    {t.newsletter.btn}
-                  </motion.button>
-                </div>
-              </div>
-            </SectionReveal>
-          </section>
+          <PhilosophySection />
+          <BranchesSection />
         </main>
 
         <Footer />
