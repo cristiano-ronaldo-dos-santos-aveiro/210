@@ -86,9 +86,6 @@ interface Translations {
     classicDesc: string;
     classicBtn: string;
   };
-  footer: {
-    opened: string;
-  };
 }
 
 const HERO_BRANDS = ['FILA', 'ADIDAS', 'WILSON', 'PUMA', 'ON CLOUD', 'GUCCI', 'UNDER ARMOUR', 'HERMES', 'COLUMBIA', 'ARCTERYX'];
@@ -144,9 +141,6 @@ const TRANSLATIONS: Record<Language, Translations> = {
       classicDesc: "Kundalik va rasmiy uslub o'rtasidagi mukammal muvozanat. Doimiy dolzarb kiyimlar.",
       classicBtn: "Klassikani kashf eting"
     },
-    footer: {
-      opened: "2016 yilda ochildik"
-    }
   },
   ru: {
     nav: {
@@ -198,9 +192,6 @@ const TRANSLATIONS: Record<Language, Translations> = {
       classicDesc: "Идеальный баланс между повседневным и формальным стилем. Вневременные вещи.",
       classicBtn: "Исследовать классику"
     },
-    footer: {
-      opened: "Открылись в 2016"
-    }
   },
   en: {
     nav: {
@@ -252,9 +243,6 @@ const TRANSLATIONS: Record<Language, Translations> = {
       classicDesc: "The perfect balance between casual and formal. Timeless pieces.",
       classicBtn: "Explore classic"
     },
-    footer: {
-      opened: "Open since 2016"
-    }
   }
 };
 
@@ -879,9 +867,6 @@ const BranchesSection = () => {
 };
 
 const Footer = () => {
-  const { lang } = React.useContext(LangContext);
-  const t = TRANSLATIONS[lang].footer;
-
   return (
     <motion.footer
       initial={{ opacity: 0 }}
@@ -935,8 +920,6 @@ const Footer = () => {
             <TelegramIcon size={26} />
           </motion.a>
         </div>
-
-        <p className="text-white/45 text-xs md:text-sm font-semibold uppercase tracking-[0.25em]">{t.opened}</p>
       </div>
     </motion.footer>
   );
