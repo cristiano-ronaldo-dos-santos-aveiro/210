@@ -14,6 +14,7 @@ const HERO_BG_IMAGE =
 /** Replace with your real contacts */
 const CONTACT_PHONE = '+998 90 123 45 67';
 const CONTACT_TELEGRAM = 'https://t.me/shop210';
+const CONTACT_INSTAGRAM = 'https://instagram.com/';
 
 const TelegramIcon = ({ className, size = 22 }: { className?: string; size?: number }) => (
   <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
@@ -98,16 +99,7 @@ interface Translations {
     btn: string;
   };
   footer: {
-    desc: string;
-    shop: string;
-    support: string;
-    rights: string;
-    privacy: string;
-    terms: string;
-    shipping: string;
-    sizeGuide: string;
-    contact: string;
-    faq: string;
+    opened: string;
   };
 }
 
@@ -176,16 +168,7 @@ const TRANSLATIONS: Record<Language, Translations> = {
       btn: "Obuna bo'lish"
     },
     footer: {
-      desc: "Haqiqiy brend kiyimlari uchun manzilingiz. Biz sport va uslubni birlashtiramiz.",
-      shop: "Do'kon",
-      support: "Yordam",
-      rights: "© 2016 210 DO'KONI. BARCHA HUQUQLAR HIMOYA QILINGAN.",
-      privacy: "Maxfiylik siyosati",
-      terms: "Foydalanish shartlari",
-      shipping: "Yetkazib berish va qaytarish",
-      sizeGuide: "O'lchamlar bo'yicha qo'llanma",
-      contact: "Biz bilan bog'lanish",
-      faq: "Ko'p beriladigan savollar"
+      opened: "2016 yilda ochildik"
     }
   },
   ru: {
@@ -250,16 +233,7 @@ const TRANSLATIONS: Record<Language, Translations> = {
       btn: "Подписаться"
     },
     footer: {
-      desc: "Ваше место для аутентичной брендовой одежды. Мы объединяем спорт и стиль.",
-      shop: "Магазин",
-      support: "Поддержка",
-      rights: "© 2024 МАГАЗИН 210. ВСЕ ПРАВА ЗАЩИЩЕНЫ.",
-      privacy: "Политика конфиденциальности",
-      terms: "Условия использования",
-      shipping: "Доставка и возврат",
-      sizeGuide: "Гид по размерам",
-      contact: "Контакты",
-      faq: "Часто задаваемые вопросы"
+      opened: "Открылись в 2016"
     }
   },
   en: {
@@ -324,16 +298,7 @@ const TRANSLATIONS: Record<Language, Translations> = {
       btn: "Subscribe"
     },
     footer: {
-      desc: "Your destination for authentic brand wear. We bring together sport and style.",
-      shop: "Shop",
-      support: "Support",
-      rights: "© 2024 210. ALL RIGHTS RESERVED.",
-      privacy: "Privacy policy",
-      terms: "Terms of use",
-      shipping: "Shipping & returns",
-      sizeGuide: "Size guide",
-      contact: "Contact",
-      faq: "FAQ"
+      opened: "Open since 2016"
     }
   }
 };
@@ -990,74 +955,65 @@ const Footer = () => {
       whileInView={{ opacity: 1 }}
       viewport={{ once: true, margin: '-80px' }}
       transition={{ duration: 0.5 }}
-      className="bg-black text-white pt-24 pb-12"
+      className="bg-black text-white py-16 md:py-20"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-center mb-16 md:mb-20">
-          <div className="flex items-center gap-5 md:gap-8" aria-label="210 × Anba">
-            <img
-              src={LOGO_210_SRC}
-              alt="210 Sports Wear"
-              className="h-12 md:h-16 w-auto max-h-16 object-contain object-center brightness-0 invert"
-              loading="lazy"
-              decoding="async"
-              referrerPolicy="no-referrer"
-            />
-            <span
-              className="shrink-0 w-px h-11 md:h-14 bg-white/35 rounded-full"
-              aria-hidden
-            />
-            <img
-              src={LOGO_ANBA_SRC}
-              alt="Anba"
-              className="h-10 md:h-12 w-auto max-h-12 object-contain object-center"
-              loading="lazy"
-              decoding="async"
-              referrerPolicy="no-referrer"
-            />
-          </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center gap-10">
+        <div className="flex items-center gap-5 md:gap-8" aria-label="210 × Anba">
+          <img
+            src={LOGO_210_SRC}
+            alt="210 Sports Wear"
+            className="h-12 md:h-16 w-auto max-h-16 object-contain object-center brightness-0 invert"
+            loading="lazy"
+            decoding="async"
+            referrerPolicy="no-referrer"
+          />
+          <span className="shrink-0 w-px h-11 md:h-14 bg-white/35 rounded-full" aria-hidden />
+          <img
+            src={LOGO_ANBA_SRC}
+            alt="Anba"
+            className="h-10 md:h-12 w-auto max-h-12 object-contain object-center"
+            loading="lazy"
+            decoding="async"
+            referrerPolicy="no-referrer"
+          />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-24">
-          <div className="col-span-1 md:col-span-2">
-            <p className="text-white/60 max-w-sm mb-8">
-              {t.desc}
-            </p>
-            <div className="flex flex-wrap items-center gap-5">
-              <motion.a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-white/70 hover:text-white transition-colors" whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.96 }}>
-                <Instagram size={22} strokeWidth={1.5} />
-              </motion.a>
-              <motion.a href={CONTACT_TELEGRAM} target="_blank" rel="noopener noreferrer" aria-label="Telegram" className="text-white/70 hover:text-white transition-colors" whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.96 }}>
-                <TelegramIcon size={22} />
-              </motion.a>
-              <motion.a href={`tel:${CONTACT_PHONE.replace(/\s/g, '')}`} aria-label="Phone" className="text-white/70 hover:text-white transition-colors flex items-center gap-2 text-sm font-medium tracking-wide" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                <Phone size={22} strokeWidth={1.5} />
-                <span className="hidden sm:inline">{CONTACT_PHONE}</span>
-              </motion.a>
-            </div>
-          </div>
-          <div>
-            <h4 className="text-lg font-bold uppercase mb-6">{t.shop}</h4>
-            <ul className="space-y-4 text-white/60">
-              <li><a href="#shop-looks" className="hover:text-white transition-colors">{TRANSLATIONS[lang].nav.shopLooks}</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="text-lg font-bold uppercase mb-6">{t.support}</h4>
-            <ul className="space-y-4 text-white/60">
-              <li><a href="#" className="hover:text-white transition-colors">{t.shipping}</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">{t.sizeGuide}</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">{t.contact}</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">{t.faq}</a></li>
-            </ul>
-          </div>
+
+        <div className="flex flex-wrap items-center justify-center gap-8 md:gap-10">
+          <motion.a
+            href={CONTACT_INSTAGRAM}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
+            className="text-white/75 hover:text-white transition-colors p-2"
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.96 }}
+          >
+            <Instagram size={26} strokeWidth={1.5} />
+          </motion.a>
+          <motion.a
+            href={CONTACT_TELEGRAM}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Telegram"
+            className="text-white/75 hover:text-white transition-colors p-2"
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.96 }}
+          >
+            <TelegramIcon size={26} />
+          </motion.a>
+          <motion.a
+            href={`tel:${CONTACT_PHONE.replace(/\s/g, '')}`}
+            aria-label="Phone"
+            className="text-white/75 hover:text-white transition-colors flex items-center gap-3 text-sm font-medium tracking-wide p-2"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <Phone size={26} strokeWidth={1.5} />
+            <span>{CONTACT_PHONE}</span>
+          </motion.a>
         </div>
-        <div className="pt-12 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6 text-white/40 text-xs font-bold uppercase tracking-widest">
-          <p>{t.rights}</p>
-          <div className="flex space-x-8">
-            <a href="#" className="hover:text-white transition-colors">{t.privacy}</a>
-            <a href="#" className="hover:text-white transition-colors">{t.terms}</a>
-          </div>
-        </div>
+
+        <p className="text-white/45 text-xs md:text-sm font-semibold uppercase tracking-[0.25em]">{t.opened}</p>
       </div>
     </motion.footer>
   );
