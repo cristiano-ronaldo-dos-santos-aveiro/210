@@ -3,8 +3,13 @@ import { motion } from 'motion/react';
 import { ShoppingBag, Search, Menu, X, ArrowRight, Instagram, Phone, MapPin } from 'lucide-react';
 import { cn } from './lib/utils';
 
-const LOGO_210_SRC = new URL('../photo/logo-210.png', import.meta.url).href;
-const LOGO_ANBA_SRC = new URL('../photo/logo-anba.png', import.meta.url).href;
+/** PNG exports in /photo (210 stack + signature mark) */
+const LOGO_210_SRC = new URL('../photo/IMG_2657.PNG', import.meta.url).href;
+const LOGO_ANBA_SRC = new URL('../photo/IMG_26589.PNG', import.meta.url).href;
+
+/** Hero background — replace with your own photo in /photo if you prefer */
+const HERO_BG_IMAGE =
+  'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&q=88&w=2400';
 
 /** Replace with your real contacts */
 const CONTACT_PHONE = '+998 90 123 45 67';
@@ -38,11 +43,16 @@ interface Translations {
     sport: string;
     classic: string;
     brands: string;
+    showroom: string;
   };
   hero: {
     headline: string;
     subtext: string;
     rail: string;
+    scrollHint: string;
+    titleScript: string;
+    titleGlass: string;
+    tagline: string;
   };
   looks: {
     shopLooks: string;
@@ -105,11 +115,22 @@ const HERO_BRANDS = ['FILA', 'ADIDAS', 'WILSON', 'PUMA', 'ON CLOUD', 'GUCCI', 'U
 
 const TRANSLATIONS: Record<Language, Translations> = {
   uz: {
-    nav: { shopLooks: "Ko'rinishlar", new: "Yangi kelganlar", sport: "Sport", classic: "Yarim klassika", brands: "Brendlar" },
+    nav: {
+      shopLooks: "Ko'rinishlar",
+      new: "Yangi kelganlar",
+      sport: "Sport",
+      classic: "Yarim klassika",
+      brands: "Brendlar",
+      showroom: "Shou-room"
+    },
     hero: {
       headline: "Dunyo bo'ylab tayyor premium ko'rinishlar",
       subtext: "Biz tanlaymiz, uslublashtiramiz va original buyumlarni rasmiy import qilamiz",
-      rail: "2016-YILDA ASOS SOLINGAN"
+      rail: "2016-YILDA ASOS SOLINGAN",
+      scrollHint: "Pastga",
+      titleScript: "210",
+      titleGlass: "SPORTS WEAR",
+      tagline: "Biz oddiylidan yiroqmiz"
     },
     looks: {
       shopLooks: "Ko'rinishlar",
@@ -168,11 +189,22 @@ const TRANSLATIONS: Record<Language, Translations> = {
     }
   },
   ru: {
-    nav: { shopLooks: "Образы", new: "Новинки", sport: "Спорт", classic: "Полуклассика", brands: "Бренды" },
+    nav: {
+      shopLooks: "Образы",
+      new: "Новинки",
+      sport: "Спорт",
+      classic: "Полуклассика",
+      brands: "Бренды",
+      showroom: "Шоурум"
+    },
     hero: {
       headline: "Готовые премиальные образы со всего мира",
       subtext: "Мы подбираем, стилизуем и официально ввозим оригинальные вещи",
-      rail: "ОСНОВАНО В 2016 — ТАШКЕНТ"
+      rail: "ОСНОВАНО В 2016 — ТАШКЕНТ",
+      scrollHint: "Листать",
+      titleScript: "210",
+      titleGlass: "SPORTS WEAR",
+      tagline: "Мы выше обыденности"
     },
     looks: {
       shopLooks: "Образы",
@@ -231,11 +263,22 @@ const TRANSLATIONS: Record<Language, Translations> = {
     }
   },
   en: {
-    nav: { shopLooks: "Looks", new: "New", sport: "Sport", classic: "Semi-classic", brands: "Brands" },
+    nav: {
+      shopLooks: "Looks",
+      new: "New",
+      sport: "Sport",
+      classic: "Semi-classic",
+      brands: "Brands",
+      showroom: "Showroom"
+    },
     hero: {
       headline: "Ready-made premium looks from around the world",
       subtext: "We curate, style, and officially import original pieces",
-      rail: "EST. 2016 — TASHKENT"
+      rail: "EST. 2016 — TASHKENT",
+      scrollHint: "Scroll",
+      titleScript: "210",
+      titleGlass: "SPORTS WEAR",
+      tagline: "Beyond the ordinary"
     },
     looks: {
       shopLooks: "Looks",
@@ -374,78 +417,130 @@ const Navbar = () => {
   const scrollTop = useScrollTop();
   const { lang, setLang } = React.useContext(LangContext);
   const t = TRANSLATIONS[lang].nav;
-  const isScrolled = scrollTop > 16;
+  const [lightNav, setLightNav] = useState(false);
+
+  useEffect(() => {
+    const thr = Math.min(window.innerHeight * 0.48, 520);
+    setLightNav(scrollTop > thr);
+  }, [scrollTop]);
+
+  const iconBtn = lightNav
+    ? 'text-black/65 hover:text-black hover:bg-black/[0.06]'
+    : 'text-white/80 hover:text-white hover:bg-white/[0.08]';
+  const menuIcon = lightNav ? 'text-black hover:bg-black/[0.06]' : 'text-white hover:bg-white/[0.08]';
+  const logoSep = lightNav ? 'text-black/30' : 'text-white/35';
 
   return (
     <motion.nav
       initial={false}
       animate={{
-        backgroundColor: isScrolled ? 'rgba(255,255,255,0.92)' : 'rgba(255,255,255,0.72)',
-        boxShadow: isScrolled ? '0 1px 0 0 rgba(0,0,0,0.08)' : '0 0 0 0 rgba(0,0,0,0)',
+        backgroundColor: lightNav ? 'rgba(255,255,255,0.9)' : 'rgba(20,20,20,0.35)',
+        borderBottomColor: lightNav ? 'rgba(0,0,0,0.07)' : 'rgba(255,255,255,0.1)',
+        boxShadow: lightNav ? '0 1px 0 0 rgba(0,0,0,0.04)' : '0 0 0 0 transparent',
       }}
-      transition={{ duration: 0.25 }}
-      className="fixed top-0 left-0 right-0 z-50 border-b border-black/[0.06] backdrop-blur-xl"
+      transition={{ duration: 0.35, ease: [0.22, 0.61, 0.36, 1] }}
+      className="fixed top-0 left-0 right-0 z-50 border-b backdrop-blur-xl"
     >
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
-        <div className="flex items-center justify-between h-[4.25rem] md:h-[4.5rem] gap-4">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10">
+        <div className="flex items-center justify-between h-[3.75rem] md:h-[4rem] gap-3">
           <motion.a
             href="#"
-            className="flex-shrink-0 flex items-center gap-2 md:gap-3 z-10"
-            whileHover={{ opacity: 0.9 }}
+            className="flex-shrink-0 flex items-center gap-2 md:gap-2.5 z-10"
+            whileHover={{ opacity: 0.92 }}
             whileTap={{ scale: 0.98 }}
             aria-label="210 × Anba"
           >
             <img
               src={LOGO_210_SRC}
-              alt="210"
-              className="h-8 md:h-9 w-auto max-h-9 object-contain object-left"
+              alt="210 Sports Wear"
+              className={cn(
+                'h-7 md:h-9 w-auto max-h-9 object-contain object-left drop-shadow-md',
+                !lightNav && 'brightness-0 invert'
+              )}
               loading="eager"
               decoding="async"
               referrerPolicy="no-referrer"
             />
-            <span className="text-lg md:text-xl font-light text-black/35 select-none leading-none" aria-hidden>
+            <span className={cn('text-base md:text-lg font-light select-none leading-none', logoSep)} aria-hidden>
               |
             </span>
             <img
               src={LOGO_ANBA_SRC}
               alt="Anba"
-              className="h-7 md:h-8 w-auto max-h-8 object-contain object-left"
+              className={cn(
+                'h-6 md:h-8 w-auto max-h-8 object-contain object-left drop-shadow-md',
+                lightNav && 'invert'
+              )}
               loading="eager"
               decoding="async"
               referrerPolicy="no-referrer"
             />
           </motion.a>
 
-          <div className="hidden md:flex flex-1 items-center justify-center absolute left-1/2 -translate-x-1/2 pointer-events-none [&>*]:pointer-events-auto">
-            <motion.a
-              href="#shop-looks"
-              className="relative text-[13px] font-semibold uppercase tracking-[0.12em] text-black py-1 group/link"
-              whileHover={{ y: -1 }}
+          {/* Central glass capsule — desktop / tablet */}
+          <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 pointer-events-none [&>*]:pointer-events-auto">
+            <div
+              className={cn(
+                'flex items-center rounded-full border px-1.5 py-1.5 pl-5 lg:pl-6 gap-4 lg:gap-6 backdrop-blur-xl',
+                lightNav ? 'border-black/10 bg-black/[0.04]' : 'border-white/10 bg-white/[0.07]'
+              )}
             >
-              {t.shopLooks}
-              <span className="absolute -bottom-0.5 left-0 w-full h-px bg-black" />
-            </motion.a>
+              <a
+                href="#shop-looks"
+                className={cn(
+                  'text-[10px] font-semibold uppercase tracking-[0.2em] transition-colors',
+                  lightNav ? 'text-black/55 hover:text-black' : 'text-white/70 hover:text-white'
+                )}
+              >
+                {t.shopLooks}
+              </a>
+              <a
+                href="#showroom"
+                className={cn(
+                  'text-[10px] font-semibold uppercase tracking-[0.2em] transition-colors',
+                  lightNav ? 'text-black/55 hover:text-black' : 'text-white/70 hover:text-white'
+                )}
+              >
+                {t.showroom}
+              </a>
+              <a
+                href="#brand-marquee"
+                className={cn(
+                  'text-[10px] font-semibold uppercase tracking-[0.2em] transition-colors',
+                  lightNav ? 'text-black/55 hover:text-black' : 'text-white/70 hover:text-white'
+                )}
+              >
+                {t.brands}
+              </a>
+              <div className={cn('h-5 w-px shrink-0', lightNav ? 'bg-black/15' : 'bg-white/20')} aria-hidden />
+              <div className="flex items-center gap-0.5 pr-1">
+                {(['uz', 'ru', 'en'] as const).map((l) => (
+                  <button
+                    key={l}
+                    type="button"
+                    onClick={() => setLang(l)}
+                    className={cn(
+                      'w-8 h-8 rounded-full text-[9px] font-bold uppercase tracking-wide transition-all duration-200',
+                      lightNav
+                        ? lang === l
+                          ? 'bg-black text-white shadow-sm'
+                          : 'text-black/40 hover:text-black'
+                        : lang === l
+                          ? 'bg-white/20 text-white shadow-inner'
+                          : 'text-white/45 hover:text-white'
+                    )}
+                  >
+                    {l}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
 
-          <div className="hidden md:flex items-center gap-2 z-10">
-            <div className="flex items-center rounded-full bg-neutral-100/90 p-0.5 border border-black/[0.06]">
-              {(['uz', 'ru', 'en'] as const).map((l) => (
-                <button
-                  key={l}
-                  type="button"
-                  onClick={() => setLang(l)}
-                  className={cn(
-                    'px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider rounded-full transition-all duration-200',
-                    lang === l ? 'bg-black text-white shadow-sm' : 'text-black/50 hover:text-black'
-                  )}
-                >
-                  {l}
-                </button>
-              ))}
-            </div>
+          <div className="hidden md:flex items-center gap-1 z-10">
             <motion.button
               type="button"
-              className="p-2.5 rounded-full text-black/70 hover:text-black hover:bg-black/[0.05] transition-colors"
+              className={cn('p-2.5 rounded-full transition-colors', iconBtn)}
               whileTap={{ scale: 0.94 }}
               aria-label="Search"
             >
@@ -453,27 +548,43 @@ const Navbar = () => {
             </motion.button>
             <motion.button
               type="button"
-              className="relative p-2.5 rounded-full text-black/70 hover:text-black hover:bg-black/[0.05] transition-colors"
+              className={cn('relative p-2.5 rounded-full transition-colors', iconBtn)}
               whileTap={{ scale: 0.94 }}
               aria-label="Cart"
             >
               <ShoppingBag size={20} strokeWidth={1.75} />
-              <span className="absolute top-1.5 right-1.5 min-w-[14px] h-[14px] px-0.5 flex items-center justify-center bg-black text-white text-[9px] font-bold rounded-full leading-none">
+              <span
+                className={cn(
+                  'absolute top-1.5 right-1.5 min-w-[14px] h-[14px] px-0.5 flex items-center justify-center text-[9px] font-bold rounded-full leading-none',
+                  lightNav ? 'bg-black text-white' : 'bg-white text-black'
+                )}
+              >
                 0
               </span>
             </motion.button>
           </div>
 
-          <div className="md:hidden flex items-center gap-2">
-            <div className="flex rounded-full bg-neutral-100 p-0.5 border border-black/[0.06]">
+          <div className="md:hidden flex items-center gap-2 z-10">
+            <div
+              className={cn(
+                'flex rounded-full border p-0.5',
+                lightNav ? 'border-black/10 bg-black/[0.04]' : 'border-white/15 bg-white/[0.07]'
+              )}
+            >
               {(['uz', 'ru', 'en'] as const).map((l) => (
                 <button
                   key={l}
                   type="button"
                   onClick={() => setLang(l)}
                   className={cn(
-                    'px-2 py-1 text-[9px] font-semibold uppercase rounded-full',
-                    lang === l ? 'bg-black text-white' : 'text-black/50'
+                    'px-2 py-1 text-[9px] font-bold uppercase rounded-full transition-colors',
+                    lightNav
+                      ? lang === l
+                        ? 'bg-black text-white'
+                        : 'text-black/45'
+                      : lang === l
+                        ? 'bg-white/20 text-white'
+                        : 'text-white/50'
                   )}
                 >
                   {l}
@@ -483,7 +594,7 @@ const Navbar = () => {
             <motion.button
               type="button"
               onClick={() => setIsOpen(!isOpen)}
-              className="p-2 rounded-full hover:bg-black/[0.05]"
+              className={cn('p-2 rounded-full transition-colors', menuIcon)}
               whileTap={{ scale: 0.92 }}
               aria-expanded={isOpen}
               aria-label="Menu"
@@ -499,18 +610,69 @@ const Navbar = () => {
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}
-          className="md:hidden bg-white/98 backdrop-blur-xl border-t border-black/5 px-4 pt-4 pb-8 space-y-1 overflow-hidden"
+          className={cn(
+            'md:hidden backdrop-blur-xl border-t px-4 pt-4 pb-8 space-y-1 overflow-hidden',
+            lightNav ? 'bg-white/95 border-black/8' : 'bg-[#1a1a1a]/96 border-white/10'
+          )}
         >
-          <a href="#shop-looks" onClick={() => setIsOpen(false)} className="block text-[15px] font-semibold uppercase tracking-wide py-3 border-b border-black/5 text-black">
+          <a
+            href="#shop-looks"
+            onClick={() => setIsOpen(false)}
+            className={cn(
+              'block text-[14px] font-semibold uppercase tracking-[0.12em] py-3 border-b',
+              lightNav ? 'border-black/8 text-black' : 'border-white/10 text-white'
+            )}
+          >
             {t.shopLooks}
           </a>
+          <a
+            href="#showroom"
+            onClick={() => setIsOpen(false)}
+            className={cn(
+              'block text-[14px] font-semibold uppercase tracking-[0.12em] py-3 border-b',
+              lightNav ? 'border-black/8 text-black' : 'border-white/10 text-white'
+            )}
+          >
+            {t.showroom}
+          </a>
+          <a
+            href="#brand-marquee"
+            onClick={() => setIsOpen(false)}
+            className={cn(
+              'block text-[14px] font-semibold uppercase tracking-[0.12em] py-3 border-b',
+              lightNav ? 'border-black/8 text-black' : 'border-white/10 text-white'
+            )}
+          >
+            {t.brands}
+          </a>
           <div className="flex items-center gap-4 pt-6">
-            <button type="button" className="p-2 rounded-full border border-black/10 text-black/70" aria-label="Search">
+            <button
+              type="button"
+              className={cn(
+                'p-2 rounded-full border',
+                lightNav ? 'border-black/12 text-black/70' : 'border-white/15 text-white/80'
+              )}
+              aria-label="Search"
+            >
               <Search size={20} strokeWidth={1.75} />
             </button>
-            <button type="button" className="relative p-2 rounded-full border border-black/10 text-black/70" aria-label="Cart">
+            <button
+              type="button"
+              className={cn(
+                'relative p-2 rounded-full border',
+                lightNav ? 'border-black/12 text-black/70' : 'border-white/15 text-white/80'
+              )}
+              aria-label="Cart"
+            >
               <ShoppingBag size={20} strokeWidth={1.75} />
-              <span className="absolute top-1 right-1 min-w-[14px] h-[14px] flex items-center justify-center bg-black text-white text-[9px] font-bold rounded-full">0</span>
+              <span
+                className={cn(
+                  'absolute top-1 right-1 min-w-[14px] h-[14px] flex items-center justify-center text-[9px] font-bold rounded-full',
+                  lightNav ? 'bg-black text-white' : 'bg-white text-black'
+                )}
+              >
+                0
+              </span>
             </button>
           </div>
         </motion.div>
@@ -520,17 +682,57 @@ const Navbar = () => {
 };
 
 const Hero = () => {
+  const { lang } = React.useContext(LangContext);
+  const t = TRANSLATIONS[lang].hero;
+
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center bg-white overflow-hidden pt-[4.5rem] md:pt-[5rem]">
-      <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,rgba(0,0,0,0.02)_50%,transparent_100%)] pointer-events-none" />
-      <div className="flex flex-col items-center justify-center px-4 text-center">
+    <section
+      className="relative min-h-screen bg-[#141414] flex flex-col"
+      style={{ ['--hero-photo' as string]: `url('${HERO_BG_IMAGE}')` }}
+    >
+      <div className="flex-1 flex flex-col justify-center px-3 sm:px-5 md:px-8 pt-[4.5rem] pb-6 md:pt-[5.25rem] md:pb-10 max-w-[1600px] mx-auto w-full">
+        <div className="relative w-full rounded-2xl sm:rounded-[1.65rem] md:rounded-[2rem] overflow-hidden min-h-[min(68vh,680px)] aspect-[4/5] sm:aspect-[5/6] md:aspect-[21/10] lg:aspect-[2.2/1] shadow-[0_28px_90px_-16px_rgba(0,0,0,0.75)] ring-1 ring-white/[0.07]">
+          <img
+            src={HERO_BG_IMAGE}
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover object-[center_28%]"
+            fetchPriority="high"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/45" />
+          <div
+            className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 hidden lg:block w-px h-32 bg-gradient-to-b from-transparent via-white/40 to-transparent"
+            aria-hidden
+          />
+
+          <div className="relative z-10 h-full min-h-[inherit] flex flex-col justify-end md:justify-center px-5 sm:px-9 md:px-12 lg:px-16 py-9 md:py-12">
+            <motion.div
+              initial={{ opacity: 0, y: 36 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: [0.22, 0.61, 0.36, 1] }}
+              className="max-w-4xl"
+            >
+              <p className="hero-tagline text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl mb-2 md:mb-3 drop-shadow-[0_4px_24px_rgba(0,0,0,0.45)]">
+                {t.titleScript}
+              </p>
+              <h1 className="relative mt-0">
+                <span className="hero-glass-headline block font-black uppercase leading-[0.9] tracking-tight text-[clamp(2.25rem,9vw,6.25rem)]">
+                  {t.titleGlass}
+                </span>
+              </h1>
+              <p className="mt-5 md:mt-7 text-[11px] sm:text-xs font-medium uppercase tracking-[0.32em] text-white/75 max-w-lg">
+                {t.tagline}
+              </p>
+            </motion.div>
+          </div>
+        </div>
+
         <motion.p
-          initial={{ opacity: 0, y: 28, filter: 'blur(6px)' }}
-          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-          transition={{ duration: 0.85, ease: [0.22, 0.61, 0.36, 1] }}
-          className="text-2xl md:text-3xl lg:text-4xl font-normal tracking-wide text-black/90 hero-tagline animate-float max-w-2xl"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.85, duration: 0.5 }}
+          className="text-center text-[10px] font-semibold uppercase tracking-[0.5em] text-white/30 mt-7 md:mt-9"
         >
-          Biz oddiylidan yiroqmiz
+          {t.scrollHint}
         </motion.p>
       </div>
     </section>
@@ -539,7 +741,10 @@ const Hero = () => {
 
 const BrandMarquee = () => {
   return (
-    <div className="relative py-8 bg-black border-y border-white/10 overflow-hidden whitespace-nowrap">
+    <div
+      id="brand-marquee"
+      className="relative py-8 bg-black border-y border-white/10 overflow-hidden whitespace-nowrap scroll-mt-24"
+    >
       <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none" />
       <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none" />
       <div className="flex animate-marquee">
@@ -748,7 +953,7 @@ const ShowroomSection = () => {
   const t = TRANSLATIONS[lang].showroom;
 
   return (
-    <section className="py-14 md:py-16 bg-white border-t border-black/5">
+    <section id="showroom" className="py-14 md:py-16 bg-white border-t border-black/5 scroll-mt-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionReveal>
           <p className="text-xs font-bold uppercase tracking-[0.3em] text-black/50 mb-3">{t.title}</p>
@@ -793,7 +998,7 @@ const Footer = () => {
             <img
               src={LOGO_210_SRC}
               alt="210 Sports Wear"
-              className="h-12 md:h-16 w-auto max-h-16 object-contain object-center"
+              className="h-12 md:h-16 w-auto max-h-16 object-contain object-center brightness-0 invert"
               loading="lazy"
               decoding="async"
               referrerPolicy="no-referrer"

@@ -32,3 +32,25 @@
   font-style: italic;
   letter-spacing: 0.02em;
 }
+
+/* “Glass” headline: photo shows through letterforms (like reference) */
+.hero-glass-headline {
+  background-image: var(--hero-photo);
+  background-size: cover;
+  background-position: center 30%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: rgba(255, 255, 255, 0.15);
+  filter: drop-shadow(0 4px 28px rgba(0, 0, 0, 0.45));
+}
+
+@supports not (background-clip: text) {
+  .hero-glass-headline {
+    -webkit-text-fill-color: rgba(255, 255, 255, 0.95);
+    color: rgba(255, 255, 255, 0.95);
+    background-image: none;
+    filter: none;
+    text-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+  }
+}
