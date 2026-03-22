@@ -7,9 +7,17 @@ import { cn } from './lib/utils';
 const LOGO_210_SRC = new URL('../photo/IMG_2657.PNG', import.meta.url).href;
 const LOGO_ANBA_SRC = new URL('../photo/IMG_26589.PNG', import.meta.url).href;
 
-/** Hero background — replace with your own photo in /photo if you prefer */
-const HERO_BG_IMAGE =
-  'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&q=88&w=2400';
+/** Spotlight card backgrounds (replace with your own photos anytime) */
+const CARD_BG = {
+  wisdom:
+    'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&q=80&w=1200',
+  spring:
+    'https://images.unsplash.com/photo-1490750967868-88cb4486a973?auto=format&fit=crop&q=80&w=1200',
+  newDrop:
+    'https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&q=80&w=1200',
+  special:
+    'https://images.unsplash.com/photo-1558171813-4c088753af8f?auto=format&fit=crop&q=80&w=1200'
+} as const;
 
 /** Replace with your real contacts */
 const CONTACT_TELEGRAM = 'https://t.me/shop210';
@@ -26,34 +34,23 @@ type Language = 'uz' | 'ru' | 'en';
 
 interface Translations {
   nav: {
-    shopLooks: string;
-    new: string;
-    sport: string;
-    classic: string;
+    collections: string;
     philosophy: string;
     branches: string;
   };
-  hero: {
-    headline: string;
-    subtext: string;
+  home: {
     rail: string;
-    scrollHint: string;
     titleScript: string;
     titleGlass: string;
     tagline: string;
   };
-  looks: {
-    shopLooks: string;
-    fullSet: string;
-    viewLook: string;
-    buyFullLook: string;
-    addSeparately: string;
-    itemsInLook: string;
-  };
-  newCollection: {
-    label: string;
-    title: string;
-    cta: string;
+  cards: {
+    sectionEyebrow: string;
+    sectionTitle: string;
+    wisdom: { label: string; title: string; body: string };
+    spring: { label: string; title: string; body: string };
+    newDrop: { label: string; title: string; body: string };
+    special: { label: string; title: string; body: string };
   };
   philosophy: {
     label: string;
@@ -65,47 +62,44 @@ interface Translations {
     title: string;
     body: string;
   };
-  categories: {
-    sportTitle: string;
-    sportDesc: string;
-    sportBtn: string;
-    classicTitle: string;
-    classicDesc: string;
-    classicBtn: string;
-  };
 }
 
 const TRANSLATIONS: Record<Language, Translations> = {
   uz: {
     nav: {
-      shopLooks: "Ko'rinishlar",
-      new: "Yangi kelganlar",
-      sport: "Sport",
-      classic: "Yarim klassika",
+      collections: "Kolleksiyalar",
       philosophy: "Falsafa",
       branches: "Filiallar"
     },
-    hero: {
-      headline: "Dunyo bo'ylab tayyor premium ko'rinishlar",
-      subtext: "Biz tanlaymiz, uslublashtiramiz va original buyumlarni rasmiy import qilamiz",
-      rail: "2016-YILDA ASOS SOLINGAN",
-      scrollHint: "Pastga",
+    home: {
+      rail: "2016 — Toshkent",
       titleScript: "210",
       titleGlass: "SPORTS WEAR",
-      tagline: "Biz oddiylidan yiroqmiz"
+      tagline: "Biz oddiylidan yiroqmiz — original va tanlangan uslub."
     },
-    looks: {
-      shopLooks: "Ko'rinishlar",
-      fullSet: "To'liq set",
-      viewLook: "Ko'rinishni ko'rish",
-      buyFullLook: "Butun obrazni sotib olish",
-      addSeparately: "Alohida qo'shish",
-      itemsInLook: "Obrazga kiradi"
-    },
-    newCollection: {
-      label: "Bahor 2026",
-      title: "Yangi kolleksiya",
-      cta: "Kolleksiyani ko'rish"
+    cards: {
+      sectionEyebrow: "Tanlov",
+      sectionTitle: "Kolleksiyalar va ruh",
+      wisdom: {
+        label: "Hikmat",
+        title: "Do'kon falsafasi",
+        body: "Har bir buyum — sabr, sifat va o'ziga xoslik haqida. Oddiylik emas, chuqurlik."
+      },
+      spring: {
+        label: "Bahor",
+        title: "Bahor kolleksiyasi",
+        body: "Yengil ranglar, yangi siluetlar va mavsumiy yangilanish — do'konda."
+      },
+      newDrop: {
+        label: "Yangi",
+        title: "Yangi kelganlar",
+        body: "Yaqinda kelgan modellar va cheklangan partiyalar — birinchi bo'lib ko'ring."
+      },
+      special: {
+        label: "Maxsus",
+        title: "Maxsus kolleksiya",
+        body: "Tanlangan brendlar va noyob setlar — kompromiss qilmaydiganlar uchun."
+      }
     },
     philosophy: {
       label: "Falsafa",
@@ -117,45 +111,42 @@ const TRANSLATIONS: Record<Language, Translations> = {
       title: "Bizning filiallar",
       body: "Markaziy savdo nuqtasi: Toshkent. Batafsil manzil, ish vaqti va boshqa shaharlar bo'yicha yangiliklar — Telegram orqali yozing."
     },
-    categories: {
-      sportTitle: "Sport uslubi",
-      sportDesc: "Harakat uchun yaratilgan. Dunyoning yetakchi brendlaridan original ekipirovka.",
-      sportBtn: "Sportni kashf eting",
-      classicTitle: "Yarim klassika",
-      classicDesc: "Kundalik va rasmiy uslub o'rtasidagi mukammal muvozanat. Doimiy dolzarb kiyimlar.",
-      classicBtn: "Klassikani kashf eting"
-    },
   },
   ru: {
     nav: {
-      shopLooks: "Образы",
-      new: "Новинки",
-      sport: "Спорт",
-      classic: "Полуклассика",
+      collections: "Коллекции",
       philosophy: "Философия",
       branches: "Филиалы"
     },
-    hero: {
-      headline: "Готовые премиальные образы со всего мира",
-      subtext: "Мы подбираем, стилизуем и официально ввозим оригинальные вещи",
-      rail: "ОСНОВАНО В 2016 — ТАШКЕНТ",
-      scrollHint: "Листать",
+    home: {
+      rail: "С 2016 — Ташкент",
       titleScript: "210",
       titleGlass: "SPORTS WEAR",
-      tagline: "Мы выше обыденности"
+      tagline: "Выше обыденности — оригинал и отобранный стиль."
     },
-    looks: {
-      shopLooks: "Образы",
-      fullSet: "Полный комплект",
-      viewLook: "Смотреть образ",
-      buyFullLook: "Купить весь образ",
-      addSeparately: "Добавить отдельно",
-      itemsInLook: "В образ входит"
-    },
-    newCollection: {
-      label: "Весна 2025",
-      title: "Новая коллекция",
-      cta: "Смотреть коллекцию"
+    cards: {
+      sectionEyebrow: "Выбор",
+      sectionTitle: "Коллекции и настроение",
+      wisdom: {
+        label: "Мудрость",
+        title: "Философия бутика",
+        body: "Каждая вещь — о терпении, качестве и характере. Не про простоту, а про глубину."
+      },
+      spring: {
+        label: "Весна",
+        title: "Весенняя коллекция",
+        body: "Светлые оттенки, новые силуэты и сезонное обновление — уже в бутике."
+      },
+      newDrop: {
+        label: "Новое",
+        title: "Новые поступления",
+        body: "Свежие модели и ограниченные партии — будьте первыми."
+      },
+      special: {
+        label: "Особое",
+        title: "Специальная коллекция",
+        body: "Отобранные бренды и уникальные сеты — для тех, кто не идёт на компромиссы."
+      }
     },
     philosophy: {
       label: "Философия",
@@ -167,45 +158,42 @@ const TRANSLATIONS: Record<Language, Translations> = {
       title: "Наши филиалы",
       body: "Главная точка: Ташкент. Адрес, часы работы и открытие в других городах — напишите в Telegram."
     },
-    categories: {
-      sportTitle: "Спортивный стиль",
-      sportDesc: "Создано для движения. Оригинальная экипировка от ведущих мировых брендов.",
-      sportBtn: "Исследовать спорт",
-      classicTitle: "Полуклассика",
-      classicDesc: "Идеальный баланс между повседневным и формальным стилем. Вневременные вещи.",
-      classicBtn: "Исследовать классику"
-    },
   },
   en: {
     nav: {
-      shopLooks: "Looks",
-      new: "New",
-      sport: "Sport",
-      classic: "Semi-classic",
+      collections: "Collections",
       philosophy: "Philosophy",
       branches: "Branches"
     },
-    hero: {
-      headline: "Ready-made premium looks from around the world",
-      subtext: "We curate, style, and officially import original pieces",
-      rail: "EST. 2016 — TASHKENT",
-      scrollHint: "Scroll",
+    home: {
+      rail: "Est. 2016 — Tashkent",
       titleScript: "210",
       titleGlass: "SPORTS WEAR",
-      tagline: "Beyond the ordinary"
+      tagline: "Beyond the ordinary — authentic pieces, curated style."
     },
-    looks: {
-      shopLooks: "Looks",
-      fullSet: "Full set",
-      viewLook: "View look",
-      buyFullLook: "Buy full look",
-      addSeparately: "Add separately",
-      itemsInLook: "This look includes"
-    },
-    newCollection: {
-      label: "Spring 2025",
-      title: "New collection",
-      cta: "View collection"
+    cards: {
+      sectionEyebrow: "Curated",
+      sectionTitle: "Collections & spirit",
+      wisdom: {
+        label: "Wisdom",
+        title: "Boutique philosophy",
+        body: "Every piece speaks to patience, quality, and character — depth over noise."
+      },
+      spring: {
+        label: "Spring",
+        title: "Spring collection",
+        body: "Light tones, fresh silhouettes, and seasonal energy — in store now."
+      },
+      newDrop: {
+        label: "New",
+        title: "New arrivals",
+        body: "Latest drops and limited runs — see them first."
+      },
+      special: {
+        label: "Special",
+        title: "Special collection",
+        body: "Selected brands and distinctive sets — for those who don’t compromise."
+      }
     },
     philosophy: {
       label: "Philosophy",
@@ -217,83 +205,8 @@ const TRANSLATIONS: Record<Language, Translations> = {
       title: "Our branches",
       body: "Flagship: Tashkent. For full address, hours, and new cities — message us on Telegram."
     },
-    categories: {
-      sportTitle: "Sport style",
-      sportDesc: "Built for movement. Original gear from leading global brands.",
-      sportBtn: "Explore sport",
-      classicTitle: "Semi-classic",
-      classicDesc: "The perfect balance between casual and formal. Timeless pieces.",
-      classicBtn: "Explore classic"
-    },
   }
 };
-
-type LookItemType = 'jacket' | 'pants' | 'shoes' | 'accessories' | 'top';
-
-interface LookItem {
-  id: string;
-  name: Record<Language, string>;
-  brand: string;
-  price: string;
-  type: LookItemType;
-}
-
-interface Look {
-  id: number;
-  name: Record<Language, string>;
-  image: string;
-  totalPrice: string;
-  items: LookItem[];
-}
-
-const LOOKS: Look[] = [
-  {
-    id: 1,
-    name: { ru: "Dubai Night", uz: "Dubai Night", en: "Dubai Night" },
-    image: "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&q=80&w=1200",
-    totalPrice: "4 200 000 UZS",
-    items: [
-      { id: "1-1", name: { ru: "Куртка оверсайз", uz: "Oversayz Kurtka", en: "Oversize Jacket" }, brand: "Fear of God", price: "1 800 000 UZS", type: "jacket" },
-      { id: "1-2", name: { ru: "Брюки карго", uz: "Cargo Shimlar", en: "Cargo Pants" }, brand: "Nike", price: "950 000 UZS", type: "pants" },
-      { id: "1-3", name: { ru: "Кроссовки", uz: "Krossovkalar", en: "Sneakers" }, brand: "New Balance", price: "1 200 000 UZS", type: "shoes" },
-      { id: "1-4", name: { ru: "Кепка", uz: "Kepka", en: "Cap" }, brand: "Lacoste", price: "250 000 UZS", type: "accessories" }
-    ]
-  },
-  {
-    id: 2,
-    name: { ru: "Minimal Street", uz: "Minimal Street", en: "Minimal Street" },
-    image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=1200",
-    totalPrice: "3 850 000 UZS",
-    items: [
-      { id: "2-1", name: { ru: "Худи Tech Fleece", uz: "Tech Fleece Hudisi", en: "Tech Fleece Hoodie" }, brand: "Nike", price: "1 200 000 UZS", type: "top" },
-      { id: "2-2", name: { ru: "Спортивные брюки", uz: "Sport Shimlari", en: "Sport Pants" }, brand: "Adidas", price: "850 000 UZS", type: "pants" },
-      { id: "2-3", name: { ru: "Кроссовки Air Max", uz: "Air Max Krossovkalari", en: "Air Max" }, brand: "Nike", price: "1 500 000 UZS", type: "shoes" },
-      { id: "2-4", name: { ru: "Рюкзак", uz: "Ryukzak", en: "Backpack" }, brand: "Puma", price: "300 000 UZS", type: "accessories" }
-    ]
-  },
-  {
-    id: 3,
-    name: { ru: "Smart Casual", uz: "Smart Casual", en: "Smart Casual" },
-    image: "https://images.unsplash.com/photo-1596755094514-f87034a264c6?auto=format&fit=crop&q=80&w=1200",
-    totalPrice: "3 550 000 UZS",
-    items: [
-      { id: "3-1", name: { ru: "Рубашка Oxford", uz: "Oxford Ko'ylak", en: "Oxford Shirt" }, brand: "Ralph Lauren", price: "950 000 UZS", type: "top" },
-      { id: "3-2", name: { ru: "Брюки чинос", uz: "Chinos", en: "Chinos" }, brand: "Tommy Hilfiger", price: "1 100 000 UZS", type: "pants" },
-      { id: "3-3", name: { ru: "Лоферы", uz: "Loferlar", en: "Loafers" }, brand: "Hugo Boss", price: "1 500 000 UZS", type: "shoes" }
-    ]
-  },
-  {
-    id: 4,
-    name: { ru: "Weekend Vibes", uz: "Weekend Vibes", en: "Weekend Vibes" },
-    image: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&q=80&w=1200",
-    totalPrice: "2 900 000 UZS",
-    items: [
-      { id: "4-1", name: { ru: "Свитер меринос", uz: "Merinos Sviter", en: "Merino Sweater" }, brand: "Lacoste", price: "1 400 000 UZS", type: "top" },
-      { id: "4-2", name: { ru: "Джинсы", uz: "Jinslar", en: "Jeans" }, brand: "Levi's", price: "1 000 000 UZS", type: "pants" },
-      { id: "4-3", name: { ru: "Кеды", uz: "Kedilar", en: "Sneakers" }, brand: "Converse", price: "500 000 UZS", type: "shoes" }
-    ]
-  }
-];
 
 // --- Context for Language ---
 const LangContext = React.createContext<{ lang: Language; setLang: (l: Language) => void }>({ lang: 'uz', setLang: () => {} });
@@ -348,10 +261,10 @@ const Navbar = () => {
           <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 pointer-events-none [&>*]:pointer-events-auto">
             <div className="flex items-center rounded-full border border-black/10 bg-black/[0.035] px-1.5 py-1.5 pl-4 lg:pl-5 gap-3 lg:gap-5 backdrop-blur-xl">
               <a
-                href="#shop-looks"
+                href="#spotlight"
                 className="text-[10px] font-semibold uppercase tracking-[0.2em] text-black/55 hover:text-black transition-colors"
               >
-                {t.shopLooks}
+                {t.collections}
               </a>
               <a
                 href="#philosophy"
@@ -444,11 +357,11 @@ const Navbar = () => {
           className="md:hidden backdrop-blur-xl border-t border-black/8 bg-white px-4 pt-4 pb-8 space-y-1 overflow-hidden"
         >
           <a
-            href="#shop-looks"
+            href="#spotlight"
             onClick={() => setIsOpen(false)}
             className="block text-[14px] font-semibold uppercase tracking-[0.12em] py-3 border-b border-black/8 text-black"
           >
-            {t.shopLooks}
+            {t.collections}
           </a>
           <a
             href="#philosophy"
@@ -485,189 +398,97 @@ const Navbar = () => {
   );
 };
 
-const Hero = () => {
+const CompactHome = () => {
   const { lang } = React.useContext(LangContext);
-  const t = TRANSLATIONS[lang].hero;
+  const t = TRANSLATIONS[lang].home;
 
   return (
-    <section
-      className="relative min-h-screen bg-[#141414] flex flex-col"
-      style={{ ['--hero-photo' as string]: `url('${HERO_BG_IMAGE}')` }}
-    >
-      <div className="flex-1 flex flex-col justify-center px-3 sm:px-5 md:px-8 pt-[4.5rem] pb-6 md:pt-[5.25rem] md:pb-10 max-w-[1600px] mx-auto w-full">
-        <div className="relative w-full rounded-2xl sm:rounded-[1.65rem] md:rounded-[2rem] overflow-hidden min-h-[min(68vh,680px)] aspect-[4/5] sm:aspect-[5/6] md:aspect-[21/10] lg:aspect-[2.2/1] shadow-[0_28px_90px_-16px_rgba(0,0,0,0.75)] ring-1 ring-white/[0.07]">
-          <img
-            src={HERO_BG_IMAGE}
-            alt=""
-            className="absolute inset-0 h-full w-full object-cover object-[center_28%]"
-            fetchPriority="high"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/45" />
-          <div
-            className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 hidden lg:block w-px h-32 bg-gradient-to-b from-transparent via-white/40 to-transparent"
-            aria-hidden
-          />
-
-          <div className="relative z-10 h-full min-h-[inherit] flex flex-col justify-end md:justify-center px-5 sm:px-9 md:px-12 lg:px-16 py-9 md:py-12">
-            <motion.div
-              initial={{ opacity: 0, y: 36 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: [0.22, 0.61, 0.36, 1] }}
-              className="max-w-4xl"
-            >
-              <p className="hero-tagline text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl mb-2 md:mb-3 drop-shadow-[0_4px_24px_rgba(0,0,0,0.45)]">
-                {t.titleScript}
-              </p>
-              <h1 className="relative mt-0">
-                <span className="hero-glass-headline block font-black uppercase leading-[0.9] tracking-tight text-[clamp(2.25rem,9vw,6.25rem)]">
-                  {t.titleGlass}
-                </span>
-              </h1>
-              <p className="mt-5 md:mt-7 text-[11px] sm:text-xs font-medium uppercase tracking-[0.32em] text-white/75 max-w-lg">
-                {t.tagline}
-              </p>
-            </motion.div>
-          </div>
-        </div>
-
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.85, duration: 0.5 }}
-          className="text-center text-[10px] font-semibold uppercase tracking-[0.5em] text-white/30 mt-7 md:mt-9"
+    <section className="relative bg-gradient-to-b from-neutral-50 via-white to-white border-b border-black/[0.06] scroll-mt-0">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10 pt-[4.75rem] md:pt-[5rem] pb-8 md:pb-10">
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55, ease: [0.22, 0.61, 0.36, 1] }}
+          className="text-center max-w-2xl mx-auto"
         >
-          {t.scrollHint}
-        </motion.p>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-black/40 mb-3">{t.rail}</p>
+          <p className="home-script-title text-4xl sm:text-5xl md:text-[3.25rem] text-black leading-none mb-1">{t.titleScript}</p>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-black uppercase tracking-tight text-black">{t.titleGlass}</h1>
+          <p className="mt-4 text-sm md:text-base text-black/55 leading-relaxed max-w-md mx-auto">{t.tagline}</p>
+        </motion.div>
       </div>
     </section>
   );
 };
 
-const LookCard: React.FC<{ look: Look; onSelect: () => void }> = ({ look, onSelect }) => {
+type SpotlightKey = 'wisdom' | 'spring' | 'newDrop' | 'special';
+
+const SPOTLIGHT_ORDER: SpotlightKey[] = ['wisdom', 'spring', 'newDrop', 'special'];
+
+const SPOTLIGHT_ACCENT: Record<SpotlightKey, string> = {
+  wisdom: 'from-amber-950/85 via-stone-900/55 to-black/20',
+  spring: 'from-emerald-950/70 via-teal-900/40 to-white/10',
+  newDrop: 'from-neutral-950/80 via-black/50 to-black/15',
+  special: 'from-violet-950/75 via-purple-950/45 to-black/20'
+};
+
+const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number }> = ({ cardKey, index }) => {
   const { lang } = React.useContext(LangContext);
-  const t = TRANSLATIONS[lang].looks;
+  const copy = TRANSLATIONS[lang].cards[cardKey];
+  const bg = CARD_BG[cardKey];
+  const overlay = SPOTLIGHT_ACCENT[cardKey];
 
   return (
     <motion.article
-      whileHover={{ y: -6 }}
-      className="group cursor-pointer"
-      onClick={onSelect}
+      initial={{ opacity: 0, y: 28 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-40px' }}
+      transition={{ delay: index * 0.06, type: 'spring', stiffness: 80, damping: 22 }}
+      className="group relative min-h-[220px] sm:min-h-[260px] rounded-2xl overflow-hidden border border-black/[0.07] shadow-[0_20px_50px_-24px_rgba(0,0,0,0.35)] bg-neutral-900"
     >
-      <motion.div
-        className="relative w-full max-w-[240px] sm:max-w-none mx-auto sm:mx-0 aspect-[3/4] max-h-[300px] sm:max-h-[340px] overflow-hidden bg-neutral-200 mb-3 rounded-xl border border-black/5"
-        whileHover={{ borderColor: 'rgba(0,0,0,0.15)', boxShadow: '0 16px 32px -12px rgba(0,0,0,0.12)' }}
-        transition={{ duration: 0.35 }}
-      >
+      <div className="absolute inset-0">
         <motion.img
-          src={look.image}
-          alt={look.name[lang]}
-          loading="lazy"
-          className="w-full h-full object-cover"
+          src={bg}
+          alt=""
+          className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+          loading={index < 2 ? 'eager' : 'lazy'}
+          decoding="async"
           referrerPolicy="no-referrer"
-          whileHover={{ scale: 1.08 }}
-          transition={{ duration: 0.6, ease: [0.22, 0.61, 0.36, 1] }}
         />
-        <span className="absolute top-4 left-4 bg-black text-white text-[10px] font-bold uppercase px-2 py-1 tracking-widest">
-          {t.fullSet}
+        <div className={cn('absolute inset-0 bg-gradient-to-br', overlay)} />
+        <div className="absolute inset-0 ring-1 ring-inset ring-white/10 rounded-2xl pointer-events-none" />
+      </div>
+      <div className="relative z-10 flex flex-col justify-end h-full min-h-[220px] sm:min-h-[260px] p-6 md:p-8 text-left">
+        <span className="inline-flex w-fit text-[10px] font-bold uppercase tracking-[0.28em] text-white/85 bg-white/15 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20 mb-3">
+          {copy.label}
         </span>
-        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/25 transition-colors duration-300 flex items-end justify-center pb-6">
-          <motion.span
-            className="bg-white text-black px-8 py-4 font-bold uppercase text-sm tracking-widest inline-block opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            {t.viewLook}
-          </motion.span>
-        </div>
-      </motion.div>
-      <h3 className="text-base md:text-lg font-bold tracking-tight text-black">{look.name[lang]}</h3>
-      <p className="text-xs md:text-sm text-black/50 mt-1">{look.totalPrice}</p>
+        <h2 className="text-xl md:text-2xl font-black uppercase tracking-tight text-white drop-shadow-sm">{copy.title}</h2>
+        <p className="mt-2 text-sm md:text-[0.95rem] text-white/80 leading-relaxed max-w-sm">{copy.body}</p>
+      </div>
     </motion.article>
   );
 };
 
-const LookPage: React.FC<{ look: Look; onClose: () => void }> = ({ look, onClose }) => {
+const SpotlightSection = () => {
   const { lang } = React.useContext(LangContext);
-  const t = TRANSLATIONS[lang].looks;
+  const t = TRANSLATIONS[lang].cards;
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0, transition: { duration: 0.25 } }}
-      transition={{ duration: 0.3 }}
-      className="fixed inset-0 z-[100] bg-white overflow-y-auto"
-    >
-      <button
-        onClick={onClose}
-        className="fixed top-6 right-6 z-10 w-12 h-12 flex items-center justify-center bg-black/5 hover:bg-black/10 transition-colors"
-        aria-label="Close"
-      >
-        <X size={24} />
-      </button>
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-            className="relative aspect-[4/5] overflow-hidden bg-neutral-100"
-          >
-            <img src={look.image} alt={look.name[lang]} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-          </motion.div>
-          <div>
-            <motion.h1
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.15, duration: 0.4 }}
-              className="text-4xl md:text-5xl font-black uppercase tracking-tight mb-2"
-            >
-              {look.name[lang]}
-            </motion.h1>
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.25 }}
-              className="text-lg text-black/60 mb-10"
-            >
-              {t.itemsInLook}
-            </motion.p>
-            <ul className="space-y-6 mb-12">
-              {look.items.map((item, i) => (
-                <motion.li
-                  key={item.id}
-                  initial={{ opacity: 0, x: 12 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.3 + i * 0.06 }}
-                  className="flex flex-wrap items-center justify-between gap-4 py-4 border-b border-black/10"
-                >
-                  <div>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-black/50">{item.brand}</p>
-                    <p className="font-bold">{item.name[lang]}</p>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <span className="font-bold">{item.price}</span>
-                    <button className="text-xs font-bold uppercase tracking-widest text-black/60 hover:text-black border-b border-transparent hover:border-black transition-colors">
-                      {t.addSeparately}
-                    </button>
-                  </div>
-                </motion.li>
-              ))}
-            </ul>
-            <motion.button
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-              className="w-full bg-black text-white py-5 font-black uppercase tracking-widest text-lg hover:bg-black/90 transition-colors"
-              whileHover={{ scale: 1.01 }}
-              whileTap={{ scale: 0.99 }}
-            >
-              {t.buyFullLook} — {look.totalPrice}
-            </motion.button>
+    <section id="spotlight" className="py-12 md:py-16 bg-white scroll-mt-24">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <SectionReveal>
+          <div className="mb-8 md:mb-10 text-center md:text-left">
+            <span className="text-xs font-bold uppercase tracking-[0.3em] text-black/45 block mb-2">{t.sectionEyebrow}</span>
+            <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tight text-black">{t.sectionTitle}</h2>
           </div>
+        </SectionReveal>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 md:gap-6">
+          {SPOTLIGHT_ORDER.map((key, i) => (
+            <SpotlightCard key={key} cardKey={key} index={i} />
+          ))}
         </div>
       </div>
-    </motion.div>
+    </section>
   );
 };
 
@@ -783,39 +604,15 @@ const Footer = () => {
 
 export default function App() {
   const [lang, setLang] = React.useState<Language>('uz');
-  const [selectedLook, setSelectedLook] = useState<Look | null>(null);
-  const t = TRANSLATIONS[lang];
 
   return (
     <LangContext.Provider value={{ lang, setLang }}>
       <div className="min-h-screen bg-white">
         <Navbar />
-        {selectedLook && <LookPage look={selectedLook} onClose={() => setSelectedLook(null)} />}
 
         <main>
-          <Hero />
-
-          <section id="shop-looks" className="py-16 md:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-24">
-            <SectionReveal>
-              <div className="mb-10 md:mb-12">
-                <span className="text-xs font-bold uppercase tracking-[0.3em] text-black/50 mb-2 block">{t.looks.shopLooks}</span>
-                <h2 className="text-4xl md:text-5xl font-black uppercase">{t.looks.shopLooks}</h2>
-              </div>
-            </SectionReveal>
-            <motion.div
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: '-60px' }}
-              variants={{ visible: { transition: { staggerChildren: 0.08 } } }}
-            >
-              {LOOKS.map((look, i) => (
-                <motion.div key={look.id} variants={{ hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 80, damping: 20 } } }}>
-                  <LookCard look={look} onSelect={() => setSelectedLook(look)} />
-                </motion.div>
-              ))}
-            </motion.div>
-          </section>
+          <CompactHome />
+          <SpotlightSection />
 
           <PhilosophySection />
           <BranchesSection />
