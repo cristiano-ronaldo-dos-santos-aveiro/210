@@ -150,7 +150,7 @@ const TRANSLATIONS: Record<Language, Translations> = {
       },
       newDrop: {
         label: "Poyabzal",
-        title: "Lyuks poyabzal",
+        title: "Oyoq kiymlar"
         body: "Teri, sport va klassik siluetlar — cheklangan partiyalar va original modellar."
       },
       special: {
