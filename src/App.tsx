@@ -8,9 +8,25 @@ const LOGO_210_SRC = new URL('../photo/IMG_2657.PNG', import.meta.url).href;
 const LOGO_ANBA_SRC = new URL('../photo/IMG_26589.PNG', import.meta.url).href;
 
 /** Spotlight card backgrounds (replace with your own photos anytime) */
+/**
+ * Brand strip: favicons + optional /public/brands/{localSlug}.png — add your PNGs when ready.
+ */
+const BRAND_MARQUEE_ITEMS = [
+  { domain: 'fila.com', alt: 'FILA', localSlug: 'fila' as const },
+  { domain: 'adidas.com', alt: 'Adidas', localSlug: 'adidas' as const },
+  { domain: 'wilson.com', alt: 'Wilson', localSlug: 'wilson' as const },
+  { domain: 'puma.com', alt: 'Puma', localSlug: 'puma' as const },
+  { domain: 'on-running.com', alt: 'On', localSlug: 'on-cloud' as const },
+  { domain: 'gucci.com', alt: 'Gucci', localSlug: 'gucci' as const },
+  { domain: 'underarmour.com', alt: 'Under Armour', localSlug: 'under-armour' as const },
+  { domain: 'hermes.com', alt: 'Hermès', localSlug: 'hermes' as const },
+  { domain: 'columbia.com', alt: 'Columbia', localSlug: 'columbia' as const },
+  { domain: 'arcteryx.com', alt: "Arc'teryx", localSlug: 'arcteryx' as const }
+] as const;
+
 const CARD_BG = {
-  wisdom:
-    'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&q=80&w=1200',
+  featured:
+    'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&q=80&w=1200',
   spring:
     'https://images.unsplash.com/photo-1490750967868-88cb4486a973?auto=format&fit=crop&q=80&w=1200',
   newDrop:
@@ -35,19 +51,14 @@ type Language = 'uz' | 'ru' | 'en';
 interface Translations {
   nav: {
     collections: string;
+    brands: string;
     philosophy: string;
     branches: string;
-  };
-  home: {
-    rail: string;
-    titleScript: string;
-    titleGlass: string;
-    tagline: string;
   };
   cards: {
     sectionEyebrow: string;
     sectionTitle: string;
-    wisdom: { label: string; title: string; body: string };
+    featured: { label: string; title: string; body: string };
     spring: { label: string; title: string; body: string };
     newDrop: { label: string; title: string; body: string };
     special: { label: string; title: string; body: string };
@@ -68,22 +79,17 @@ const TRANSLATIONS: Record<Language, Translations> = {
   uz: {
     nav: {
       collections: "Kolleksiyalar",
+      brands: "Brendlar",
       philosophy: "Falsafa",
       branches: "Filiallar"
     },
-    home: {
-      rail: "2016 — Toshkent",
-      titleScript: "210",
-      titleGlass: "SPORTS WEAR",
-      tagline: "Biz oddiylidan yiroqmiz — original va tanlangan uslub."
-    },
     cards: {
       sectionEyebrow: "Tanlov",
-      sectionTitle: "Kolleksiyalar va ruh",
-      wisdom: {
-        label: "Hikmat",
-        title: "Do'kon falsafasi",
-        body: "Har bir buyum — sabr, sifat va o'ziga xoslik haqida. Oddiylik emas, chuqurlik."
+      sectionTitle: "Kolleksiyalar",
+      featured: {
+        label: "Saralangan",
+        title: "Mavsumiy tanlov",
+        body: "Trend siluetlar va yangi palitra — hozir do'konda."
       },
       spring: {
         label: "Bahor",
@@ -115,22 +121,17 @@ const TRANSLATIONS: Record<Language, Translations> = {
   ru: {
     nav: {
       collections: "Коллекции",
+      brands: "Бренды",
       philosophy: "Философия",
       branches: "Филиалы"
     },
-    home: {
-      rail: "С 2016 — Ташкент",
-      titleScript: "210",
-      titleGlass: "SPORTS WEAR",
-      tagline: "Выше обыденности — оригинал и отобранный стиль."
-    },
     cards: {
       sectionEyebrow: "Выбор",
-      sectionTitle: "Коллекции и настроение",
-      wisdom: {
-        label: "Мудрость",
-        title: "Философия бутика",
-        body: "Каждая вещь — о терпении, качестве и характере. Не про простоту, а про глубину."
+      sectionTitle: "Коллекции",
+      featured: {
+        label: "Подборка",
+        title: "Сезонный тренд",
+        body: "Актуальные силуэты и палитра — уже в бутике."
       },
       spring: {
         label: "Весна",
@@ -162,22 +163,17 @@ const TRANSLATIONS: Record<Language, Translations> = {
   en: {
     nav: {
       collections: "Collections",
+      brands: "Brands",
       philosophy: "Philosophy",
       branches: "Branches"
     },
-    home: {
-      rail: "Est. 2016 — Tashkent",
-      titleScript: "210",
-      titleGlass: "SPORTS WEAR",
-      tagline: "Beyond the ordinary — authentic pieces, curated style."
-    },
     cards: {
       sectionEyebrow: "Curated",
-      sectionTitle: "Collections & spirit",
-      wisdom: {
-        label: "Wisdom",
-        title: "Boutique philosophy",
-        body: "Every piece speaks to patience, quality, and character — depth over noise."
+      sectionTitle: "Collections",
+      featured: {
+        label: "Featured",
+        title: "Season edit",
+        body: "Fresh silhouettes and palette — in store now."
       },
       spring: {
         label: "Spring",
@@ -278,6 +274,12 @@ const Navbar = () => {
               >
                 {t.branches}
               </a>
+              <a
+                href="#brand-marquee"
+                className="text-[10px] font-semibold uppercase tracking-[0.2em] text-black/55 hover:text-black transition-colors"
+              >
+                {t.brands}
+              </a>
               <div className="h-5 w-px shrink-0 bg-black/15" aria-hidden />
               <div className="flex items-center gap-0.5 pr-1">
                 {(['uz', 'ru', 'en'] as const).map((l) => (
@@ -377,6 +379,13 @@ const Navbar = () => {
           >
             {t.branches}
           </a>
+          <a
+            href="#brand-marquee"
+            onClick={() => setIsOpen(false)}
+            className="block text-[14px] font-semibold uppercase tracking-[0.12em] py-3 border-b border-black/8 text-black"
+          >
+            {t.brands}
+          </a>
           <div className="flex items-center gap-4 pt-6">
             <button
               type="button"
@@ -398,35 +407,12 @@ const Navbar = () => {
   );
 };
 
-const CompactHome = () => {
-  const { lang } = React.useContext(LangContext);
-  const t = TRANSLATIONS[lang].home;
+type SpotlightKey = 'featured' | 'spring' | 'newDrop' | 'special';
 
-  return (
-    <section className="relative bg-gradient-to-b from-neutral-50 via-white to-white border-b border-black/[0.06] scroll-mt-0">
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10 pt-[4.75rem] md:pt-[5rem] pb-8 md:pb-10">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55, ease: [0.22, 0.61, 0.36, 1] }}
-          className="text-center max-w-2xl mx-auto"
-        >
-          <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-black/40 mb-3">{t.rail}</p>
-          <p className="home-script-title text-4xl sm:text-5xl md:text-[3.25rem] text-black leading-none mb-1">{t.titleScript}</p>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-black uppercase tracking-tight text-black">{t.titleGlass}</h1>
-          <p className="mt-4 text-sm md:text-base text-black/55 leading-relaxed max-w-md mx-auto">{t.tagline}</p>
-        </motion.div>
-      </div>
-    </section>
-  );
-};
-
-type SpotlightKey = 'wisdom' | 'spring' | 'newDrop' | 'special';
-
-const SPOTLIGHT_ORDER: SpotlightKey[] = ['wisdom', 'spring', 'newDrop', 'special'];
+const SPOTLIGHT_ORDER: SpotlightKey[] = ['featured', 'spring', 'newDrop', 'special'];
 
 const SPOTLIGHT_ACCENT: Record<SpotlightKey, string> = {
-  wisdom: 'from-amber-950/85 via-stone-900/55 to-black/20',
+  featured: 'from-rose-950/80 via-neutral-900/50 to-black/25',
   spring: 'from-emerald-950/70 via-teal-900/40 to-white/10',
   newDrop: 'from-neutral-950/80 via-black/50 to-black/15',
   special: 'from-violet-950/75 via-purple-950/45 to-black/20'
@@ -440,30 +426,29 @@ const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number }> = ({ car
 
   return (
     <motion.article
-      initial={{ opacity: 0, y: 28 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-40px' }}
-      transition={{ delay: index * 0.06, type: 'spring', stiffness: 80, damping: 22 }}
-      className="group relative min-h-[220px] sm:min-h-[260px] rounded-2xl overflow-hidden border border-black/[0.07] shadow-[0_20px_50px_-24px_rgba(0,0,0,0.35)] bg-neutral-900"
+      initial={{ opacity: 0, y: 24 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.08, type: 'spring', stiffness: 76, damping: 22 }}
+      className="group relative w-full max-w-md mx-auto aspect-[3/5] rounded-2xl overflow-hidden border border-black/[0.08] shadow-[0_24px_60px_-28px_rgba(0,0,0,0.4)] bg-neutral-900"
     >
       <div className="absolute inset-0">
-        <motion.img
+        <img
           src={bg}
           alt=""
-          className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+          className="h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.04]"
           loading={index < 2 ? 'eager' : 'lazy'}
           decoding="async"
           referrerPolicy="no-referrer"
         />
-        <div className={cn('absolute inset-0 bg-gradient-to-br', overlay)} />
+        <div className={cn('absolute inset-0 bg-gradient-to-t', overlay)} />
         <div className="absolute inset-0 ring-1 ring-inset ring-white/10 rounded-2xl pointer-events-none" />
       </div>
-      <div className="relative z-10 flex flex-col justify-end h-full min-h-[220px] sm:min-h-[260px] p-6 md:p-8 text-left">
-        <span className="inline-flex w-fit text-[10px] font-bold uppercase tracking-[0.28em] text-white/85 bg-white/15 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20 mb-3">
+      <div className="relative z-10 flex flex-col justify-end h-full p-6 md:p-8 text-left min-h-0">
+        <span className="inline-flex w-fit text-[10px] font-bold uppercase tracking-[0.28em] text-white/90 bg-white/15 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20 mb-3">
           {copy.label}
         </span>
         <h2 className="text-xl md:text-2xl font-black uppercase tracking-tight text-white drop-shadow-sm">{copy.title}</h2>
-        <p className="mt-2 text-sm md:text-[0.95rem] text-white/80 leading-relaxed max-w-sm">{copy.body}</p>
+        <p className="mt-2 text-sm md:text-[0.95rem] text-white/85 leading-relaxed max-w-[280px]">{copy.body}</p>
       </div>
     </motion.article>
   );
@@ -474,21 +459,83 @@ const SpotlightSection = () => {
   const t = TRANSLATIONS[lang].cards;
 
   return (
-    <section id="spotlight" className="py-12 md:py-16 bg-white scroll-mt-24">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <SectionReveal>
-          <div className="mb-8 md:mb-10 text-center md:text-left">
-            <span className="text-xs font-bold uppercase tracking-[0.3em] text-black/45 block mb-2">{t.sectionEyebrow}</span>
-            <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tight text-black">{t.sectionTitle}</h2>
-          </div>
-        </SectionReveal>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 md:gap-6">
+    <section id="spotlight" className="bg-white scroll-mt-24">
+      <div className="max-w-lg mx-auto px-4 sm:px-6 lg:px-8 pt-[4.85rem] md:pt-[5.1rem] pb-10 md:pb-14">
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45 }}
+          className="mb-8 md:mb-10 text-center"
+        >
+          <span className="text-xs font-bold uppercase tracking-[0.3em] text-black/45 block mb-2">{t.sectionEyebrow}</span>
+          <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tight text-black">{t.sectionTitle}</h1>
+        </motion.div>
+        <div className="flex flex-col gap-6 md:gap-8">
           {SPOTLIGHT_ORDER.map((key, i) => (
             <SpotlightCard key={key} cardKey={key} index={i} />
           ))}
         </div>
       </div>
     </section>
+  );
+};
+
+const BrandMarqueeLogo: React.FC<{ domain: string; alt: string; localSlug: string }> = ({ domain, alt, localSlug }) => {
+  const [failed, setFailed] = useState(false);
+  const remoteSrc = `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=128`;
+  const localSrc = `/brands/${localSlug}.png`;
+  const [src, setSrc] = useState(remoteSrc);
+
+  if (failed) {
+    return (
+      <span className="inline-flex items-center mx-8 md:mx-12 text-xl md:text-3xl font-semibold uppercase text-white/55 tracking-tight whitespace-nowrap">
+        {alt}
+      </span>
+    );
+  }
+
+  return (
+    <motion.span className="inline-flex items-center mx-8 md:mx-12" whileHover={{ scale: 1.06 }}>
+      <img
+        src={src}
+        alt={alt}
+        className="h-10 md:h-12 w-10 md:w-12 md:min-w-[48px] object-contain object-center rounded-sm opacity-95 hover:opacity-100 transition-opacity duration-300"
+        loading="lazy"
+        decoding="async"
+        referrerPolicy="no-referrer"
+        onError={() => {
+          if (src === remoteSrc) {
+            setSrc(localSrc);
+          } else {
+            setFailed(true);
+          }
+        }}
+      />
+    </motion.span>
+  );
+};
+
+const BrandMarquee = () => {
+  const loop = [...BRAND_MARQUEE_ITEMS, ...BRAND_MARQUEE_ITEMS];
+
+  return (
+    <div
+      id="brand-marquee"
+      className="relative py-7 md:py-9 bg-black border-y border-white/10 overflow-hidden scroll-mt-24"
+    >
+      <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none" />
+      <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none" />
+      <div className="flex animate-marquee items-center w-max">
+        {loop.map((item, i) => (
+          <BrandMarqueeLogo
+            key={`${item.domain}-${i}`}
+            domain={item.domain}
+            alt={item.alt}
+            localSlug={item.localSlug}
+          />
+        ))}
+      </div>
+    </div>
   );
 };
 
@@ -611,8 +658,8 @@ export default function App() {
         <Navbar />
 
         <main>
-          <CompactHome />
           <SpotlightSection />
+          <BrandMarquee />
 
           <PhilosophySection />
           <BranchesSection />
@@ -621,6 +668,14 @@ export default function App() {
         <Footer />
 
         <style>{`
+          @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+          }
+          .animate-marquee {
+            display: inline-flex;
+            animation: marquee 30s linear infinite;
+          }
           @keyframes float {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-6px); }
