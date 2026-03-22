@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { ShoppingBag, Search, Menu, X, Instagram, MapPin } from 'lucide-react';
+import { ShoppingBag, Search, Menu, X, Instagram, MapPin, Phone } from 'lucide-react';
 import { cn } from './lib/utils';
 
 /** PNG exports in /photo (210 stack + signature mark) */
@@ -38,6 +38,8 @@ const CARD_BG = {
 /** Replace with your real contacts */
 const CONTACT_TELEGRAM = 'https://t.me/Direct_210';
 const CONTACT_INSTAGRAM = 'https://www.instagram.com/210_direct/';
+const CONTACT_PHONE_TEL = 'tel:+998952100000';
+const CONTACT_PHONE_LABEL = '+998 952 100 000';
 
 const TelegramIcon = ({ className, size = 22 }: { className?: string; size?: number }) => (
   <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
@@ -300,6 +302,14 @@ const Navbar = () => {
           </div>
 
           <div className="hidden md:flex items-center gap-1 z-10">
+            <motion.a
+              href={CONTACT_PHONE_TEL}
+              className={cn('p-2.5 rounded-full transition-colors', iconBtn)}
+              whileTap={{ scale: 0.94 }}
+              aria-label={`Call ${CONTACT_PHONE_LABEL}`}
+            >
+              <Phone size={20} strokeWidth={1.75} />
+            </motion.a>
             <motion.button
               type="button"
               className={cn('p-2.5 rounded-full transition-colors', iconBtn)}
@@ -387,6 +397,14 @@ const Navbar = () => {
             {t.brands}
           </a>
           <div className="flex items-center gap-4 pt-6">
+            <motion.a
+              href={CONTACT_PHONE_TEL}
+              className="p-2 rounded-full border border-white/20 text-white/85 hover:text-white hover:bg-white/[0.06]"
+              whileTap={{ scale: 0.96 }}
+              aria-label={`Call ${CONTACT_PHONE_LABEL}`}
+            >
+              <Phone size={20} strokeWidth={1.75} />
+            </motion.a>
             <button
               type="button"
               className="p-2 rounded-full border border-white/20 text-white/85 hover:text-white hover:bg-white/[0.06]"
@@ -644,6 +662,15 @@ const Footer = () => {
             whileTap={{ scale: 0.96 }}
           >
             <TelegramIcon size={26} />
+          </motion.a>
+          <motion.a
+            href={CONTACT_PHONE_TEL}
+            aria-label={`Phone ${CONTACT_PHONE_LABEL}`}
+            className="text-white/75 hover:text-white transition-colors p-2"
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.96 }}
+          >
+            <Phone size={26} strokeWidth={1.75} />
           </motion.a>
         </div>
       </div>
