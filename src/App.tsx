@@ -37,7 +37,7 @@ const CARD_BG = {
 
 /** Replace with your real contacts */
 const CONTACT_TELEGRAM = 'https://t.me/shop210';
-const CONTACT_INSTAGRAM = 'https://instagram.com/';
+const CONTACT_INSTAGRAM = 'https://www.instagram.com/210_direct/';
 
 const TelegramIcon = ({ className, size = 22 }: { className?: string; size?: number }) => (
   <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
