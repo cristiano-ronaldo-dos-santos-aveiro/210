@@ -3,9 +3,9 @@ import { motion } from 'motion/react';
 import { ShoppingBag, Search, Menu, X, Instagram, MapPin, Phone } from 'lucide-react';
 import { cn } from './lib/utils';
 
-/** PNG exports in /photo (210 stack + collections / signature mark) */
+/** PNG exports in /photo (210 stack + partner / signature mark) */
 const LOGO_210_SRC = new URL('../photo/IMG_2657.PNG', import.meta.url).href;
-const LOGO_COLLECTIONS_SRC = new URL('../photo/IMG_26589.PNG', import.meta.url).href;
+const LOGO_COLLECTIONS_SRC = new URL('../photo/logo-collections.png', import.meta.url).href;
 
 /** Spotlight card backgrounds (replace with your own photos anytime) */
 /** Brand strip: logos from /public/brands/{slug}.png */
@@ -39,6 +39,31 @@ const CONTACT_INSTAGRAM = 'https://www.instagram.com/210_direct/';
 const CONTACT_PHONE_TEL = 'tel:+998952100000';
 const CONTACT_PHONE_LABEL = '+998 952 100 000';
 
+/** Filial ma’lumotlari — har birini alohida yangilang (Instagram, telefon, xarita) */
+const STORE_BRANCHES = [
+  {
+    name: 'Nurafshon',
+    instagram: CONTACT_INSTAGRAM,
+    phoneTel: CONTACT_PHONE_TEL,
+    phoneLabel: CONTACT_PHONE_LABEL,
+    mapsUrl: 'https://www.google.com/maps/search/?api=1&query=210+Nurafshon%2C+Uzbekistan'
+  },
+  {
+    name: 'Gulzor',
+    instagram: CONTACT_INSTAGRAM,
+    phoneTel: CONTACT_PHONE_TEL,
+    phoneLabel: CONTACT_PHONE_LABEL,
+    mapsUrl: 'https://www.google.com/maps/search/?api=1&query=210+Gulzor%2C+Uzbekistan'
+  },
+  {
+    name: 'Nukus',
+    instagram: CONTACT_INSTAGRAM,
+    phoneTel: CONTACT_PHONE_TEL,
+    phoneLabel: CONTACT_PHONE_LABEL,
+    mapsUrl: 'https://www.google.com/maps/search/?api=1&query=210+Nukus%2C+Uzbekistan'
+  }
+] as const;
+
 const TelegramIcon = ({ className, size = 22 }: { className?: string; size?: number }) => (
   <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
     <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.863-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.831-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
@@ -70,6 +95,9 @@ interface Translations {
     label: string;
     title: string;
     body: string;
+    actionInstagram: string;
+    actionPhone: string;
+    actionMaps: string;
   };
 }
 
@@ -105,13 +133,16 @@ const TRANSLATIONS: Record<Language, Translations> = {
     },
     philosophy: {
       label: "Falsafa",
-      title: "Faqat original. 2016-yildan beri.",
-      body: "210 — bu brend tarixi va qadriyatlar. Biz oddiylikdan yiroqmiz: har bir buyum birinchi qo'ldan, original va sifat kafolati bilan. Sport va uslubni birlashtirib, dunyo bo'ylab tanlangan ko'rinishlarni taklif qilamiz. Kompromiss qilmaydiganlar uchun do'kon — 2016-yildan beri."
+      title: "Biz oddiylidan yiroqmiz!",
+      body: "Luxury faqat kiyim bilan o'lchanmaydi. U serviz bilan boshlanadi va yuqori servis mukammallikka olib boradi !\n\n210 va Anba shu servizni o'z mijozlariga taqdim qiladi !"
     },
     branches: {
       label: "Filiallar",
       title: "Bizning filiallar",
-      body: "Markaziy savdo nuqtasi: Toshkent. Batafsil manzil, ish vaqti va boshqa shaharlar bo'yicha yangiliklar — Telegram orqali yozing."
+      body: "Uchta filial — Nurafshon, Gulzor va Nukus. Pastdagi kartochkalardan aloqa va manzilni oching.",
+      actionInstagram: "Instagram",
+      actionPhone: "Telefon",
+      actionMaps: "Xarita"
     },
   },
   ru: {
@@ -145,13 +176,16 @@ const TRANSLATIONS: Record<Language, Translations> = {
     },
     philosophy: {
       label: "Философия",
-      title: "Только оригинал. С 2016 года.",
-      body: "210 — это история бренда и ценности. Мы выше обыденности: каждая вещь из первых рук, оригинал и гарантия качества. Соединяем спорт и стиль, предлагаем курируемые образы со всего мира. Для тех, кто не идёт на компромиссы — с 2016 года."
+      title: "Мы далеки от обыденности!",
+      body: "210 — это история бренда и его ценности. Мы далеки от обыденности: каждая вещь из первых рук, оригинальная и с гарантией качества. Мы предлагаем отобранные образы со всего мира, сочетая спорт и стиль. Магазин для тех, кто не идёт на компромиссы — с 2016 года."
     },
     branches: {
       label: "Филиалы",
       title: "Наши филиалы",
-      body: "Главная точка: Ташкент. Адрес, часы работы и открытие в других городах — напишите в Telegram."
+      body: "Три точки — Нурафшон, Гульзор и Нукус. Откройте контакты и карту в карточках ниже.",
+      actionInstagram: "Instagram",
+      actionPhone: "Телефон",
+      actionMaps: "Карта"
     },
   },
   en: {
@@ -185,13 +219,16 @@ const TRANSLATIONS: Record<Language, Translations> = {
     },
     philosophy: {
       label: "Philosophy",
-      title: "Original only. Since 2016.",
-      body: "210 is our story and our values. Beyond the ordinary: every piece is first-hand, authentic, and quality-guaranteed. We blend sport and style with curated looks from around the world. For those who don't compromise — since 2016."
+      title: "We are far from ordinary!",
+      body: "210 is the history and values of the brand. We are far from ordinary: each item is first-hand, original and with a guarantee of quality. We offer selected looks from around the world, combining sport and style. A store for those who do not compromise — since 2016."
     },
     branches: {
       label: "Branches",
       title: "Our branches",
-      body: "Flagship: Tashkent. For full address, hours, and new cities — message us on Telegram."
+      body: "Three locations — Nurafshon, Gulzor, and Nukus. Use the cards below for Instagram, phone, and maps.",
+      actionInstagram: "Instagram",
+      actionPhone: "Phone",
+      actionMaps: "Location"
     },
   }
 };
@@ -223,7 +260,7 @@ const Navbar = () => {
             className="flex-shrink-0 flex items-center gap-2 md:gap-2.5 z-10"
             whileHover={{ opacity: 0.92 }}
             whileTap={{ scale: 0.98 }}
-            aria-label="210 × Collections"
+            aria-label="210 × Anpa Limited"
           >
             <img
               src={LOGO_210_SRC}
@@ -238,7 +275,7 @@ const Navbar = () => {
             </span>
             <img
               src={LOGO_COLLECTIONS_SRC}
-              alt="Collections"
+              alt="Anpa Limited"
               className="h-6 md:h-8 w-auto max-h-8 object-contain object-left"
               loading="eager"
               decoding="async"
@@ -458,7 +495,7 @@ const SpotlightSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45 }}
           className="mb-6 md:mb-8 flex flex-col items-center justify-center"
-          aria-label="210 × Collections"
+          aria-label="210 × Anpa Limited"
         >
           <div className="flex items-center justify-center gap-2.5 md:gap-3.5 min-h-[2.75rem] md:min-h-[3.25rem]">
             <img
@@ -474,7 +511,7 @@ const SpotlightSection = () => {
             </span>
             <img
               src={LOGO_COLLECTIONS_SRC}
-              alt="Collections"
+              alt="Anpa Limited"
               className="h-[1.35rem] sm:h-[1.5rem] md:h-[1.75rem] w-auto max-h-[1.75rem] object-contain object-center"
               loading="eager"
               decoding="async"
@@ -498,18 +535,18 @@ const BrandMarqueeLogo: React.FC<{ alt: string; slug: string }> = ({ alt, slug }
 
   if (failed) {
     return (
-      <span className="inline-flex items-center mx-10 md:mx-14 text-2xl md:text-4xl font-semibold uppercase text-white/55 tracking-tight whitespace-nowrap">
+      <span className="inline-flex items-center mx-8 md:mx-12 text-xl md:text-3xl font-semibold uppercase text-white/55 tracking-tight whitespace-nowrap">
         {alt}
       </span>
     );
   }
 
   return (
-    <motion.span className="inline-flex items-center mx-10 md:mx-14" whileHover={{ scale: 1.06 }}>
+    <motion.span className="inline-flex items-center mx-8 md:mx-12" whileHover={{ scale: 1.06 }}>
       <img
         src={src}
         alt={alt}
-        className="h-14 md:h-[4.25rem] w-auto max-w-[155px] md:max-w-[185px] object-contain object-center opacity-95 hover:opacity-100 transition-opacity duration-300"
+        className="h-12 md:h-[3.5rem] w-auto max-w-[132px] md:max-w-[158px] object-contain object-center opacity-95 hover:opacity-100 transition-opacity duration-300"
         loading="lazy"
         decoding="async"
         onError={() => setFailed(true)}
@@ -524,7 +561,7 @@ const BrandMarquee = () => {
   return (
     <div
       id="brand-marquee"
-      className="relative py-8 md:py-10 bg-black border-y border-white/10 overflow-hidden scroll-mt-24"
+      className="relative py-7 md:py-9 bg-black border-y border-white/10 overflow-hidden scroll-mt-24"
     >
       <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none" />
       <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none" />
@@ -559,10 +596,66 @@ const PhilosophySection = () => {
         <SectionReveal>
           <p className="text-xs font-bold uppercase tracking-[0.3em] text-black/45 mb-3">{t.label}</p>
           <h2 className="text-3xl md:text-4xl font-black uppercase text-black mb-6 leading-tight">{t.title}</h2>
-          <p className="text-base md:text-lg text-black/65 leading-relaxed">{t.body}</p>
+          <p className="text-base md:text-lg text-black/65 leading-relaxed whitespace-pre-line">{t.body}</p>
         </SectionReveal>
       </div>
     </section>
+  );
+};
+
+const BranchCard: React.FC<{
+  branch: (typeof STORE_BRANCHES)[number];
+  actionInstagram: string;
+  actionPhone: string;
+  actionMaps: string;
+  index: number;
+}> = ({ branch, actionInstagram, actionPhone, actionMaps, index }) => {
+  const iconBtn =
+    'inline-flex items-center justify-center rounded-full border border-black/10 bg-black text-white p-2.5 hover:bg-neutral-800 transition-colors shadow-sm';
+
+  return (
+    <motion.article
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-40px' }}
+      transition={{ delay: index * 0.06, type: 'spring', stiffness: 80, damping: 22 }}
+      className="rounded-xl border border-black/[0.08] bg-white px-4 py-4 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.12)] flex flex-col items-center text-center gap-3"
+    >
+      <div className="flex items-center justify-center gap-2 text-black">
+        <MapPin size={18} className="text-black/45 shrink-0" strokeWidth={2} aria-hidden />
+        <h3 className="text-base sm:text-lg font-black uppercase tracking-tight">{branch.name}</h3>
+      </div>
+      <div className="flex items-center justify-center gap-2 w-full pt-1">
+        <motion.a
+          href={branch.instagram}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={iconBtn}
+          aria-label={`${branch.name} — ${actionInstagram}`}
+          whileTap={{ scale: 0.96 }}
+        >
+          <Instagram size={18} strokeWidth={1.75} />
+        </motion.a>
+        <motion.a
+          href={branch.phoneTel}
+          className={iconBtn}
+          aria-label={`${branch.name} — ${actionPhone}: ${branch.phoneLabel}`}
+          whileTap={{ scale: 0.96 }}
+        >
+          <Phone size={18} strokeWidth={1.75} />
+        </motion.a>
+        <motion.a
+          href={branch.mapsUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={iconBtn}
+          aria-label={`${branch.name} — ${actionMaps}`}
+          whileTap={{ scale: 0.96 }}
+        >
+          <MapPin size={18} strokeWidth={1.75} />
+        </motion.a>
+      </div>
+    </motion.article>
   );
 };
 
@@ -571,16 +664,29 @@ const BranchesSection = () => {
   const t = TRANSLATIONS[lang].branches;
 
   return (
-    <section id="branches" className="py-16 md:py-20 bg-white border-t border-black/5 scroll-mt-24">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="branches" className="py-14 md:py-20 bg-white border-t border-black/5 scroll-mt-24">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionReveal>
-          <p className="text-xs font-bold uppercase tracking-[0.3em] text-black/45 mb-3">{t.label}</p>
-          <h2 className="text-3xl md:text-4xl font-black uppercase text-black mb-6 leading-tight flex items-center gap-3">
-            <MapPin size={28} className="text-black/55 shrink-0" strokeWidth={1.75} />
+          <p className="text-xs font-bold uppercase tracking-[0.3em] text-black/45 mb-2 text-center">{t.label}</p>
+          <h2 className="text-2xl md:text-3xl font-black uppercase text-black mb-3 md:mb-4 leading-tight text-center">
             {t.title}
           </h2>
-          <p className="text-base md:text-lg text-black/65 leading-relaxed">{t.body}</p>
+          <p className="text-sm md:text-base text-black/60 leading-relaxed text-center max-w-2xl mx-auto mb-8 md:mb-10">
+            {t.body}
+          </p>
         </SectionReveal>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+          {STORE_BRANCHES.map((branch, i) => (
+            <BranchCard
+              key={branch.name}
+              branch={branch}
+              actionInstagram={t.actionInstagram}
+              actionPhone={t.actionPhone}
+              actionMaps={t.actionMaps}
+              index={i}
+            />
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -596,7 +702,7 @@ const Footer = () => {
       className="bg-black text-white py-16 md:py-20"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center gap-10">
-        <div className="flex items-center gap-5 md:gap-8" aria-label="210 × Collections">
+        <div className="flex items-center gap-5 md:gap-8" aria-label="210 × Anpa Limited">
           <img
             src={LOGO_210_SRC}
             alt="210 Sports Wear"
@@ -608,7 +714,7 @@ const Footer = () => {
           <span className="shrink-0 w-px h-11 md:h-14 bg-white/35 rounded-full" aria-hidden />
           <img
             src={LOGO_COLLECTIONS_SRC}
-            alt="Collections"
+            alt="Anpa Limited"
             className="h-10 md:h-12 w-auto max-h-12 object-contain object-center brightness-0 invert"
             loading="lazy"
             decoding="async"
