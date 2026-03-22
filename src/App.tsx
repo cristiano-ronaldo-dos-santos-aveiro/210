@@ -216,9 +216,9 @@ const Navbar = () => {
   const { lang, setLang } = React.useContext(LangContext);
   const t = TRANSLATIONS[lang].nav;
 
-  const iconBtn = 'bg-black text-white hover:bg-neutral-800 shadow-sm';
-  const menuIcon = 'bg-black text-white hover:bg-neutral-800 shadow-sm';
-  const navPill = 'inline-flex items-center justify-center rounded-full bg-black px-3.5 py-2 text-[9px] font-semibold uppercase tracking-[0.18em] text-white hover:bg-neutral-800 transition-colors shadow-sm';
+  const navLinkInBar =
+    'text-[10px] font-semibold uppercase tracking-[0.2em] text-white/75 hover:text-white transition-colors';
+  const iconInBar = 'p-2.5 rounded-full text-white hover:bg-white/10 transition-colors';
   const logoSep = 'text-black/30';
 
   return (
@@ -256,31 +256,31 @@ const Navbar = () => {
             />
           </motion.a>
 
-          {/* Central glass capsule — desktop / tablet */}
+          {/* One black bar: nav links + languages */}
           <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 pointer-events-none [&>*]:pointer-events-auto">
-            <div className="flex items-center rounded-full border border-black/10 bg-white px-2 py-1.5 gap-2 lg:gap-2.5 backdrop-blur-xl shadow-[0_1px_0_0_rgba(0,0,0,0.04)]">
-              <a href="#spotlight" className={navPill}>
+            <div className="flex items-center rounded-full bg-black px-4 lg:px-5 py-2 gap-3 lg:gap-4 shadow-md">
+              <a href="#spotlight" className={navLinkInBar}>
                 {t.collections}
               </a>
-              <a href="#philosophy" className={navPill}>
+              <a href="#philosophy" className={navLinkInBar}>
                 {t.philosophy}
               </a>
-              <a href="#branches" className={navPill}>
+              <a href="#branches" className={navLinkInBar}>
                 {t.branches}
               </a>
-              <a href="#brand-marquee" className={navPill}>
+              <a href="#brand-marquee" className={navLinkInBar}>
                 {t.brands}
               </a>
-              <div className="h-5 w-px shrink-0 bg-black/12 mx-0.5" aria-hidden />
-              <div className="flex items-center gap-1 pr-0.5">
+              <div className="h-5 w-px shrink-0 bg-white/25" aria-hidden />
+              <div className="flex items-center gap-0.5">
                 {(['uz', 'ru', 'en'] as const).map((l) => (
                   <button
                     key={l}
                     type="button"
                     onClick={() => setLang(l)}
                     className={cn(
-                      'w-8 h-8 rounded-full text-[9px] font-bold uppercase tracking-wide transition-all duration-200 bg-black text-white hover:bg-neutral-800 shadow-sm',
-                      lang === l && 'ring-2 ring-offset-2 ring-offset-white ring-white/70'
+                      'min-w-[2rem] h-8 rounded-full text-[9px] font-bold uppercase tracking-wide transition-colors text-white/55 hover:text-white',
+                      lang === l && 'bg-white/15 text-white'
                     )}
                   >
                     {l}
@@ -290,26 +290,22 @@ const Navbar = () => {
             </div>
           </div>
 
-          <div className="hidden md:flex items-center gap-1 z-10">
+          {/* One black bar: phone, search, cart */}
+          <div className="hidden md:flex items-center rounded-full bg-black px-1 py-1 gap-0.5 z-10 shadow-md">
             <motion.a
               href={CONTACT_PHONE_TEL}
-              className={cn('p-2.5 rounded-full transition-colors', iconBtn)}
+              className={iconInBar}
               whileTap={{ scale: 0.94 }}
               aria-label={`Call ${CONTACT_PHONE_LABEL}`}
             >
               <Phone size={20} strokeWidth={1.75} />
             </motion.a>
-            <motion.button
-              type="button"
-              className={cn('p-2.5 rounded-full transition-colors', iconBtn)}
-              whileTap={{ scale: 0.94 }}
-              aria-label="Search"
-            >
+            <motion.button type="button" className={iconInBar} whileTap={{ scale: 0.94 }} aria-label="Search">
               <Search size={20} strokeWidth={1.75} />
             </motion.button>
             <motion.button
               type="button"
-              className={cn('relative p-2.5 rounded-full transition-colors', iconBtn)}
+              className={cn('relative', iconInBar)}
               whileTap={{ scale: 0.94 }}
               aria-label="Cart"
             >
@@ -320,32 +316,32 @@ const Navbar = () => {
             </motion.button>
           </div>
 
-          <div className="md:hidden flex items-center gap-2 z-10">
-            <div className="flex rounded-full border border-black/10 bg-white p-0.5 gap-0.5">
+          <div className="md:hidden flex items-center z-10">
+            <div className="flex items-center rounded-full bg-black pl-2 pr-1 py-1 gap-0.5 shadow-md">
               {(['uz', 'ru', 'en'] as const).map((l) => (
                 <button
                   key={l}
                   type="button"
                   onClick={() => setLang(l)}
                   className={cn(
-                    'px-2.5 py-1.5 text-[9px] font-bold uppercase rounded-full transition-colors bg-black text-white hover:bg-neutral-800',
-                    lang === l && 'ring-2 ring-offset-1 ring-offset-white ring-white/60'
+                    'px-2.5 py-1.5 rounded-full text-[9px] font-bold uppercase transition-colors text-white/55 hover:text-white',
+                    lang === l && 'bg-white/15 text-white'
                   )}
                 >
                   {l}
                 </button>
               ))}
+              <motion.button
+                type="button"
+                onClick={() => setIsOpen(!isOpen)}
+                className="p-2 rounded-full text-white hover:bg-white/10 transition-colors"
+                whileTap={{ scale: 0.92 }}
+                aria-expanded={isOpen}
+                aria-label="Menu"
+              >
+                {isOpen ? <X size={22} strokeWidth={1.75} /> : <Menu size={22} strokeWidth={1.75} />}
+              </motion.button>
             </div>
-            <motion.button
-              type="button"
-              onClick={() => setIsOpen(!isOpen)}
-              className={cn('p-2 rounded-full transition-colors', menuIcon)}
-              whileTap={{ scale: 0.92 }}
-              aria-expanded={isOpen}
-              aria-label="Menu"
-            >
-              {isOpen ? <X size={22} strokeWidth={1.75} /> : <Menu size={22} strokeWidth={1.75} />}
-            </motion.button>
           </div>
         </div>
       </div>
@@ -355,40 +351,42 @@ const Navbar = () => {
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}
-          className="md:hidden backdrop-blur-xl border-t border-black/8 bg-white px-4 pt-4 pb-8 space-y-2 overflow-hidden"
+          className="md:hidden backdrop-blur-xl border-t border-black/8 bg-white px-4 pt-4 pb-8 overflow-hidden"
         >
-          <a
-            href="#spotlight"
-            onClick={() => setIsOpen(false)}
-            className="block text-center text-[13px] font-semibold uppercase tracking-[0.12em] py-3.5 rounded-xl bg-black text-white hover:bg-neutral-800 transition-colors"
-          >
-            {t.collections}
-          </a>
-          <a
-            href="#philosophy"
-            onClick={() => setIsOpen(false)}
-            className="block text-center text-[13px] font-semibold uppercase tracking-[0.12em] py-3.5 rounded-xl bg-black text-white hover:bg-neutral-800 transition-colors"
-          >
-            {t.philosophy}
-          </a>
-          <a
-            href="#branches"
-            onClick={() => setIsOpen(false)}
-            className="block text-center text-[13px] font-semibold uppercase tracking-[0.12em] py-3.5 rounded-xl bg-black text-white hover:bg-neutral-800 transition-colors"
-          >
-            {t.branches}
-          </a>
-          <a
-            href="#brand-marquee"
-            onClick={() => setIsOpen(false)}
-            className="block text-center text-[13px] font-semibold uppercase tracking-[0.12em] py-3.5 rounded-xl bg-black text-white hover:bg-neutral-800 transition-colors"
-          >
-            {t.brands}
-          </a>
-          <div className="flex items-center gap-3 pt-6">
+          <div className="rounded-2xl bg-black overflow-hidden shadow-md">
+            <a
+              href="#spotlight"
+              onClick={() => setIsOpen(false)}
+              className="block text-center text-[13px] font-semibold uppercase tracking-[0.12em] py-3.5 text-white border-b border-white/10 hover:bg-white/[0.06] transition-colors"
+            >
+              {t.collections}
+            </a>
+            <a
+              href="#philosophy"
+              onClick={() => setIsOpen(false)}
+              className="block text-center text-[13px] font-semibold uppercase tracking-[0.12em] py-3.5 text-white border-b border-white/10 hover:bg-white/[0.06] transition-colors"
+            >
+              {t.philosophy}
+            </a>
+            <a
+              href="#branches"
+              onClick={() => setIsOpen(false)}
+              className="block text-center text-[13px] font-semibold uppercase tracking-[0.12em] py-3.5 text-white border-b border-white/10 hover:bg-white/[0.06] transition-colors"
+            >
+              {t.branches}
+            </a>
+            <a
+              href="#brand-marquee"
+              onClick={() => setIsOpen(false)}
+              className="block text-center text-[13px] font-semibold uppercase tracking-[0.12em] py-3.5 text-white hover:bg-white/[0.06] transition-colors"
+            >
+              {t.brands}
+            </a>
+          </div>
+          <div className="flex justify-center items-center rounded-full bg-black px-2 py-2 gap-1 mt-5 shadow-md">
             <motion.a
               href={CONTACT_PHONE_TEL}
-              className="p-2.5 rounded-full bg-black text-white hover:bg-neutral-800 shadow-sm"
+              className="p-2.5 rounded-full text-white hover:bg-white/10 transition-colors"
               whileTap={{ scale: 0.96 }}
               aria-label={`Call ${CONTACT_PHONE_LABEL}`}
             >
@@ -396,16 +394,12 @@ const Navbar = () => {
             </motion.a>
             <button
               type="button"
-              className="p-2.5 rounded-full bg-black text-white hover:bg-neutral-800 shadow-sm"
+              className="p-2.5 rounded-full text-white hover:bg-white/10 transition-colors"
               aria-label="Search"
             >
               <Search size={20} strokeWidth={1.75} />
             </button>
-            <button
-              type="button"
-              className="relative p-2.5 rounded-full bg-black text-white hover:bg-neutral-800 shadow-sm"
-              aria-label="Cart"
-            >
+            <button type="button" className="relative p-2.5 rounded-full text-white hover:bg-white/10 transition-colors" aria-label="Cart">
               <ShoppingBag size={20} strokeWidth={1.75} />
               <span className="absolute top-1 right-1 min-w-[14px] h-[14px] flex items-center justify-center bg-white text-black text-[9px] font-bold rounded-full">
                 0
