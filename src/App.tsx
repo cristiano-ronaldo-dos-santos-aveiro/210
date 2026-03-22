@@ -429,7 +429,7 @@ const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number }> = ({ car
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.08, type: 'spring', stiffness: 76, damping: 22 }}
-      className="group relative w-full max-w-md mx-auto aspect-[3/5] rounded-2xl overflow-hidden border border-black/[0.08] shadow-[0_24px_60px_-28px_rgba(0,0,0,0.4)] bg-neutral-900"
+      className="group relative w-full aspect-[3/4] max-h-[320px] sm:max-h-[340px] rounded-xl overflow-hidden border border-black/[0.08] shadow-[0_16px_40px_-20px_rgba(0,0,0,0.35)] bg-neutral-900"
     >
       <div className="absolute inset-0">
         <img
@@ -443,12 +443,12 @@ const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number }> = ({ car
         <div className={cn('absolute inset-0 bg-gradient-to-t', overlay)} />
         <div className="absolute inset-0 ring-1 ring-inset ring-white/10 rounded-2xl pointer-events-none" />
       </div>
-      <div className="relative z-10 flex flex-col justify-end h-full p-6 md:p-8 text-left min-h-0">
-        <span className="inline-flex w-fit text-[10px] font-bold uppercase tracking-[0.28em] text-white/90 bg-white/15 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20 mb-3">
+      <div className="relative z-10 flex flex-col justify-end h-full p-4 sm:p-5 text-left min-h-0">
+        <span className="inline-flex w-fit text-[9px] font-bold uppercase tracking-[0.22em] text-white/90 bg-white/15 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/20 mb-2">
           {copy.label}
         </span>
-        <h2 className="text-xl md:text-2xl font-black uppercase tracking-tight text-white drop-shadow-sm">{copy.title}</h2>
-        <p className="mt-2 text-sm md:text-[0.95rem] text-white/85 leading-relaxed max-w-[280px]">{copy.body}</p>
+        <h2 className="text-sm sm:text-base font-black uppercase tracking-tight text-white drop-shadow-sm leading-tight">{copy.title}</h2>
+        <p className="mt-1.5 text-[11px] sm:text-xs text-white/85 leading-snug line-clamp-3">{copy.body}</p>
       </div>
     </motion.article>
   );
@@ -460,17 +460,17 @@ const SpotlightSection = () => {
 
   return (
     <section id="spotlight" className="bg-white scroll-mt-24">
-      <div className="max-w-lg mx-auto px-4 sm:px-6 lg:px-8 pt-[4.85rem] md:pt-[5.1rem] pb-10 md:pb-14">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-[4.85rem] md:pt-[5.1rem] pb-10 md:pb-14">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45 }}
-          className="mb-8 md:mb-10 text-center"
+          className="mb-6 md:mb-8 text-center"
         >
           <span className="text-xs font-bold uppercase tracking-[0.3em] text-black/45 block mb-2">{t.sectionEyebrow}</span>
-          <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tight text-black">{t.sectionTitle}</h1>
+          <h1 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-black">{t.sectionTitle}</h1>
         </motion.div>
-        <div className="flex flex-col gap-6 md:gap-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           {SPOTLIGHT_ORDER.map((key, i) => (
             <SpotlightCard key={key} cardKey={key} index={i} />
           ))}
