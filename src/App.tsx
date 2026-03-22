@@ -3,9 +3,9 @@ import { motion } from 'motion/react';
 import { ShoppingBag, Search, Menu, X, Instagram, MapPin, Phone } from 'lucide-react';
 import { cn } from './lib/utils';
 
-/** PNG exports in /photo (210 stack + signature mark) */
+/** PNG exports in /photo (210 stack + collections / signature mark) */
 const LOGO_210_SRC = new URL('../photo/IMG_2657.PNG', import.meta.url).href;
-const LOGO_ANBA_SRC = new URL('../photo/IMG_26589.PNG', import.meta.url).href;
+const LOGO_COLLECTIONS_SRC = new URL('../photo/IMG_26589.PNG', import.meta.url).href;
 
 /** Spotlight card backgrounds (replace with your own photos anytime) */
 /** Brand strip: logos from /public/brands/{slug}.png */
@@ -231,7 +231,7 @@ const Navbar = () => {
             className="flex-shrink-0 flex items-center gap-2 md:gap-2.5 z-10"
             whileHover={{ opacity: 0.92 }}
             whileTap={{ scale: 0.98 }}
-            aria-label="210 × Anba"
+            aria-label="210 × Collections"
           >
             <img
               src={LOGO_210_SRC}
@@ -245,9 +245,9 @@ const Navbar = () => {
               |
             </span>
             <img
-              src={LOGO_ANBA_SRC}
-              alt="Anba"
-              className="h-6 md:h-8 w-auto max-h-8 object-contain object-left invert"
+              src={LOGO_COLLECTIONS_SRC}
+              alt="Collections"
+              className="h-6 md:h-8 w-auto max-h-8 object-contain object-left"
               loading="eager"
               decoding="async"
               referrerPolicy="no-referrer"
@@ -489,18 +489,18 @@ const BrandMarqueeLogo: React.FC<{ alt: string; slug: string }> = ({ alt, slug }
 
   if (failed) {
     return (
-      <span className="inline-flex items-center mx-8 md:mx-12 text-xl md:text-3xl font-semibold uppercase text-white/55 tracking-tight whitespace-nowrap">
+      <span className="inline-flex items-center mx-10 md:mx-14 text-2xl md:text-4xl font-semibold uppercase text-white/55 tracking-tight whitespace-nowrap">
         {alt}
       </span>
     );
   }
 
   return (
-    <motion.span className="inline-flex items-center mx-8 md:mx-12" whileHover={{ scale: 1.06 }}>
+    <motion.span className="inline-flex items-center mx-10 md:mx-14" whileHover={{ scale: 1.06 }}>
       <img
         src={src}
         alt={alt}
-        className="h-11 md:h-14 w-auto max-w-[120px] md:max-w-[140px] object-contain object-center opacity-95 hover:opacity-100 transition-opacity duration-300"
+        className="h-14 md:h-[4.25rem] w-auto max-w-[155px] md:max-w-[185px] object-contain object-center opacity-95 hover:opacity-100 transition-opacity duration-300"
         loading="lazy"
         decoding="async"
         onError={() => setFailed(true)}
@@ -515,7 +515,7 @@ const BrandMarquee = () => {
   return (
     <div
       id="brand-marquee"
-      className="relative py-7 md:py-9 bg-black border-y border-white/10 overflow-hidden scroll-mt-24"
+      className="relative py-8 md:py-10 bg-black border-y border-white/10 overflow-hidden scroll-mt-24"
     >
       <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none" />
       <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none" />
@@ -587,7 +587,7 @@ const Footer = () => {
       className="bg-black text-white py-16 md:py-20"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center gap-10">
-        <div className="flex items-center gap-5 md:gap-8" aria-label="210 × Anba">
+        <div className="flex items-center gap-5 md:gap-8" aria-label="210 × Collections">
           <img
             src={LOGO_210_SRC}
             alt="210 Sports Wear"
@@ -598,9 +598,9 @@ const Footer = () => {
           />
           <span className="shrink-0 w-px h-11 md:h-14 bg-white/35 rounded-full" aria-hidden />
           <img
-            src={LOGO_ANBA_SRC}
-            alt="Anba"
-            className="h-10 md:h-12 w-auto max-h-12 object-contain object-center"
+            src={LOGO_COLLECTIONS_SRC}
+            alt="Collections"
+            className="h-10 md:h-12 w-auto max-h-12 object-contain object-center brightness-0 invert"
             loading="lazy"
             decoding="async"
             referrerPolicy="no-referrer"
