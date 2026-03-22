@@ -56,8 +56,6 @@ interface Translations {
     branches: string;
   };
   cards: {
-    sectionEyebrow: string;
-    sectionTitle: string;
     featured: { label: string; title: string; body: string };
     spring: { label: string; title: string; body: string };
     newDrop: { label: string; title: string; body: string };
@@ -84,8 +82,6 @@ const TRANSLATIONS: Record<Language, Translations> = {
       branches: "Filiallar"
     },
     cards: {
-      sectionEyebrow: "Erkaklar lyuksi",
-      sectionTitle: "Kolleksiyalar",
       featured: {
         label: "Soatlar",
         title: "Erkaklar soati",
@@ -126,8 +122,6 @@ const TRANSLATIONS: Record<Language, Translations> = {
       branches: "Филиалы"
     },
     cards: {
-      sectionEyebrow: "Мужской люкс",
-      sectionTitle: "Коллекции",
       featured: {
         label: "Часы",
         title: "Мужские часы",
@@ -168,8 +162,6 @@ const TRANSLATIONS: Record<Language, Translations> = {
       branches: "Branches"
     },
     cards: {
-      sectionEyebrow: "Men’s luxury",
-      sectionTitle: "Collections",
       featured: {
         label: "Watches",
         title: "Men’s timepieces",
@@ -458,9 +450,6 @@ const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number }> = ({ car
 };
 
 const SpotlightSection = () => {
-  const { lang } = React.useContext(LangContext);
-  const t = TRANSLATIONS[lang].cards;
-
   return (
     <section id="spotlight" className="bg-white scroll-mt-24">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-[4.85rem] md:pt-[5.1rem] pb-10 md:pb-14">
@@ -468,10 +457,30 @@ const SpotlightSection = () => {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45 }}
-          className="mb-6 md:mb-8 text-center"
+          className="mb-6 md:mb-8 flex flex-col items-center justify-center"
+          aria-label="210 × Collections"
         >
-          <span className="text-xs font-bold uppercase tracking-[0.3em] text-black/45 block mb-2">{t.sectionEyebrow}</span>
-          <h1 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-black">{t.sectionTitle}</h1>
+          <div className="flex items-center justify-center gap-2.5 md:gap-3.5 min-h-[2.75rem] md:min-h-[3.25rem]">
+            <img
+              src={LOGO_210_SRC}
+              alt="210 Sports Wear"
+              className="h-[1.5rem] sm:h-[1.625rem] md:h-[1.875rem] w-auto max-h-[1.875rem] object-contain object-center"
+              loading="eager"
+              decoding="async"
+              referrerPolicy="no-referrer"
+            />
+            <span className="text-black/30 text-xl sm:text-2xl md:text-3xl font-light leading-none select-none" aria-hidden>
+              |
+            </span>
+            <img
+              src={LOGO_COLLECTIONS_SRC}
+              alt="Collections"
+              className="h-[1.35rem] sm:h-[1.5rem] md:h-[1.75rem] w-auto max-h-[1.75rem] object-contain object-center"
+              loading="eager"
+              decoding="async"
+              referrerPolicy="no-referrer"
+            />
+          </div>
         </motion.div>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           {SPOTLIGHT_ORDER.map((key, i) => (
