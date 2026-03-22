@@ -412,7 +412,7 @@ const Navbar = () => {
 
 type SpotlightKey = 'featured' | 'spring' | 'newDrop' | 'special';
 
-const SPOTLIGHT_ORDER: SpotlightKey[] = ['featured', 'spring', 'newDrop', 'special'];
+const SPOTLIGHT_ORDER: SpotlightKey[] = ['spring', 'newDrop', 'featured', 'special'];
 
 const SPOTLIGHT_ACCENT: Record<SpotlightKey, string> = {
   featured: 'from-slate-950/85 via-zinc-900/55 to-black/30',
