@@ -15,11 +15,11 @@
     scroll-behavior: smooth;
   }
   body {
-    @apply bg-white text-black antialiased;
+    @apply bg-black text-white antialiased;
     font-family: var(--font-sans);
   }
   ::selection {
-    @apply bg-black/10 text-black;
+    @apply bg-white/20 text-white;
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
