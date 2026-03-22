@@ -30,7 +30,6 @@ interface Translations {
     new: string;
     sport: string;
     classic: string;
-    brands: string;
     philosophy: string;
     branches: string;
   };
@@ -83,7 +82,6 @@ const TRANSLATIONS: Record<Language, Translations> = {
       new: "Yangi kelganlar",
       sport: "Sport",
       classic: "Yarim klassika",
-      brands: "Brendlar",
       philosophy: "Falsafa",
       branches: "Filiallar"
     },
@@ -134,7 +132,6 @@ const TRANSLATIONS: Record<Language, Translations> = {
       new: "Новинки",
       sport: "Спорт",
       classic: "Полуклассика",
-      brands: "Бренды",
       philosophy: "Философия",
       branches: "Филиалы"
     },
@@ -185,7 +182,6 @@ const TRANSLATIONS: Record<Language, Translations> = {
       new: "New",
       sport: "Sport",
       classic: "Semi-classic",
-      brands: "Brands",
       philosophy: "Philosophy",
       branches: "Branches"
     },
@@ -249,23 +245,6 @@ interface Look {
   totalPrice: string;
   items: LookItem[];
 }
-
-/**
- * Carousel: high-res favicons from brand sites (always loads real images).
- * Optional: add matching PNGs under /public/brands/{slug}.png and set localSlug — those override the URL.
- */
-const BRAND_MARQUEE_ITEMS = [
-  { domain: 'fila.com', alt: 'FILA', localSlug: 'fila' as const },
-  { domain: 'adidas.com', alt: 'Adidas', localSlug: 'adidas' as const },
-  { domain: 'wilson.com', alt: 'Wilson', localSlug: 'wilson' as const },
-  { domain: 'puma.com', alt: 'Puma', localSlug: 'puma' as const },
-  { domain: 'on-running.com', alt: 'On', localSlug: 'on-cloud' as const },
-  { domain: 'gucci.com', alt: 'Gucci', localSlug: 'gucci' as const },
-  { domain: 'underarmour.com', alt: 'Under Armour', localSlug: 'under-armour' as const },
-  { domain: 'hermes.com', alt: 'Hermès', localSlug: 'hermes' as const },
-  { domain: 'columbia.com', alt: 'Columbia', localSlug: 'columbia' as const },
-  { domain: 'arcteryx.com', alt: "Arc'teryx", localSlug: 'arcteryx' as const }
-] as const;
 
 const LOOKS: Look[] = [
   {
@@ -386,12 +365,6 @@ const Navbar = () => {
               >
                 {t.branches}
               </a>
-              <a
-                href="#brand-marquee"
-                className="text-[10px] font-semibold uppercase tracking-[0.2em] text-black/55 hover:text-black transition-colors"
-              >
-                {t.brands}
-              </a>
               <div className="h-5 w-px shrink-0 bg-black/15" aria-hidden />
               <div className="flex items-center gap-0.5 pr-1">
                 {(['uz', 'ru', 'en'] as const).map((l) => (
@@ -491,13 +464,6 @@ const Navbar = () => {
           >
             {t.branches}
           </a>
-          <a
-            href="#brand-marquee"
-            onClick={() => setIsOpen(false)}
-            className="block text-[14px] font-semibold uppercase tracking-[0.12em] py-3 border-b border-black/8 text-black"
-          >
-            {t.brands}
-          </a>
           <div className="flex items-center gap-4 pt-6">
             <button
               type="button"
@@ -574,66 +540,6 @@ const Hero = () => {
         </motion.p>
       </div>
     </section>
-  );
-};
-
-const BrandMarqueeLogo: React.FC<{ domain: string; alt: string; localSlug: string }> = ({ domain, alt, localSlug }) => {
-  const [failed, setFailed] = useState(false);
-  const remoteSrc = `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=128`;
-  const localSrc = `/brands/${localSlug}.png`;
-  /** Remote first so carousel shows pictures even without /public/brands/*.png */
-  const [src, setSrc] = useState(remoteSrc);
-
-  if (failed) {
-    return (
-      <span className="inline-flex items-center mx-8 md:mx-12 text-xl md:text-3xl font-semibold uppercase text-white/55 tracking-tight whitespace-nowrap">
-        {alt}
-      </span>
-    );
-  }
-
-  return (
-    <motion.span className="inline-flex items-center mx-8 md:mx-12" whileHover={{ scale: 1.06 }}>
-      <img
-        src={src}
-        alt={alt}
-        className="h-10 md:h-12 w-10 md:w-12 md:min-w-[48px] object-contain object-center rounded-sm opacity-95 hover:opacity-100 transition-opacity duration-300"
-        loading="lazy"
-        decoding="async"
-        referrerPolicy="no-referrer"
-        onError={() => {
-          if (src === remoteSrc) {
-            setSrc(localSrc);
-          } else {
-            setFailed(true);
-          }
-        }}
-      />
-    </motion.span>
-  );
-};
-
-const BrandMarquee = () => {
-  const loop = [...BRAND_MARQUEE_ITEMS, ...BRAND_MARQUEE_ITEMS];
-
-  return (
-    <div
-      id="brand-marquee"
-      className="relative py-7 md:py-9 bg-black border-y border-white/10 overflow-hidden scroll-mt-24"
-    >
-      <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none" />
-      <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none" />
-      <div className="flex animate-marquee items-center w-max">
-        {loop.map((item, i) => (
-          <BrandMarqueeLogo
-            key={`${item.domain}-${i}`}
-            domain={item.domain}
-            alt={item.alt}
-            localSlug={item.localSlug}
-          />
-        ))}
-      </div>
-    </div>
   );
 };
 
@@ -888,7 +794,6 @@ export default function App() {
 
         <main>
           <Hero />
-          <BrandMarquee />
 
           <section id="shop-looks" className="py-16 md:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-24">
             <SectionReveal>
@@ -919,14 +824,6 @@ export default function App() {
         <Footer />
 
         <style>{`
-          @keyframes marquee {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-          }
-          .animate-marquee {
-            display: inline-flex;
-            animation: marquee 30s linear infinite;
-          }
           @keyframes float {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-6px); }
