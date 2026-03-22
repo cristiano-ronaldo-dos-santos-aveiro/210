@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { ShoppingBag, Search, Menu, X, Instagram, MapPin } from 'lucide-react';
 import { cn } from './lib/utils';
@@ -20,18 +20,6 @@ const TelegramIcon = ({ className, size = 22 }: { className?: string; size?: num
     <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.863-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.831-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
   </svg>
 );
-
-// Scroll-based navbar background
-const useScrollTop = () => {
-  const [scrollTop, setScrollTop] = useState(0);
-  useEffect(() => {
-    const onScroll = () => setScrollTop(window.scrollY);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-  return scrollTop;
-};
 
 // --- Types ---
 type Language = 'uz' | 'ru' | 'en';
@@ -335,32 +323,17 @@ const LangContext = React.createContext<{ lang: Language; setLang: (l: Language)
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const scrollTop = useScrollTop();
   const { lang, setLang } = React.useContext(LangContext);
   const t = TRANSLATIONS[lang].nav;
-  const [lightNav, setLightNav] = useState(false);
 
-  useEffect(() => {
-    const thr = Math.min(window.innerHeight * 0.48, 520);
-    setLightNav(scrollTop > thr);
-  }, [scrollTop]);
-
-  const iconBtn = lightNav
-    ? 'text-black/65 hover:text-black hover:bg-black/[0.06]'
-    : 'text-white/80 hover:text-white hover:bg-white/[0.08]';
-  const menuIcon = lightNav ? 'text-black hover:bg-black/[0.06]' : 'text-white hover:bg-white/[0.08]';
-  const logoSep = lightNav ? 'text-black/30' : 'text-white/35';
+  const iconBtn = 'text-black/65 hover:text-black hover:bg-black/[0.06]';
+  const menuIcon = 'text-black hover:bg-black/[0.06]';
+  const logoSep = 'text-black/30';
 
   return (
     <motion.nav
       initial={false}
-      animate={{
-        backgroundColor: lightNav ? 'rgba(255,255,255,0.9)' : 'rgba(20,20,20,0.35)',
-        borderBottomColor: lightNav ? 'rgba(0,0,0,0.07)' : 'rgba(255,255,255,0.1)',
-        boxShadow: lightNav ? '0 1px 0 0 rgba(0,0,0,0.04)' : '0 0 0 0 transparent',
-      }}
-      transition={{ duration: 0.35, ease: [0.22, 0.61, 0.36, 1] }}
-      className="fixed top-0 left-0 right-0 z-50 border-b backdrop-blur-xl"
+      className="fixed top-0 left-0 right-0 z-50 border-b border-black/[0.08] bg-white/95 backdrop-blur-xl shadow-[0_1px_0_0_rgba(0,0,0,0.04)]"
     >
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10">
         <div className="flex items-center justify-between h-[3.75rem] md:h-[4rem] gap-3">
@@ -374,10 +347,7 @@ const Navbar = () => {
             <img
               src={LOGO_210_SRC}
               alt="210 Sports Wear"
-              className={cn(
-                'h-7 md:h-9 w-auto max-h-9 object-contain object-left drop-shadow-md',
-                !lightNav && 'brightness-0 invert'
-              )}
+              className="h-7 md:h-9 w-auto max-h-9 object-contain object-left"
               loading="eager"
               decoding="async"
               referrerPolicy="no-referrer"
@@ -388,10 +358,7 @@ const Navbar = () => {
             <img
               src={LOGO_ANBA_SRC}
               alt="Anba"
-              className={cn(
-                'h-6 md:h-8 w-auto max-h-8 object-contain object-left drop-shadow-md',
-                lightNav && 'invert'
-              )}
+              className="h-6 md:h-8 w-auto max-h-8 object-contain object-left invert"
               loading="eager"
               decoding="async"
               referrerPolicy="no-referrer"
@@ -400,49 +367,32 @@ const Navbar = () => {
 
           {/* Central glass capsule — desktop / tablet */}
           <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 pointer-events-none [&>*]:pointer-events-auto">
-            <div
-              className={cn(
-                'flex items-center rounded-full border px-1.5 py-1.5 pl-4 lg:pl-5 gap-3 lg:gap-5 backdrop-blur-xl',
-                lightNav ? 'border-black/10 bg-black/[0.04]' : 'border-white/10 bg-white/[0.07]'
-              )}
-            >
+            <div className="flex items-center rounded-full border border-black/10 bg-black/[0.035] px-1.5 py-1.5 pl-4 lg:pl-5 gap-3 lg:gap-5 backdrop-blur-xl">
               <a
                 href="#shop-looks"
-                className={cn(
-                  'text-[10px] font-semibold uppercase tracking-[0.2em] transition-colors',
-                  lightNav ? 'text-black/55 hover:text-black' : 'text-white/70 hover:text-white'
-                )}
+                className="text-[10px] font-semibold uppercase tracking-[0.2em] text-black/55 hover:text-black transition-colors"
               >
                 {t.shopLooks}
               </a>
               <a
                 href="#philosophy"
-                className={cn(
-                  'text-[10px] font-semibold uppercase tracking-[0.2em] transition-colors',
-                  lightNav ? 'text-black/55 hover:text-black' : 'text-white/70 hover:text-white'
-                )}
+                className="text-[10px] font-semibold uppercase tracking-[0.2em] text-black/55 hover:text-black transition-colors"
               >
                 {t.philosophy}
               </a>
               <a
                 href="#branches"
-                className={cn(
-                  'text-[10px] font-semibold uppercase tracking-[0.2em] transition-colors',
-                  lightNav ? 'text-black/55 hover:text-black' : 'text-white/70 hover:text-white'
-                )}
+                className="text-[10px] font-semibold uppercase tracking-[0.2em] text-black/55 hover:text-black transition-colors"
               >
                 {t.branches}
               </a>
               <a
                 href="#brand-marquee"
-                className={cn(
-                  'text-[10px] font-semibold uppercase tracking-[0.2em] transition-colors',
-                  lightNav ? 'text-black/55 hover:text-black' : 'text-white/70 hover:text-white'
-                )}
+                className="text-[10px] font-semibold uppercase tracking-[0.2em] text-black/55 hover:text-black transition-colors"
               >
                 {t.brands}
               </a>
-              <div className={cn('h-5 w-px shrink-0', lightNav ? 'bg-black/15' : 'bg-white/20')} aria-hidden />
+              <div className="h-5 w-px shrink-0 bg-black/15" aria-hidden />
               <div className="flex items-center gap-0.5 pr-1">
                 {(['uz', 'ru', 'en'] as const).map((l) => (
                   <button
@@ -451,13 +401,7 @@ const Navbar = () => {
                     onClick={() => setLang(l)}
                     className={cn(
                       'w-8 h-8 rounded-full text-[9px] font-bold uppercase tracking-wide transition-all duration-200',
-                      lightNav
-                        ? lang === l
-                          ? 'bg-black text-white shadow-sm'
-                          : 'text-black/40 hover:text-black'
-                        : lang === l
-                          ? 'bg-white/20 text-white shadow-inner'
-                          : 'text-white/45 hover:text-white'
+                      lang === l ? 'bg-black text-white shadow-sm' : 'text-black/40 hover:text-black'
                     )}
                   >
                     {l}
@@ -483,24 +427,14 @@ const Navbar = () => {
               aria-label="Cart"
             >
               <ShoppingBag size={20} strokeWidth={1.75} />
-              <span
-                className={cn(
-                  'absolute top-1.5 right-1.5 min-w-[14px] h-[14px] px-0.5 flex items-center justify-center text-[9px] font-bold rounded-full leading-none',
-                  lightNav ? 'bg-black text-white' : 'bg-white text-black'
-                )}
-              >
+              <span className="absolute top-1.5 right-1.5 min-w-[14px] h-[14px] px-0.5 flex items-center justify-center bg-black text-white text-[9px] font-bold rounded-full leading-none">
                 0
               </span>
             </motion.button>
           </div>
 
           <div className="md:hidden flex items-center gap-2 z-10">
-            <div
-              className={cn(
-                'flex rounded-full border p-0.5',
-                lightNav ? 'border-black/10 bg-black/[0.04]' : 'border-white/15 bg-white/[0.07]'
-              )}
-            >
+            <div className="flex rounded-full border border-black/10 bg-black/[0.035] p-0.5">
               {(['uz', 'ru', 'en'] as const).map((l) => (
                 <button
                   key={l}
@@ -508,13 +442,7 @@ const Navbar = () => {
                   onClick={() => setLang(l)}
                   className={cn(
                     'px-2 py-1 text-[9px] font-bold uppercase rounded-full transition-colors',
-                    lightNav
-                      ? lang === l
-                        ? 'bg-black text-white'
-                        : 'text-black/45'
-                      : lang === l
-                        ? 'bg-white/20 text-white'
-                        : 'text-white/50'
+                    lang === l ? 'bg-black text-white' : 'text-black/45'
                   )}
                 >
                   {l}
@@ -540,77 +468,47 @@ const Navbar = () => {
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}
-          className={cn(
-            'md:hidden backdrop-blur-xl border-t px-4 pt-4 pb-8 space-y-1 overflow-hidden',
-            lightNav ? 'bg-white/95 border-black/8' : 'bg-[#1a1a1a]/96 border-white/10'
-          )}
+          className="md:hidden backdrop-blur-xl border-t border-black/8 bg-white px-4 pt-4 pb-8 space-y-1 overflow-hidden"
         >
           <a
             href="#shop-looks"
             onClick={() => setIsOpen(false)}
-            className={cn(
-              'block text-[14px] font-semibold uppercase tracking-[0.12em] py-3 border-b',
-              lightNav ? 'border-black/8 text-black' : 'border-white/10 text-white'
-            )}
+            className="block text-[14px] font-semibold uppercase tracking-[0.12em] py-3 border-b border-black/8 text-black"
           >
             {t.shopLooks}
           </a>
           <a
             href="#philosophy"
             onClick={() => setIsOpen(false)}
-            className={cn(
-              'block text-[14px] font-semibold uppercase tracking-[0.12em] py-3 border-b',
-              lightNav ? 'border-black/8 text-black' : 'border-white/10 text-white'
-            )}
+            className="block text-[14px] font-semibold uppercase tracking-[0.12em] py-3 border-b border-black/8 text-black"
           >
             {t.philosophy}
           </a>
           <a
             href="#branches"
             onClick={() => setIsOpen(false)}
-            className={cn(
-              'block text-[14px] font-semibold uppercase tracking-[0.12em] py-3 border-b',
-              lightNav ? 'border-black/8 text-black' : 'border-white/10 text-white'
-            )}
+            className="block text-[14px] font-semibold uppercase tracking-[0.12em] py-3 border-b border-black/8 text-black"
           >
             {t.branches}
           </a>
           <a
             href="#brand-marquee"
             onClick={() => setIsOpen(false)}
-            className={cn(
-              'block text-[14px] font-semibold uppercase tracking-[0.12em] py-3 border-b',
-              lightNav ? 'border-black/8 text-black' : 'border-white/10 text-white'
-            )}
+            className="block text-[14px] font-semibold uppercase tracking-[0.12em] py-3 border-b border-black/8 text-black"
           >
             {t.brands}
           </a>
           <div className="flex items-center gap-4 pt-6">
             <button
               type="button"
-              className={cn(
-                'p-2 rounded-full border',
-                lightNav ? 'border-black/12 text-black/70' : 'border-white/15 text-white/80'
-              )}
+              className="p-2 rounded-full border border-black/12 text-black/70"
               aria-label="Search"
             >
               <Search size={20} strokeWidth={1.75} />
             </button>
-            <button
-              type="button"
-              className={cn(
-                'relative p-2 rounded-full border',
-                lightNav ? 'border-black/12 text-black/70' : 'border-white/15 text-white/80'
-              )}
-              aria-label="Cart"
-            >
+            <button type="button" className="relative p-2 rounded-full border border-black/12 text-black/70" aria-label="Cart">
               <ShoppingBag size={20} strokeWidth={1.75} />
-              <span
-                className={cn(
-                  'absolute top-1 right-1 min-w-[14px] h-[14px] flex items-center justify-center text-[9px] font-bold rounded-full',
-                  lightNav ? 'bg-black text-white' : 'bg-white text-black'
-                )}
-              >
+              <span className="absolute top-1 right-1 min-w-[14px] h-[14px] flex items-center justify-center bg-black text-white text-[9px] font-bold rounded-full">
                 0
               </span>
             </button>
