@@ -48,9 +48,17 @@ const PERFUME_SPOTLIGHT_SLIDES = [
   new URL('../photo/soatlar/photo_2026-03-22_13-00-14.jpg', import.meta.url).href
 ] as const;
 
-/** Spotlight parfyumeriya slaydi — tezroq almashinuv */
-const PERFUME_SLIDE_MS = 2800;
-const PERFUME_FADE_S = 0.75;
+/** Soatlar spotlight kartasi — premium soat suratlari (tartib: Santos-style → Daytona ice-blue → two-tone Daytona → AP Royal Oak) */
+const WATCH_SPOTLIGHT_SLIDES = [
+  new URL('../photo/Soatlar/photo_2026-03-22_13-11-15.jpg', import.meta.url).href,
+  new URL('../photo/Soatlar/photo_2026-03-22_13-11-17.jpg', import.meta.url).href,
+  new URL('../photo/Soatlar/photo_2026-03-22_13-11-20.jpg', import.meta.url).href,
+  new URL('../photo/Soatlar/photo_2026-03-22_13-12-47.jpg', import.meta.url).href
+] as const;
+
+/** Spotlight slaydlari (parfyumeriya + soatlar) — bir xil tezlik va fade */
+const SPOTLIGHT_SLIDE_MS = 2800;
+const SPOTLIGHT_FADE_S = 0.75;
 
 type StoreBranch = {
   name: string;
@@ -470,15 +478,20 @@ const SPOTLIGHT_ACCENT: Record<SpotlightKey, string> = {
   special: 'from-violet-950/80 via-purple-950/50 to-black/30'
 };
 
-const PerfumeSpotlightSlideshow: React.FC<{ label: string }> = ({ label }) => {
+/** Soatlar va atirlar spotlight kartalarida bir xil crossfade slayd */
+const SPOTLIGHT_SLIDE_SETS: Partial<Record<SpotlightKey, readonly string[]>> = {
+  featured: WATCH_SPOTLIGHT_SLIDES,
+  special: PERFUME_SPOTLIGHT_SLIDES
+};
+
+const SpotlightCrossfadeSlideshow: React.FC<{ slides: readonly string[]; label: string }> = ({ slides, label }) => {
   const [active, setActive] = useState(0);
-  const slides = PERFUME_SPOTLIGHT_SLIDES;
 
   useEffect(() => {
     if (slides.length <= 1) return;
     const id = window.setInterval(() => {
       setActive((i) => (i + 1) % slides.length);
-    }, PERFUME_SLIDE_MS);
+    }, SPOTLIGHT_SLIDE_MS);
     return () => clearInterval(id);
   }, [slides.length]);
 
@@ -500,7 +513,7 @@ const PerfumeSpotlightSlideshow: React.FC<{ label: string }> = ({ label }) => {
             opacity: idx === active ? 1 : 0,
             scale: idx === active ? 1 : 1.04
           }}
-          transition={{ duration: PERFUME_FADE_S, ease: [0.22, 0.61, 0.36, 1] }}
+          transition={{ duration: SPOTLIGHT_FADE_S, ease: [0.22, 0.61, 0.36, 1] }}
         />
       ))}
       {slides.length > 1 && (
@@ -524,6 +537,7 @@ const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number }> = ({ car
   const { lang } = React.useContext(LangContext);
   const copy = TRANSLATIONS[lang].cards[cardKey];
   const overlay = SPOTLIGHT_ACCENT[cardKey];
+  const slideSet = SPOTLIGHT_SLIDE_SETS[cardKey];
 
   return (
     <motion.article
@@ -533,9 +547,9 @@ const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number }> = ({ car
       className="group relative w-full aspect-[3/4] max-h-[320px] sm:max-h-[340px] rounded-xl overflow-hidden border border-black/[0.08] shadow-[0_16px_40px_-20px_rgba(0,0,0,0.35)] bg-neutral-900"
     >
       <div className="absolute inset-0">
-        {cardKey === 'special' ? (
+        {slideSet ? (
           <div className="absolute inset-0 overflow-hidden">
-            <PerfumeSpotlightSlideshow label={copy.title} />
+            <SpotlightCrossfadeSlideshow slides={slideSet} label={copy.title} />
           </div>
         ) : (
           <img
