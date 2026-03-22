@@ -214,14 +214,14 @@ const Navbar = () => {
   const { lang, setLang } = React.useContext(LangContext);
   const t = TRANSLATIONS[lang].nav;
 
-  const iconBtn = 'text-black/65 hover:text-black hover:bg-black/[0.06]';
-  const menuIcon = 'text-black hover:bg-black/[0.06]';
-  const logoSep = 'text-black/30';
+  const iconBtn = 'text-white/80 hover:text-white hover:bg-white/[0.08]';
+  const menuIcon = 'text-white hover:bg-white/[0.08]';
+  const logoSep = 'text-white/35';
 
   return (
     <motion.nav
       initial={false}
-      className="fixed top-0 left-0 right-0 z-50 border-b border-black/[0.08] bg-white/95 backdrop-blur-xl shadow-[0_1px_0_0_rgba(0,0,0,0.04)]"
+      className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-black/95 backdrop-blur-xl shadow-[0_1px_0_0_rgba(255,255,255,0.06)]"
     >
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10">
         <div className="flex items-center justify-between h-[3.75rem] md:h-[4rem] gap-3">
@@ -235,7 +235,7 @@ const Navbar = () => {
             <img
               src={LOGO_210_SRC}
               alt="210 Sports Wear"
-              className="h-7 md:h-9 w-auto max-h-9 object-contain object-left"
+              className="h-7 md:h-9 w-auto max-h-9 object-contain object-left brightness-0 invert"
               loading="eager"
               decoding="async"
               referrerPolicy="no-referrer"
@@ -246,7 +246,7 @@ const Navbar = () => {
             <img
               src={LOGO_ANBA_SRC}
               alt="Anba"
-              className="h-6 md:h-8 w-auto max-h-8 object-contain object-left invert"
+              className="h-6 md:h-8 w-auto max-h-8 object-contain object-left brightness-0 invert"
               loading="eager"
               decoding="async"
               referrerPolicy="no-referrer"
@@ -255,32 +255,32 @@ const Navbar = () => {
 
           {/* Central glass capsule — desktop / tablet */}
           <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 pointer-events-none [&>*]:pointer-events-auto">
-            <div className="flex items-center rounded-full border border-black/10 bg-black/[0.035] px-1.5 py-1.5 pl-4 lg:pl-5 gap-3 lg:gap-5 backdrop-blur-xl">
+            <div className="flex items-center rounded-full border border-white/15 bg-white/[0.06] px-1.5 py-1.5 pl-4 lg:pl-5 gap-3 lg:gap-5 backdrop-blur-xl">
               <a
                 href="#spotlight"
-                className="text-[10px] font-semibold uppercase tracking-[0.2em] text-black/55 hover:text-black transition-colors"
+                className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/65 hover:text-white transition-colors"
               >
                 {t.collections}
               </a>
               <a
                 href="#philosophy"
-                className="text-[10px] font-semibold uppercase tracking-[0.2em] text-black/55 hover:text-black transition-colors"
+                className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/65 hover:text-white transition-colors"
               >
                 {t.philosophy}
               </a>
               <a
                 href="#branches"
-                className="text-[10px] font-semibold uppercase tracking-[0.2em] text-black/55 hover:text-black transition-colors"
+                className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/65 hover:text-white transition-colors"
               >
                 {t.branches}
               </a>
               <a
                 href="#brand-marquee"
-                className="text-[10px] font-semibold uppercase tracking-[0.2em] text-black/55 hover:text-black transition-colors"
+                className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/65 hover:text-white transition-colors"
               >
                 {t.brands}
               </a>
-              <div className="h-5 w-px shrink-0 bg-black/15" aria-hidden />
+              <div className="h-5 w-px shrink-0 bg-white/20" aria-hidden />
               <div className="flex items-center gap-0.5 pr-1">
                 {(['uz', 'ru', 'en'] as const).map((l) => (
                   <button
@@ -289,7 +289,7 @@ const Navbar = () => {
                     onClick={() => setLang(l)}
                     className={cn(
                       'w-8 h-8 rounded-full text-[9px] font-bold uppercase tracking-wide transition-all duration-200',
-                      lang === l ? 'bg-black text-white shadow-sm' : 'text-black/40 hover:text-black'
+                      lang === l ? 'bg-white text-black shadow-sm' : 'text-white/45 hover:text-white'
                     )}
                   >
                     {l}
@@ -315,14 +315,14 @@ const Navbar = () => {
               aria-label="Cart"
             >
               <ShoppingBag size={20} strokeWidth={1.75} />
-              <span className="absolute top-1.5 right-1.5 min-w-[14px] h-[14px] px-0.5 flex items-center justify-center bg-black text-white text-[9px] font-bold rounded-full leading-none">
+              <span className="absolute top-1.5 right-1.5 min-w-[14px] h-[14px] px-0.5 flex items-center justify-center bg-white text-black text-[9px] font-bold rounded-full leading-none">
                 0
               </span>
             </motion.button>
           </div>
 
           <div className="md:hidden flex items-center gap-2 z-10">
-            <div className="flex rounded-full border border-black/10 bg-black/[0.035] p-0.5">
+            <div className="flex rounded-full border border-white/15 bg-white/[0.06] p-0.5">
               {(['uz', 'ru', 'en'] as const).map((l) => (
                 <button
                   key={l}
@@ -330,7 +330,7 @@ const Navbar = () => {
                   onClick={() => setLang(l)}
                   className={cn(
                     'px-2 py-1 text-[9px] font-bold uppercase rounded-full transition-colors',
-                    lang === l ? 'bg-black text-white' : 'text-black/45'
+                    lang === l ? 'bg-white text-black' : 'text-white/45 hover:text-white'
                   )}
                 >
                   {l}
@@ -356,47 +356,51 @@ const Navbar = () => {
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}
-          className="md:hidden backdrop-blur-xl border-t border-black/8 bg-white px-4 pt-4 pb-8 space-y-1 overflow-hidden"
+          className="md:hidden backdrop-blur-xl border-t border-white/10 bg-black px-4 pt-4 pb-8 space-y-1 overflow-hidden"
         >
           <a
             href="#spotlight"
             onClick={() => setIsOpen(false)}
-            className="block text-[14px] font-semibold uppercase tracking-[0.12em] py-3 border-b border-black/8 text-black"
+            className="block text-[14px] font-semibold uppercase tracking-[0.12em] py-3 border-b border-white/10 text-white"
           >
             {t.collections}
           </a>
           <a
             href="#philosophy"
             onClick={() => setIsOpen(false)}
-            className="block text-[14px] font-semibold uppercase tracking-[0.12em] py-3 border-b border-black/8 text-black"
+            className="block text-[14px] font-semibold uppercase tracking-[0.12em] py-3 border-b border-white/10 text-white"
           >
             {t.philosophy}
           </a>
           <a
             href="#branches"
             onClick={() => setIsOpen(false)}
-            className="block text-[14px] font-semibold uppercase tracking-[0.12em] py-3 border-b border-black/8 text-black"
+            className="block text-[14px] font-semibold uppercase tracking-[0.12em] py-3 border-b border-white/10 text-white"
           >
             {t.branches}
           </a>
           <a
             href="#brand-marquee"
             onClick={() => setIsOpen(false)}
-            className="block text-[14px] font-semibold uppercase tracking-[0.12em] py-3 border-b border-black/8 text-black"
+            className="block text-[14px] font-semibold uppercase tracking-[0.12em] py-3 border-b border-white/10 text-white"
           >
             {t.brands}
           </a>
           <div className="flex items-center gap-4 pt-6">
             <button
               type="button"
-              className="p-2 rounded-full border border-black/12 text-black/70"
+              className="p-2 rounded-full border border-white/20 text-white/85 hover:text-white hover:bg-white/[0.06]"
               aria-label="Search"
             >
               <Search size={20} strokeWidth={1.75} />
             </button>
-            <button type="button" className="relative p-2 rounded-full border border-black/12 text-black/70" aria-label="Cart">
+            <button
+              type="button"
+              className="relative p-2 rounded-full border border-white/20 text-white/85 hover:text-white hover:bg-white/[0.06]"
+              aria-label="Cart"
+            >
               <ShoppingBag size={20} strokeWidth={1.75} />
-              <span className="absolute top-1 right-1 min-w-[14px] h-[14px] flex items-center justify-center bg-black text-white text-[9px] font-bold rounded-full">
+              <span className="absolute top-1 right-1 min-w-[14px] h-[14px] flex items-center justify-center bg-white text-black text-[9px] font-bold rounded-full">
                 0
               </span>
             </button>
