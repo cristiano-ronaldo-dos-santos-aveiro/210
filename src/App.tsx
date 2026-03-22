@@ -8,20 +8,13 @@ const LOGO_210_SRC = new URL('../photo/IMG_2657.PNG', import.meta.url).href;
 const LOGO_ANBA_SRC = new URL('../photo/IMG_26589.PNG', import.meta.url).href;
 
 /** Spotlight card backgrounds (replace with your own photos anytime) */
-/**
- * Brand strip: favicons + optional /public/brands/{localSlug}.png — add your PNGs when ready.
- */
+/** Brand strip: logos from /public/brands/{slug}.png */
 const BRAND_MARQUEE_ITEMS = [
-  { domain: 'fila.com', alt: 'FILA', localSlug: 'fila' as const },
-  { domain: 'adidas.com', alt: 'Adidas', localSlug: 'adidas' as const },
-  { domain: 'wilson.com', alt: 'Wilson', localSlug: 'wilson' as const },
-  { domain: 'puma.com', alt: 'Puma', localSlug: 'puma' as const },
-  { domain: 'on-running.com', alt: 'On', localSlug: 'on-cloud' as const },
-  { domain: 'gucci.com', alt: 'Gucci', localSlug: 'gucci' as const },
-  { domain: 'underarmour.com', alt: 'Under Armour', localSlug: 'under-armour' as const },
-  { domain: 'hermes.com', alt: 'Hermès', localSlug: 'hermes' as const },
-  { domain: 'columbia.com', alt: 'Columbia', localSlug: 'columbia' as const },
-  { domain: 'arcteryx.com', alt: "Arc'teryx", localSlug: 'arcteryx' as const }
+  { alt: 'Gucci', slug: 'gucci' as const },
+  { alt: 'Adidas', slug: 'adidas' as const },
+  { alt: 'Nike', slug: 'nike' as const },
+  { alt: 'FILA', slug: 'fila' as const },
+  { alt: 'Hermès', slug: 'hermes' as const }
 ] as const;
 
 const CARD_BG = {
@@ -485,11 +478,9 @@ const SpotlightSection = () => {
   );
 };
 
-const BrandMarqueeLogo: React.FC<{ domain: string; alt: string; localSlug: string }> = ({ domain, alt, localSlug }) => {
+const BrandMarqueeLogo: React.FC<{ alt: string; slug: string }> = ({ alt, slug }) => {
   const [failed, setFailed] = useState(false);
-  const remoteSrc = `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=128`;
-  const localSrc = `/brands/${localSlug}.png`;
-  const [src, setSrc] = useState(remoteSrc);
+  const src = `/brands/${slug}.png`;
 
   if (failed) {
     return (
@@ -504,17 +495,10 @@ const BrandMarqueeLogo: React.FC<{ domain: string; alt: string; localSlug: strin
       <img
         src={src}
         alt={alt}
-        className="h-10 md:h-12 w-10 md:w-12 md:min-w-[48px] object-contain object-center rounded-sm opacity-95 hover:opacity-100 transition-opacity duration-300"
+        className="h-11 md:h-14 w-auto max-w-[120px] md:max-w-[140px] object-contain object-center opacity-95 hover:opacity-100 transition-opacity duration-300"
         loading="lazy"
         decoding="async"
-        referrerPolicy="no-referrer"
-        onError={() => {
-          if (src === remoteSrc) {
-            setSrc(localSrc);
-          } else {
-            setFailed(true);
-          }
-        }}
+        onError={() => setFailed(true)}
       />
     </motion.span>
   );
@@ -532,12 +516,7 @@ const BrandMarquee = () => {
       <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none" />
       <div className="flex animate-marquee items-center w-max">
         {loop.map((item, i) => (
-          <BrandMarqueeLogo
-            key={`${item.domain}-${i}`}
-            domain={item.domain}
-            alt={item.alt}
-            localSlug={item.localSlug}
-          />
+          <BrandMarqueeLogo key={`${item.slug}-${i}`} alt={item.alt} slug={item.slug} />
         ))}
       </div>
     </div>
