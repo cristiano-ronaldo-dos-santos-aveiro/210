@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import { ShoppingBag, Search, Menu, X, Instagram, MapPin, Phone } from 'lucide-react';
 import { cn } from './lib/utils';
@@ -39,30 +39,51 @@ const CONTACT_INSTAGRAM = 'https://www.instagram.com/210_direct/';
 const CONTACT_PHONE_TEL = 'tel:+998952100000';
 const CONTACT_PHONE_LABEL = '+998 952 100 000';
 
-/** Filial ma’lumotlari — har birini alohida yangilang (Instagram, telefon, xarita) */
-const STORE_BRANCHES = [
+/** Nurafshon: parfyumeriya slaydlari (foto tartibi: Crivelli → Tom Ford → Bleu de Chanel → ROJA → Bvlgari) */
+const NURAFSHON_PERFUME_SLIDES = [
+  new URL('../photo/soatlar/photo_2026-03-22_12-58-53.jpg', import.meta.url).href,
+  new URL('../photo/soatlar/photo_2026-03-22_13-00-18.jpg', import.meta.url).href,
+  new URL('../photo/soatlar/photo_2026-03-22_13-00-08.jpg', import.meta.url).href,
+  new URL('../photo/soatlar/photo_2026-03-22_12-59-59.jpg', import.meta.url).href,
+  new URL('../photo/soatlar/photo_2026-03-22_13-00-14.jpg', import.meta.url).href
+] as const;
+
+type StoreBranch = {
+  name: string;
+  instagram: string;
+  phoneTel: string;
+  phoneLabel: string;
+  mapsUrl: string;
+  slides: readonly string[];
+};
+
+/** Filial ma’lumotlari — slides massivini keyinroq to‘ldiring (Gulzor, Nukus) */
+const STORE_BRANCHES: readonly StoreBranch[] = [
   {
     name: 'Nurafshon',
     instagram: CONTACT_INSTAGRAM,
     phoneTel: CONTACT_PHONE_TEL,
     phoneLabel: CONTACT_PHONE_LABEL,
-    mapsUrl: 'https://www.google.com/maps/search/?api=1&query=210+Nurafshon%2C+Uzbekistan'
+    mapsUrl: 'https://www.google.com/maps/search/?api=1&query=210+Nurafshon%2C+Uzbekistan',
+    slides: NURAFSHON_PERFUME_SLIDES
   },
   {
     name: 'Gulzor',
     instagram: CONTACT_INSTAGRAM,
     phoneTel: CONTACT_PHONE_TEL,
     phoneLabel: CONTACT_PHONE_LABEL,
-    mapsUrl: 'https://www.google.com/maps/search/?api=1&query=210+Gulzor%2C+Uzbekistan'
+    mapsUrl: 'https://www.google.com/maps/search/?api=1&query=210+Gulzor%2C+Uzbekistan',
+    slides: []
   },
   {
     name: 'Nukus',
     instagram: CONTACT_INSTAGRAM,
     phoneTel: CONTACT_PHONE_TEL,
     phoneLabel: CONTACT_PHONE_LABEL,
-    mapsUrl: 'https://www.google.com/maps/search/?api=1&query=210+Nukus%2C+Uzbekistan'
+    mapsUrl: 'https://www.google.com/maps/search/?api=1&query=210+Nukus%2C+Uzbekistan',
+    slides: []
   }
-] as const;
+];
 
 const TelegramIcon = ({ className, size = 22 }: { className?: string; size?: number }) => (
   <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
@@ -603,8 +624,74 @@ const PhilosophySection = () => {
   );
 };
 
+const BRANCH_SLIDE_MS = 4200;
+const BRANCH_FADE_S = 1.15;
+
+const BranchSlideshow: React.FC<{ slides: readonly string[]; label: string }> = ({ slides, label }) => {
+  const [active, setActive] = useState(0);
+
+  useEffect(() => {
+    if (slides.length <= 1) return;
+    const id = window.setInterval(() => {
+      setActive((i) => (i + 1) % slides.length);
+    }, BRANCH_SLIDE_MS);
+    return () => clearInterval(id);
+  }, [slides.length]);
+
+  if (slides.length === 0) {
+    return (
+      <div
+        className="relative w-full aspect-[4/5] max-h-[220px] sm:max-h-[240px] rounded-lg overflow-hidden bg-gradient-to-br from-neutral-100 via-neutral-50 to-neutral-200 ring-1 ring-black/[0.06]"
+        aria-hidden
+      >
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className="text-[10px] font-bold uppercase tracking-[0.35em] text-black/25">210</span>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative w-full aspect-[4/5] max-h-[220px] sm:max-h-[240px] rounded-lg overflow-hidden bg-neutral-950 ring-1 ring-black/[0.08] shadow-inner">
+      <span className="sr-only" aria-live="polite">
+        {label} — slide {active + 1} of {slides.length}
+      </span>
+      {slides.map((src, idx) => (
+        <motion.img
+          key={src}
+          src={src}
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover"
+          loading={idx === 0 ? 'eager' : 'lazy'}
+          decoding="async"
+          initial={false}
+          animate={{
+            opacity: idx === active ? 1 : 0,
+            scale: idx === active ? 1 : 1.05
+          }}
+          transition={{ duration: BRANCH_FADE_S, ease: [0.22, 0.61, 0.36, 1] }}
+        />
+      ))}
+      <div className="absolute inset-x-0 bottom-0 h-14 sm:h-16 bg-gradient-to-t from-black/50 to-transparent pointer-events-none" />
+      {slides.length > 1 && (
+        <div className="absolute bottom-2.5 left-0 right-0 flex justify-center gap-1.5 px-2">
+          {slides.map((_, idx) => (
+            <span
+              key={idx}
+              className={cn(
+                'h-1.5 rounded-full transition-all duration-500 ease-out',
+                idx === active ? 'w-4 bg-white shadow-sm' : 'w-1.5 bg-white/40'
+              )}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
 const BranchCard: React.FC<{
-  branch: (typeof STORE_BRANCHES)[number];
+  branch: StoreBranch;
   actionInstagram: string;
   actionPhone: string;
   actionMaps: string;
@@ -619,9 +706,10 @@ const BranchCard: React.FC<{
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-40px' }}
       transition={{ delay: index * 0.06, type: 'spring', stiffness: 80, damping: 22 }}
-      className="rounded-xl border border-black/[0.08] bg-white px-4 py-4 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.12)] flex flex-col items-center text-center gap-3"
+      className="rounded-xl border border-black/[0.08] bg-white p-3 sm:p-3.5 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.12)] flex flex-col items-center text-center gap-3"
     >
-      <div className="flex items-center justify-center gap-2 text-black">
+      <BranchSlideshow slides={branch.slides} label={branch.name} />
+      <div className="flex items-center justify-center gap-2 text-black pt-0.5">
         <MapPin size={18} className="text-black/45 shrink-0" strokeWidth={2} aria-hidden />
         <h3 className="text-base sm:text-lg font-black uppercase tracking-tight">{branch.name}</h3>
       </div>
