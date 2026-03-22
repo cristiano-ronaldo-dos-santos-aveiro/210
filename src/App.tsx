@@ -36,7 +36,7 @@ const CARD_BG = {
 } as const;
 
 /** Replace with your real contacts */
-const CONTACT_TELEGRAM = 'https://t.me/shop210';
+const CONTACT_TELEGRAM = 'https://t.me/Direct_210';
 const CONTACT_INSTAGRAM = 'https://www.instagram.com/210_direct/';
 
 const TelegramIcon = ({ className, size = 22 }: { className?: string; size?: number }) => (
