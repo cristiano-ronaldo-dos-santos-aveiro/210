@@ -451,7 +451,7 @@ const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number }> = ({ car
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.08, type: 'spring', stiffness: 76, damping: 22 }}
-      className="group relative w-full aspect-[3/4] max-h-[320px] sm:max-h-[340px] rounded-xl overflow-hidden border border-white/10 shadow-[0_16px_48px_-20px_rgba(0,0,0,0.75)] bg-neutral-900"
+      className="group relative w-full aspect-[3/4] max-h-[320px] sm:max-h-[340px] rounded-xl overflow-hidden border border-black/[0.08] shadow-[0_16px_40px_-20px_rgba(0,0,0,0.35)] bg-neutral-900"
     >
       <div className="absolute inset-0">
         <img
@@ -481,7 +481,7 @@ const SpotlightSection = () => {
   const t = TRANSLATIONS[lang].cards;
 
   return (
-    <section id="spotlight" className="bg-black scroll-mt-24">
+    <section id="spotlight" className="bg-white scroll-mt-24">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-[4.85rem] md:pt-[5.1rem] pb-10 md:pb-14">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
@@ -489,8 +489,8 @@ const SpotlightSection = () => {
           transition={{ duration: 0.45 }}
           className="mb-6 md:mb-8 text-center"
         >
-          <span className="text-xs font-bold uppercase tracking-[0.3em] text-white/45 block mb-2">{t.sectionEyebrow}</span>
-          <h1 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-white">{t.sectionTitle}</h1>
+          <span className="text-xs font-bold uppercase tracking-[0.3em] text-black/45 block mb-2">{t.sectionEyebrow}</span>
+          <h1 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-black">{t.sectionTitle}</h1>
         </motion.div>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           {SPOTLIGHT_ORDER.map((key, i) => (
@@ -578,12 +578,12 @@ const PhilosophySection = () => {
   const t = TRANSLATIONS[lang].philosophy;
 
   return (
-    <section id="philosophy" className="py-16 md:py-20 bg-zinc-900 border-t border-white/10 scroll-mt-24">
+    <section id="philosophy" className="py-16 md:py-20 bg-neutral-50 border-t border-black/5 scroll-mt-24">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionReveal>
-          <p className="text-xs font-bold uppercase tracking-[0.3em] text-white/45 mb-3">{t.label}</p>
-          <h2 className="text-3xl md:text-4xl font-black uppercase text-white mb-6 leading-tight">{t.title}</h2>
-          <p className="text-base md:text-lg text-white/65 leading-relaxed">{t.body}</p>
+          <p className="text-xs font-bold uppercase tracking-[0.3em] text-black/45 mb-3">{t.label}</p>
+          <h2 className="text-3xl md:text-4xl font-black uppercase text-black mb-6 leading-tight">{t.title}</h2>
+          <p className="text-base md:text-lg text-black/65 leading-relaxed">{t.body}</p>
         </SectionReveal>
       </div>
     </section>
@@ -595,15 +595,15 @@ const BranchesSection = () => {
   const t = TRANSLATIONS[lang].branches;
 
   return (
-    <section id="branches" className="py-16 md:py-20 bg-black border-t border-white/10 scroll-mt-24">
+    <section id="branches" className="py-16 md:py-20 bg-white border-t border-black/5 scroll-mt-24">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionReveal>
-          <p className="text-xs font-bold uppercase tracking-[0.3em] text-white/45 mb-3">{t.label}</p>
-          <h2 className="text-3xl md:text-4xl font-black uppercase text-white mb-6 leading-tight flex items-center gap-3">
-            <MapPin size={28} className="text-white/55 shrink-0" strokeWidth={1.75} />
+          <p className="text-xs font-bold uppercase tracking-[0.3em] text-black/45 mb-3">{t.label}</p>
+          <h2 className="text-3xl md:text-4xl font-black uppercase text-black mb-6 leading-tight flex items-center gap-3">
+            <MapPin size={28} className="text-black/55 shrink-0" strokeWidth={1.75} />
             {t.title}
           </h2>
-          <p className="text-base md:text-lg text-white/65 leading-relaxed">{t.body}</p>
+          <p className="text-base md:text-lg text-black/65 leading-relaxed">{t.body}</p>
         </SectionReveal>
       </div>
     </section>
@@ -617,23 +617,23 @@ const Footer = () => {
       whileInView={{ opacity: 1 }}
       viewport={{ once: true, margin: '-80px' }}
       transition={{ duration: 0.5 }}
-      className="bg-white text-black py-16 md:py-20 border-t border-black/10"
+      className="bg-black text-white py-16 md:py-20"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center gap-10">
         <div className="flex items-center gap-5 md:gap-8" aria-label="210 × Anba">
           <img
             src={LOGO_210_SRC}
             alt="210 Sports Wear"
-            className="h-12 md:h-16 w-auto max-h-16 object-contain object-center"
+            className="h-12 md:h-16 w-auto max-h-16 object-contain object-center brightness-0 invert"
             loading="lazy"
             decoding="async"
             referrerPolicy="no-referrer"
           />
-          <span className="shrink-0 w-px h-11 md:h-14 bg-black/15 rounded-full" aria-hidden />
+          <span className="shrink-0 w-px h-11 md:h-14 bg-white/35 rounded-full" aria-hidden />
           <img
             src={LOGO_ANBA_SRC}
             alt="Anba"
-            className="h-10 md:h-12 w-auto max-h-12 object-contain object-center invert"
+            className="h-10 md:h-12 w-auto max-h-12 object-contain object-center"
             loading="lazy"
             decoding="async"
             referrerPolicy="no-referrer"
@@ -646,7 +646,7 @@ const Footer = () => {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Instagram"
-            className="text-black/55 hover:text-black transition-colors p-2"
+            className="text-white/75 hover:text-white transition-colors p-2"
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.96 }}
           >
@@ -657,7 +657,7 @@ const Footer = () => {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Telegram"
-            className="text-black/55 hover:text-black transition-colors p-2"
+            className="text-white/75 hover:text-white transition-colors p-2"
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.96 }}
           >
@@ -666,7 +666,7 @@ const Footer = () => {
           <motion.a
             href={CONTACT_PHONE_TEL}
             aria-label={`Phone ${CONTACT_PHONE_LABEL}`}
-            className="text-black/55 hover:text-black transition-colors p-2"
+            className="text-white/75 hover:text-white transition-colors p-2"
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.96 }}
           >
@@ -685,7 +685,7 @@ export default function App() {
 
   return (
     <LangContext.Provider value={{ lang, setLang }}>
-      <div className="min-h-screen bg-black text-white">
+      <div className="min-h-screen bg-white">
         <Navbar />
 
         <main>
