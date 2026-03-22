@@ -17,15 +17,20 @@ const BRAND_MARQUEE_ITEMS = [
   { alt: 'Hermès', slug: 'hermes' as const }
 ] as const;
 
+/** Men's luxury boutique — editorial-style Unsplash refs (swap for your own shots anytime) */
 const CARD_BG = {
+  /** Watches */
   featured:
-    'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&q=80&w=1200',
+    'https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&q=85&w=1200',
+  /** Spring / seasonal menswear */
   spring:
-    'https://images.unsplash.com/photo-1490750967868-88cb4486a973?auto=format&fit=crop&q=80&w=1200',
+    'https://images.unsplash.com/photo-1617137968427-85924c2a2efd?auto=format&fit=crop&q=85&w=1200',
+  /** Shoes */
   newDrop:
-    'https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&q=80&w=1200',
+    'https://images.unsplash.com/photo-1600185365921-3fcc2f66655b?auto=format&fit=crop&q=85&w=1200',
+  /** Fragrances */
   special:
-    'https://images.unsplash.com/photo-1558171813-4c088753af8f?auto=format&fit=crop&q=80&w=1200'
+    'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&q=85&w=1200'
 } as const;
 
 /** Replace with your real contacts */
@@ -79,27 +84,27 @@ const TRANSLATIONS: Record<Language, Translations> = {
       branches: "Filiallar"
     },
     cards: {
-      sectionEyebrow: "Tanlov",
+      sectionEyebrow: "Erkaklar lyuksi",
       sectionTitle: "Kolleksiyalar",
       featured: {
-        label: "Saralangan",
-        title: "Mavsumiy tanlov",
-        body: "Trend siluetlar va yangi palitra — hozir do'konda."
+        label: "Soatlar",
+        title: "Erkaklar soati",
+        body: "Shveytsariya va dunyo brendlari: mehanik va zamonaviy kolleksiyalar — premium do'konda."
       },
       spring: {
         label: "Bahor",
         title: "Bahor kolleksiyasi",
-        body: "Yengil ranglar, yangi siluetlar va mavsumiy yangilanish — do'konda."
+        body: "Premium paltolar, jakketlar va bahor palitrasi — zamonaviy erkak uchun."
       },
       newDrop: {
-        label: "Yangi",
-        title: "Yangi kelganlar",
-        body: "Yaqinda kelgan modellar va cheklangan partiyalar — birinchi bo'lib ko'ring."
+        label: "Poyabzal",
+        title: "Lyuks poyabzal",
+        body: "Teri, sport va klassik siluetlar — cheklangan partiyalar va original modellar."
       },
       special: {
-        label: "Maxsus",
-        title: "Maxsus kolleksiya",
-        body: "Tanlangan brendlar va noyob setlar — kompromiss qilmaydiganlar uchun."
+        label: "Parfyumeriya",
+        title: "Atir va odekolon",
+        body: "Niche va lyuks uylar: uzoq saqlanadigan erkaklar aromati — tanlov va maslahat."
       }
     },
     philosophy: {
@@ -121,27 +126,27 @@ const TRANSLATIONS: Record<Language, Translations> = {
       branches: "Филиалы"
     },
     cards: {
-      sectionEyebrow: "Выбор",
+      sectionEyebrow: "Мужской люкс",
       sectionTitle: "Коллекции",
       featured: {
-        label: "Подборка",
-        title: "Сезонный тренд",
-        body: "Актуальные силуэты и палитра — уже в бутике."
+        label: "Часы",
+        title: "Мужские часы",
+        body: "Швейцария и мировые дома: механика и современные линии — в премиальном бутике."
       },
       spring: {
         label: "Весна",
         title: "Весенняя коллекция",
-        body: "Светлые оттенки, новые силуэты и сезонное обновление — уже в бутике."
+        body: "Премиальные пальто, куртки и палитра сезона — для мужчины с характером."
       },
       newDrop: {
-        label: "Новое",
-        title: "Новые поступления",
-        body: "Свежие модели и ограниченные партии — будьте первыми."
+        label: "Обувь",
+        title: "Люксовая обувь",
+        body: "Кожа, спорт и классика: лимитированные модели и оригинал — только для мужчин."
       },
       special: {
-        label: "Особое",
-        title: "Специальная коллекция",
-        body: "Отобранные бренды и уникальные сеты — для тех, кто не идёт на компромиссы."
+        label: "Парфюм",
+        title: "Ароматы",
+        body: "Ниша и люксовые дома: стойкие мужские композиции — подбор и консультация."
       }
     },
     philosophy: {
@@ -163,27 +168,27 @@ const TRANSLATIONS: Record<Language, Translations> = {
       branches: "Branches"
     },
     cards: {
-      sectionEyebrow: "Curated",
+      sectionEyebrow: "Men’s luxury",
       sectionTitle: "Collections",
       featured: {
-        label: "Featured",
-        title: "Season edit",
-        body: "Fresh silhouettes and palette — in store now."
+        label: "Watches",
+        title: "Men’s timepieces",
+        body: "Swiss houses and global maisons — mechanical and contemporary lines, curated for him."
       },
       spring: {
         label: "Spring",
         title: "Spring collection",
-        body: "Light tones, fresh silhouettes, and seasonal energy — in store now."
+        body: "Premium coats, jackets, and a seasonal palette — modern luxury menswear."
       },
       newDrop: {
-        label: "New",
-        title: "New arrivals",
-        body: "Latest drops and limited runs — see them first."
+        label: "Footwear",
+        title: "Luxury shoes",
+        body: "Leather, sport, and classic profiles — limited runs and authentic pairs for men."
       },
       special: {
-        label: "Special",
-        title: "Special collection",
-        body: "Selected brands and distinctive sets — for those who don’t compromise."
+        label: "Fragrance",
+        title: "Perfumes & cologne",
+        body: "Niche and luxury houses — long-lasting men’s scents, with expert guidance."
       }
     },
     philosophy: {
@@ -410,10 +415,10 @@ type SpotlightKey = 'featured' | 'spring' | 'newDrop' | 'special';
 const SPOTLIGHT_ORDER: SpotlightKey[] = ['featured', 'spring', 'newDrop', 'special'];
 
 const SPOTLIGHT_ACCENT: Record<SpotlightKey, string> = {
-  featured: 'from-rose-950/80 via-neutral-900/50 to-black/25',
-  spring: 'from-emerald-950/70 via-teal-900/40 to-white/10',
-  newDrop: 'from-neutral-950/80 via-black/50 to-black/15',
-  special: 'from-violet-950/75 via-purple-950/45 to-black/20'
+  featured: 'from-slate-950/85 via-zinc-900/55 to-black/30',
+  spring: 'from-stone-950/75 via-neutral-900/45 to-black/20',
+  newDrop: 'from-amber-950/80 via-stone-900/50 to-black/25',
+  special: 'from-violet-950/80 via-purple-950/50 to-black/30'
 };
 
 const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number }> = ({ cardKey, index }) => {
