@@ -296,7 +296,7 @@ const Navbar = () => {
   return (
     <motion.nav
       initial={false}
-      className="fixed top-0 left-0 right-0 z-50 border-b border-black/[0.06] bg-white/70 backdrop-blur-2xl shadow-[0_10px_40px_-25px_rgba(0,0,0,0.35)]"
+      className="fixed top-0 left-0 right-0 z-50 border-b border-black/[0.06] bg-white shadow-[0_10px_30px_-25px_rgba(0,0,0,0.35)]"
     >
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10">
         <div className="flex items-center justify-between h-[3.75rem] md:h-[4rem] gap-3">
@@ -330,7 +330,7 @@ const Navbar = () => {
 
           {/* One black bar: nav links + languages */}
           <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 pointer-events-none [&>*]:pointer-events-auto">
-            <div className="flex items-center rounded-full bg-gradient-to-b from-black/95 to-neutral-900/95 px-4 lg:px-5 py-2 gap-3 lg:gap-4 shadow-md border border-white/10">
+            <div className="flex items-center rounded-full bg-black px-4 lg:px-5 py-2 gap-3 lg:gap-4 shadow-md border border-white/10">
               <a href="#spotlight" className={navLinkInBar}>
                 {t.collections}
               </a>
@@ -423,7 +423,7 @@ const Navbar = () => {
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}
-          className="md:hidden backdrop-blur-xl border-t border-black/8 bg-white px-4 pt-4 pb-8 overflow-hidden"
+          className="md:hidden border-t border-black/8 bg-white px-4 pt-4 pb-8 overflow-hidden"
         >
           <div className="rounded-2xl bg-black overflow-hidden shadow-md">
             <a
@@ -698,12 +698,27 @@ const PhilosophySection = () => {
   const t = TRANSLATIONS[lang].philosophy;
 
   return (
-    <section id="philosophy" className="py-16 md:py-20 bg-neutral-50 border-t border-black/5 scroll-mt-24">
+    <section id="philosophy" className="py-16 md:py-20 bg-white border-t border-black/5 scroll-mt-24">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionReveal>
-          <p className="text-xs font-bold uppercase tracking-[0.3em] text-black/45 mb-3">{t.label}</p>
-          <h2 className="text-3xl md:text-4xl font-black uppercase text-black mb-6 leading-tight">{t.title}</h2>
-          <p className="text-base md:text-lg text-black/65 leading-relaxed whitespace-pre-line">{t.body}</p>
+          <div className="relative rounded-3xl border border-black/10 bg-white px-5 sm:px-7 py-7 shadow-[0_18px_60px_-40px_rgba(0,0,0,0.35)]">
+            <div className="absolute -top-5 -left-5 h-12 w-12 rounded-full bg-black/5 blur-[0.5px]" aria-hidden />
+            <div className="absolute -bottom-6 -right-6 h-14 w-14 rounded-full bg-black/5 blur-[0.5px]" aria-hidden />
+
+            <div className="flex items-center gap-3 mb-3">
+              <span className="h-2.5 w-2.5 rounded-full bg-black" aria-hidden />
+              <p className="text-xs font-bold uppercase tracking-[0.3em] text-black/55">{t.label}</p>
+            </div>
+
+            <h2 className="text-3xl md:text-4xl font-black uppercase text-black mb-5 leading-tight">
+              {t.title}
+            </h2>
+            <div className="h-px w-24 bg-black/20 mb-6" aria-hidden />
+
+            <p className="text-base md:text-lg text-black/70 leading-relaxed whitespace-pre-line">
+              {t.body}
+            </p>
+          </div>
         </SectionReveal>
       </div>
     </section>
@@ -937,12 +952,9 @@ export default function App() {
             animation: marquee 28s linear infinite;
             will-change: transform;
           }
-          .brand-marquee:hover .animate-marquee {
-            animation-play-state: paused;
-          }
           @media (prefers-reduced-motion: reduce) {
             .animate-marquee {
-              animation: none;
+              animation-duration: 60s;
             }
           }
           @keyframes float {
