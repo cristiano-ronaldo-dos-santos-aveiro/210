@@ -552,7 +552,7 @@ const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number }> = ({ car
       transition={{ delay: index * 0.08, type: 'spring', stiffness: 76, damping: 22 }}
       whileTap={{ scale: 0.985 }}
       whileHover={{ y: -4 }}
-      className="group relative w-full aspect-[4/5] max-h-[340px] sm:max-h-[380px] rounded-2xl overflow-hidden border border-black/[0.08] shadow-[0_20px_48px_-30px_rgba(0,0,0,0.42)] bg-neutral-900"
+      className="group relative w-full aspect-[5/6] max-h-[370px] sm:max-h-[410px] rounded-2xl overflow-hidden border border-black/[0.08] shadow-[0_20px_48px_-30px_rgba(0,0,0,0.42)] bg-neutral-900"
       aria-label={`${copy.title} — open in Telegram`}
     >
       <div className="absolute inset-0">
@@ -573,12 +573,12 @@ const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number }> = ({ car
         <div className={cn('absolute inset-0 bg-gradient-to-t', overlay)} />
         <div className="absolute inset-0 ring-1 ring-inset ring-white/10 rounded-2xl pointer-events-none" />
       </div>
-      <div className="relative z-10 flex flex-col justify-end h-full p-3 sm:p-3.5 text-left min-h-0">
+      <div className="relative z-10 flex flex-col justify-end h-full p-3.5 sm:p-4 text-left min-h-0">
         <span className="inline-flex w-fit text-[9px] font-bold uppercase tracking-[0.2em] text-white/90 bg-white/15 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/20 mb-1.5">
           {copy.label}
         </span>
-        <h2 className="text-[13px] sm:text-sm font-black uppercase tracking-tight text-white drop-shadow-sm leading-tight">{copy.title}</h2>
-        <p className="mt-1 text-[10px] sm:text-[11px] text-white/85 leading-snug line-clamp-3">{copy.body}</p>
+        <h2 className="text-sm sm:text-[15px] font-black uppercase tracking-tight text-white drop-shadow-sm leading-tight">{copy.title}</h2>
+        <p className="mt-1 text-[11px] sm:text-xs text-white/85 leading-snug line-clamp-3">{copy.body}</p>
       </div>
     </motion.a>
   );
@@ -595,9 +595,9 @@ const SpotlightSection = () => {
 
   return (
     <section id="spotlight" className="bg-gradient-to-b from-white to-neutral-50/50 scroll-mt-24">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-[4.85rem] md:pt-[5.1rem] pb-10 md:pb-14">
-        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(320px,0.95fr)] gap-4 md:gap-5 items-start">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-[4.85rem] md:pt-[5.1rem] pb-10 md:pb-14">
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.12fr)_minmax(360px,0.88fr)] gap-5 md:gap-6 items-start">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
             {SPOTLIGHT_ORDER.map((key, i) => (
               <SpotlightCard key={key} cardKey={key} index={i} />
             ))}
@@ -606,7 +606,7 @@ const SpotlightSection = () => {
           <SectionReveal className="h-full">
             <div
               id="philosophy"
-              className="scroll-mt-24 relative rounded-3xl border border-black/10 bg-white px-5 sm:px-6 py-6 shadow-[0_18px_60px_-40px_rgba(0,0,0,0.35)] lg:sticky lg:top-[5.5rem]"
+              className="scroll-mt-24 relative rounded-3xl border border-black/10 bg-white px-5 sm:px-6 py-6 shadow-[0_18px_60px_-40px_rgba(0,0,0,0.35)]"
             >
               <div className="absolute -top-5 -left-5 h-12 w-12 rounded-full bg-black/5 blur-[0.5px]" aria-hidden />
               <div className="absolute -bottom-6 -right-6 h-14 w-14 rounded-full bg-black/5 blur-[0.5px]" aria-hidden />
