@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
-import { ShoppingBag, Search, Menu, X, Instagram, MapPin, Phone, ExternalLink } from 'lucide-react';
+import { ShoppingBag, Search, Menu, X, Instagram, MapPin, Phone, ArrowUpRight } from 'lucide-react';
 import { cn } from './lib/utils';
 
 /** PNG exports in /photo (210 stack + partner / signature mark) */
@@ -736,7 +736,7 @@ const BranchCard: React.FC<{
         whileTap={{ scale: 0.96 }}
         className="absolute top-3 right-3 z-20 inline-flex items-center justify-center rounded-full border border-black/10 bg-white/90 text-black p-2.5 hover:bg-white transition-colors shadow-sm"
       >
-        <ExternalLink size={18} strokeWidth={1.75} />
+        <ArrowUpRight size={18} strokeWidth={1.75} />
       </motion.a>
 
       <div
