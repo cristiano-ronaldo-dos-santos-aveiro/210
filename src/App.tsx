@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
-import { ShoppingBag, Search, Menu, X, Instagram, MapPin, Phone } from 'lucide-react';
+import { ShoppingBag, Search, Menu, X, Instagram, MapPin, Phone, ExternalLink } from 'lucide-react';
 import { cn } from './lib/utils';
 
 /** PNG exports in /photo (210 stack + partner / signature mark) */
@@ -68,12 +68,17 @@ const SHOE_SPOTLIGHT_SLIDES = [
 const SPOTLIGHT_SLIDE_MS = 2800;
 const SPOTLIGHT_FADE_S = 0.75;
 
+const NURAFSHON_BRANCH_PHOTO_SRC = new URL('../photo/filiallar/nurafshon-branch.png', import.meta.url).href;
+const GULZOR_BRANCH_PHOTO_SRC = new URL('../photo/filiallar/gulzor-branch.png', import.meta.url).href;
+const NUKUS_BRANCH_PHOTO_SRC = new URL('../photo/filiallar/nukus-branch.png', import.meta.url).href;
+
 type StoreBranch = {
   name: string;
   instagram: string;
   phoneTel: string;
   phoneLabel: string;
   mapsUrl: string;
+  photoSrc?: string;
 };
 
 const STORE_BRANCHES: readonly StoreBranch[] = [
@@ -82,21 +87,24 @@ const STORE_BRANCHES: readonly StoreBranch[] = [
     instagram: CONTACT_INSTAGRAM,
     phoneTel: CONTACT_PHONE_TEL,
     phoneLabel: CONTACT_PHONE_LABEL,
-    mapsUrl: 'https://www.google.com/maps/search/?api=1&query=210+Nurafshon%2C+Uzbekistan'
+    mapsUrl: 'https://www.google.com/maps/search/?api=1&query=210+Nurafshon%2C+Uzbekistan',
+    photoSrc: NURAFSHON_BRANCH_PHOTO_SRC
   },
   {
     name: 'Gulzor',
     instagram: CONTACT_INSTAGRAM,
     phoneTel: CONTACT_PHONE_TEL,
     phoneLabel: CONTACT_PHONE_LABEL,
-    mapsUrl: 'https://www.google.com/maps/search/?api=1&query=210+Gulzor%2C+Uzbekistan'
+    mapsUrl: 'https://www.google.com/maps/search/?api=1&query=210+Gulzor%2C+Uzbekistan',
+    photoSrc: GULZOR_BRANCH_PHOTO_SRC
   },
   {
     name: 'Nukus',
     instagram: CONTACT_INSTAGRAM,
     phoneTel: CONTACT_PHONE_TEL,
     phoneLabel: CONTACT_PHONE_LABEL,
-    mapsUrl: 'https://www.google.com/maps/search/?api=1&query=210+Nukus%2C+Uzbekistan'
+    mapsUrl: 'https://www.google.com/maps/search/?api=1&query=210+Nukus%2C+Uzbekistan',
+    photoSrc: NUKUS_BRANCH_PHOTO_SRC
   }
 ];
 
@@ -599,7 +607,7 @@ const SpotlightSection = () => {
             <img
               src={LOGO_210_SRC}
               alt="210 Sports Wear"
-              className="h-[1.5rem] sm:h-[1.625rem] md:h-[1.875rem] w-auto max-h-[1.875rem] object-contain object-center"
+              className="h-[1.75rem] sm:h-[2rem] md:h-[2.25rem] w-auto max-h-[2.25rem] object-contain object-center"
               loading="eager"
               decoding="async"
               referrerPolicy="no-referrer"
@@ -610,7 +618,7 @@ const SpotlightSection = () => {
             <img
               src={LOGO_COLLECTIONS_SRC}
               alt="Anpa Limited"
-              className="h-[1.35rem] sm:h-[1.5rem] md:h-[1.75rem] w-auto max-h-[1.75rem] object-contain object-center"
+              className="h-[1.5rem] sm:h-[1.75rem] md:h-[2rem] w-auto max-h-[2rem] object-contain object-center"
               loading="eager"
               decoding="async"
               referrerPolicy="no-referrer"
@@ -717,15 +725,35 @@ const BranchCard: React.FC<{
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-40px' }}
       transition={{ delay: index * 0.06, type: 'spring', stiffness: 80, damping: 22 }}
-      className="rounded-xl border border-black/[0.08] bg-white px-4 py-4 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.12)] flex flex-col items-center text-center gap-3"
+      className="relative rounded-xl border border-black/[0.08] bg-white px-4 py-4 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.12)] flex flex-col items-center text-center gap-3"
     >
+      <motion.a
+        href={branch.mapsUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`${branch.name} — ${actionMaps}`}
+        whileTap={{ scale: 0.96 }}
+        className="absolute top-3 right-3 inline-flex items-center justify-center rounded-full border border-black/10 bg-white/90 text-black p-2.5 hover:bg-white transition-colors shadow-sm"
+      >
+        <ExternalLink size={18} strokeWidth={1.75} />
+      </motion.a>
+
       <div
         className="relative w-full aspect-[4/5] max-h-[220px] sm:max-h-[240px] rounded-lg overflow-hidden bg-gradient-to-br from-neutral-100 via-neutral-50 to-neutral-200 ring-1 ring-black/[0.06]"
-        aria-hidden
       >
-        <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-[10px] font-bold uppercase tracking-[0.35em] text-black/25">210</span>
-        </div>
+        {branch.photoSrc ? (
+          <img
+            src={branch.photoSrc}
+            alt={branch.name}
+            className="absolute inset-0 h-full w-full object-cover object-center"
+            loading="lazy"
+            decoding="async"
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="text-[10px] font-bold uppercase tracking-[0.35em] text-black/25">210</span>
+          </div>
+        )}
       </div>
       <div className="flex items-center justify-center gap-2 text-black pt-0.5">
         <MapPin size={18} className="text-black/45 shrink-0" strokeWidth={2} aria-hidden />
@@ -821,7 +849,7 @@ const Footer = () => {
           <img
             src={LOGO_COLLECTIONS_SRC}
             alt="Anpa Limited"
-            className="h-10 md:h-12 w-auto max-h-12 object-contain object-center brightness-0 invert"
+            className="h-10 md:h-12 w-auto max-h-12 object-contain object-center invert"
             loading="lazy"
             decoding="async"
             referrerPolicy="no-referrer"
