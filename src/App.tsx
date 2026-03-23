@@ -913,6 +913,45 @@ const CartFloatingButton: React.FC = () => {
 };
 
 const Footer = () => {
+  const { lang } = React.useContext(LangContext);
+  type LegalKey = 'privacy' | 'terms';
+  const [legalOpen, setLegalOpen] = React.useState<LegalKey | null>(null);
+
+  const legalText: Record<Language, Record<LegalKey, { title: string; body: string }>> = {
+    uz: {
+      privacy: {
+        title: 'Maxfiylik siyosati',
+        body: 'Ushbu sahifa xizmat ko‘rsatish uchun kiritilgan ma’lumotlarni qayta ishlash bo‘yicha umumiy axborotni taqdim etadi. Tafsilotlar siz foydalanadigan xizmat turiga bog‘liq bo‘lishi mumkin.'
+      },
+      terms: {
+        title: 'Foydalanish shartlari',
+        body: 'Saytdan foydalanish orqali siz ushbu qoidalarni qabul qilasiz. Kontent va funksiyalar o‘zgarishi mumkin. Mahalliy qonunchilikka muvofiq mas’uliyat qo‘llaniladi.'
+      }
+    },
+    ru: {
+      privacy: {
+        title: 'Политика конфиденциальности',
+        body: 'Этот сайт предоставляет общую информацию о том, как обрабатываются данные, которые вы отправляете для обслуживания. Детали могут зависеть от типа используемых услуг.'
+      },
+      terms: {
+        title: 'Пользовательские условия',
+        body: 'Используя сайт, вы соглашаетесь с условиями. Контент и функции могут изменяться. Ответственность применяется в соответствии с действующим законодательством.'
+      }
+    },
+    en: {
+      privacy: {
+        title: 'Privacy Policy',
+        body: 'This site provides general information about how the data you submit for service may be processed. Specific details may depend on the services you use.'
+      },
+      terms: {
+        title: 'Terms of Use',
+        body: 'By using the site you agree to these terms. Content and features may change. Liability applies in accordance with applicable law.'
+      }
+    }
+  };
+
+  const active = legalOpen ? legalText[lang][legalOpen] : null;
+
   return (
     <motion.footer
       initial={{ opacity: 0 }}
@@ -921,6 +960,32 @@ const Footer = () => {
       transition={{ duration: 0.5 }}
       className="bg-black text-white py-16 md:py-20"
     >
+      {active ? (
+        <div className="fixed inset-0 z-[110] bg-black/60 flex items-center justify-center p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.98 }}
+            role="dialog"
+            aria-modal="true"
+            className="w-full max-w-xl bg-white text-black rounded-2xl shadow-[0_20px_80px_-30px_rgba(0,0,0,0.55)] border border-black/10 overflow-hidden"
+          >
+            <div className="flex items-center justify-between gap-4 px-5 py-4 border-b border-black/10">
+              <h3 className="text-base font-black">{active.title}</h3>
+              <button
+                type="button"
+                onClick={() => setLegalOpen(null)}
+                aria-label="Close"
+                className="inline-flex items-center justify-center rounded-full border border-black/10 bg-white/90 p-2 hover:bg-white transition-colors"
+              >
+                <X size={18} strokeWidth={2} />
+              </button>
+            </div>
+            <div className="px-5 py-4 text-sm leading-relaxed whitespace-pre-line">{active.body}</div>
+          </motion.div>
+        </div>
+      ) : null}
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center gap-10">
         <div className="flex items-center gap-5 md:gap-8" aria-label="210 × Anpa Limited">
           <img
@@ -974,6 +1039,28 @@ const Footer = () => {
           >
             <Phone size={26} strokeWidth={1.75} />
           </motion.a>
+        </div>
+
+        <div className="w-full pt-6 mt-2 border-t border-white/10 flex items-center justify-between gap-6">
+          <span className="text-[12px] text-white/50 select-none">
+            © {new Date().getFullYear()} 210 Sports Wear. Все права защищены.
+          </span>
+          <div className="flex items-center gap-6">
+            <button
+              type="button"
+              onClick={() => setLegalOpen('privacy')}
+              className="text-[12px] text-white/50 hover:text-white transition-colors"
+            >
+              {legalText[lang].privacy.title}
+            </button>
+            <button
+              type="button"
+              onClick={() => setLegalOpen('terms')}
+              className="text-[12px] text-white/50 hover:text-white transition-colors"
+            >
+              {legalText[lang].terms.title}
+            </button>
+          </div>
         </div>
       </div>
     </motion.footer>
