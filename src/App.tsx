@@ -179,7 +179,7 @@ const TRANSLATIONS: Record<Language, Translations> = {
     philosophy: {
       label: "Falsafa",
       title: "Biz oddiylikdan yiroqmiz!",
-      body: "Luxury faqat kiyim bilan o'lchanmaydi. U serviz bilan boshlanadi va yuqori servis mukammallikka olib boradi !\n\n210 va Anba shu servizni o'z mijozlariga taqdim qiladi !"
+      body: "Luxury faqat kiyim bilan o'lchanmaydi. U service bilan boshlanadi va yuqori service mukammallikka olib boradi !\n\n210 va Anba shu service-ni o'z mijozlariga taqdim qiladi !"
     },
     branches: {
       label: "Filiallar",
