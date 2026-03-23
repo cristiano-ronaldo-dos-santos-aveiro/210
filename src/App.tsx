@@ -796,7 +796,9 @@ const BranchCard: React.FC<{
         whileTap={{ scale: 0.96 }}
         className="absolute top-3 right-3 z-20 inline-flex items-center justify-center rounded-full border border-black/10 bg-white/90 text-black p-2.5 hover:bg-white transition-colors shadow-sm"
       >
-        <ArrowUpRight size={18} strokeWidth={1.75} />
+        <span className="text-[10px] font-bold uppercase tracking-[0.12em] leading-none">
+          OPEN
+        </span>
       </motion.a>
 
       <div className="w-full">
