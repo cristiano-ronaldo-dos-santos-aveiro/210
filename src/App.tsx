@@ -551,7 +551,8 @@ const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number }> = ({ car
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.08, type: 'spring', stiffness: 76, damping: 22 }}
       whileTap={{ scale: 0.985 }}
-      className="group relative w-full aspect-[3/4] max-h-[320px] sm:max-h-[340px] rounded-xl overflow-hidden border border-black/[0.08] shadow-[0_16px_40px_-20px_rgba(0,0,0,0.35)] bg-neutral-900"
+      whileHover={{ y: -4 }}
+      className="group relative w-full aspect-[4/5] max-h-[360px] sm:max-h-[390px] rounded-2xl overflow-hidden border border-black/[0.08] shadow-[0_24px_60px_-30px_rgba(0,0,0,0.45)] bg-neutral-900"
       aria-label={`${copy.title} — open in Telegram`}
     >
       <div className="absolute inset-0">
@@ -572,12 +573,12 @@ const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number }> = ({ car
         <div className={cn('absolute inset-0 bg-gradient-to-t', overlay)} />
         <div className="absolute inset-0 ring-1 ring-inset ring-white/10 rounded-2xl pointer-events-none" />
       </div>
-      <div className="relative z-10 flex flex-col justify-end h-full p-4 sm:p-5 text-left min-h-0">
-        <span className="inline-flex w-fit text-[9px] font-bold uppercase tracking-[0.22em] text-white/90 bg-white/15 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/20 mb-2">
+      <div className="relative z-10 flex flex-col justify-end h-full p-3.5 sm:p-4 text-left min-h-0">
+        <span className="inline-flex w-fit text-[9px] font-bold uppercase tracking-[0.2em] text-white/90 bg-white/15 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/20 mb-1.5">
           {copy.label}
         </span>
-        <h2 className="text-sm sm:text-base font-black uppercase tracking-tight text-white drop-shadow-sm leading-tight">{copy.title}</h2>
-        <p className="mt-1.5 text-[11px] sm:text-xs text-white/85 leading-snug line-clamp-3">{copy.body}</p>
+        <h2 className="text-sm sm:text-[15px] font-black uppercase tracking-tight text-white drop-shadow-sm leading-tight">{copy.title}</h2>
+        <p className="mt-1 text-[11px] sm:text-xs text-white/85 leading-snug line-clamp-3">{copy.body}</p>
       </div>
     </motion.a>
   );
@@ -585,7 +586,7 @@ const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number }> = ({ car
 
 const SpotlightSection = () => {
   return (
-    <section id="spotlight" className="bg-white scroll-mt-24">
+    <section id="spotlight" className="bg-gradient-to-b from-white to-neutral-50/50 scroll-mt-24">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-[4.85rem] md:pt-[5.1rem] pb-10 md:pb-14">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
@@ -616,7 +617,7 @@ const SpotlightSection = () => {
             />
           </div>
         </motion.div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
           {SPOTLIGHT_ORDER.map((key, i) => (
             <SpotlightCard key={key} cardKey={key} index={i} />
           ))}
@@ -744,7 +745,7 @@ const BranchCard: React.FC<{
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-40px' }}
       transition={{ delay: index * 0.06, type: 'spring', stiffness: 80, damping: 22 }}
-      className="group relative overflow-hidden rounded-2xl border border-black/[0.08] bg-white shadow-[0_10px_40px_-25px_rgba(0,0,0,0.35)]"
+      className="group relative overflow-hidden rounded-2xl border border-black/[0.08] bg-white shadow-[0_14px_45px_-26px_rgba(0,0,0,0.36)]"
       whileHover={{ scale: 1.02 }}
     >
       <motion.a
@@ -761,7 +762,7 @@ const BranchCard: React.FC<{
       </motion.a>
 
       <div className="w-full">
-        <div className="relative w-full h-[170px] sm:h-[190px] bg-neutral-50 overflow-hidden">
+        <div className="relative w-full h-[200px] sm:h-[220px] bg-neutral-50 overflow-hidden">
           {branch.photoSrc ? (
             <img
               src={branch.photoSrc}
@@ -777,10 +778,10 @@ const BranchCard: React.FC<{
           )}
         </div>
 
-        <div className="px-5 py-4 sm:px-6 sm:py-5">
+        <div className="px-4 py-3.5 sm:px-5 sm:py-4">
           <h3 className="text-[18px] sm:text-[20px] font-black text-black leading-tight">{branch.name}</h3>
 
-          <div className="mt-4 flex flex-col gap-3">
+          <div className="mt-3.5 flex flex-col gap-2.5">
             <motion.a
               href={branch.mapsUrl}
               target="_blank"
@@ -822,7 +823,7 @@ const BranchCard: React.FC<{
             whileTap={{ scale: 0.99 }}
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.25, ease: [0.22, 0.61, 0.36, 1] }}
-            className="mt-5 w-full inline-flex items-center justify-center gap-2 rounded-xl border border-black/20 bg-white px-4 py-2.5 text-[11px] font-bold uppercase tracking-[0.12em] text-black hover:bg-black hover:text-white transition-colors"
+            className="mt-4 w-full inline-flex items-center justify-center gap-2 rounded-xl border border-black/20 bg-white px-4 py-2.5 text-[11px] font-bold uppercase tracking-[0.12em] text-black hover:bg-black hover:text-white transition-colors"
             aria-label={`${branch.name} — ${actionMaps}`}
           >
             <span>{actionMaps}</span>
