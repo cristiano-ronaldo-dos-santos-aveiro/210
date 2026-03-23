@@ -552,7 +552,7 @@ const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number }> = ({ car
       transition={{ delay: index * 0.08, type: 'spring', stiffness: 76, damping: 22 }}
       whileTap={{ scale: 0.985 }}
       whileHover={{ y: -4 }}
-      className="group relative w-full aspect-[5/6] max-h-[370px] sm:max-h-[410px] rounded-2xl overflow-hidden border border-black/[0.08] shadow-[0_20px_48px_-30px_rgba(0,0,0,0.42)] bg-neutral-900"
+      className="group relative w-full h-full min-h-[260px] sm:min-h-[300px] rounded-2xl overflow-hidden border border-black/[0.08] shadow-[0_20px_48px_-30px_rgba(0,0,0,0.42)] bg-neutral-900"
       aria-label={`${copy.title} — open in Telegram`}
     >
       <div className="absolute inset-0">
@@ -594,10 +594,10 @@ const SpotlightSection = () => {
   };
 
   return (
-    <section id="spotlight" className="bg-gradient-to-b from-white to-neutral-50/50 scroll-mt-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-[4.85rem] md:pt-[5.1rem] pb-10 md:pb-14">
-        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.12fr)_minmax(360px,0.88fr)] gap-5 md:gap-6 items-start">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+    <section id="spotlight" className="bg-gradient-to-b from-white to-neutral-50/50 scroll-mt-24 min-h-screen">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-[4.2rem] md:pt-[4.5rem] pb-8 md:pb-10 min-h-[calc(100vh-4rem)] flex flex-col">
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.12fr)_minmax(360px,0.88fr)] gap-5 md:gap-6 items-stretch flex-1">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 auto-rows-fr">
             {SPOTLIGHT_ORDER.map((key, i) => (
               <SpotlightCard key={key} cardKey={key} index={i} />
             ))}
@@ -606,7 +606,7 @@ const SpotlightSection = () => {
           <SectionReveal className="h-full">
             <div
               id="philosophy"
-              className="scroll-mt-24 relative rounded-3xl border border-black/10 bg-white px-5 sm:px-6 py-6 shadow-[0_18px_60px_-40px_rgba(0,0,0,0.35)]"
+              className="scroll-mt-24 h-full relative rounded-3xl border border-black/10 bg-white px-5 sm:px-6 py-6 shadow-[0_18px_60px_-40px_rgba(0,0,0,0.35)]"
             >
               <div className="absolute -top-5 -left-5 h-12 w-12 rounded-full bg-black/5 blur-[0.5px]" aria-hidden />
               <div className="absolute -bottom-6 -right-6 h-14 w-14 rounded-full bg-black/5 blur-[0.5px]" aria-hidden />
