@@ -516,7 +516,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-[3.75rem] md:h-[4rem] gap-3">
           <motion.a
             href="#"
-            className="fixed top-2 left-4 sm:left-6 lg:left-10 z-[96] flex-shrink-0 flex items-center gap-2 md:gap-2.5 rounded-full border border-black/12 bg-white/95 px-3 py-2 shadow-[0_6px_24px_-6px_rgba(0,0,0,0.18)] ring-1 ring-black/[0.06] backdrop-blur-md"
+            className="fixed top-2 left-3 z-[96] flex max-lg:scale-[0.92] max-lg:origin-top-left flex-shrink-0 items-center gap-1.5 rounded-full border border-black/12 bg-white/95 px-2.5 py-1.5 shadow-[0_6px_24px_-6px_rgba(0,0,0,0.18)] ring-1 ring-black/[0.06] backdrop-blur-md sm:left-6 sm:gap-2 sm:px-3 sm:py-2 md:gap-2.5 lg:left-10 lg:scale-100"
             whileHover={{ opacity: 0.98, scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             aria-label="210 × Anpa Limited"
@@ -524,18 +524,18 @@ const Navbar = () => {
             <img
               src={LOGO_210_SRC}
               alt="210 Sports Wear"
-              className="h-7 md:h-9 w-auto max-h-9 object-contain object-left"
+              className="h-6 w-auto max-h-8 object-contain object-left md:h-9 md:max-h-9"
               loading="eager"
               decoding="async"
               referrerPolicy="no-referrer"
             />
-            <span className={cn('text-base md:text-lg font-light select-none leading-none', logoSep)} aria-hidden>
+            <span className={cn('text-sm font-light leading-none select-none md:text-base lg:text-lg', logoSep)} aria-hidden>
               |
             </span>
             <img
               src={LOGO_COLLECTIONS_SRC}
               alt="Anpa Limited"
-              className="h-6 md:h-8 w-auto max-h-8 object-contain object-left"
+              className="h-5 w-auto max-h-7 object-contain object-left md:h-8 md:max-h-8"
               loading="eager"
               decoding="async"
               referrerPolicy="no-referrer"
@@ -581,8 +581,8 @@ const Navbar = () => {
 
           {/* phone/search buttons removed */}
 
-          <div className="md:hidden fixed top-2 right-4 flex items-center z-[95]">
-            <div className="flex items-center gap-0.5 rounded-full border border-black/12 bg-white/90 py-1 pl-2 pr-1 shadow-[0_6px_22px_-8px_rgba(0,0,0,0.18)] ring-1 ring-black/[0.06] backdrop-blur-xl supports-[backdrop-filter]:bg-white/82">
+          <div className="fixed right-3 top-2 z-[95] flex items-center sm:right-4 md:hidden">
+            <div className="flex scale-[0.92] items-center gap-0.5 rounded-full border border-black/12 bg-white/90 py-0.5 pl-1.5 pr-0.5 shadow-[0_6px_22px_-8px_rgba(0,0,0,0.18)] ring-1 ring-black/[0.06] backdrop-blur-xl supports-[backdrop-filter]:bg-white/82 sm:scale-100 sm:py-1 sm:pl-2 sm:pr-1">
               {(['uz', 'ru', 'en'] as const).map((l) => (
                 <button
                   key={l}
@@ -768,7 +768,7 @@ const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number; className?
       whileTap={{ scale: 0.985 }}
       whileHover={{ y: -4 }}
       className={cn(
-        "group relative w-full h-full min-h-[220px] sm:min-h-0 rounded-2xl overflow-hidden border border-black/[0.08] shadow-[0_20px_48px_-30px_rgba(0,0,0,0.42)] bg-neutral-900",
+        'group relative h-full w-full min-h-[200px] overflow-hidden rounded-xl border border-black/[0.08] bg-neutral-900 shadow-[0_20px_48px_-30px_rgba(0,0,0,0.42)] sm:min-h-0 lg:rounded-2xl',
         className
       )}
     >
@@ -795,25 +795,29 @@ const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number; className?
           />
         )}
         <div className={cn('absolute inset-0 bg-gradient-to-t', overlay)} />
-        <div className="absolute inset-0 ring-1 ring-inset ring-white/10 rounded-2xl pointer-events-none" />
+        <div className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-inset ring-white/10 lg:rounded-2xl" />
       </div>
-      <div className="relative z-[2] flex flex-col justify-end h-full p-3.5 sm:p-4 text-left min-h-0 pointer-events-none">
-        <span className="inline-flex w-fit text-[9px] font-bold uppercase tracking-[0.2em] text-white/90 bg-white/15 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/20 mb-1.5">
+      <div className="pointer-events-none relative z-[2] flex h-full min-h-0 flex-col justify-end p-2.5 text-left max-lg:p-2.5 sm:p-3 lg:p-4">
+        <span className="mb-1 inline-flex w-fit rounded-full border border-white/20 bg-white/15 px-2 py-0.5 text-[7px] font-bold uppercase tracking-[0.14em] text-white/90 backdrop-blur-md max-lg:max-w-[95%] max-lg:truncate sm:px-2.5 sm:py-1 sm:text-[8px] lg:mb-1.5 lg:text-[9px] lg:tracking-[0.2em]">
           {copy.label}
         </span>
-        <h2 className="text-sm sm:text-[15px] font-black uppercase tracking-tight text-white drop-shadow-sm leading-tight">{copy.title}</h2>
-        <p className="mt-1 text-[11px] sm:text-xs text-white/85 leading-snug line-clamp-2">{copy.body}</p>
-        <div className="pointer-events-auto mt-2 flex items-center justify-end gap-2 border-t border-white/20 pt-2">
+        <h2 className="text-[11px] font-black uppercase leading-tight tracking-tight text-white drop-shadow-sm max-lg:line-clamp-3 sm:text-xs lg:line-clamp-none lg:text-[15px]">
+          {copy.title}
+        </h2>
+        <p className="mt-0.5 text-[9px] leading-snug text-white/85 line-clamp-2 max-lg:line-clamp-2 sm:mt-1 sm:text-[10px] lg:text-xs lg:line-clamp-2">
+          {copy.body}
+        </p>
+        <div className="pointer-events-auto mt-1.5 flex items-center justify-end gap-2 border-t border-white/20 pt-1.5 sm:mt-2 sm:pt-2">
           <button
             type="button"
-            className="inline-flex shrink-0 items-center justify-center rounded-full border border-white/35 bg-white/15 p-2 text-white backdrop-blur-md transition-colors hover:bg-white/25"
+            className="inline-flex size-8 shrink-0 items-center justify-center rounded-full border border-white/35 bg-white/15 text-white backdrop-blur-md transition-colors hover:bg-white/25 max-lg:size-7 lg:size-9 lg:p-2"
             aria-label={ui.addToCart}
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
             }}
           >
-            <ShoppingBag size={16} strokeWidth={1.85} />
+            <ShoppingBag className="h-3.5 w-3.5 lg:h-4 lg:w-4" strokeWidth={1.85} />
           </button>
         </div>
       </div>
@@ -827,19 +831,19 @@ const SpotlightSection = () => {
 
   return (
     <section id="spotlight" className="scroll-mt-24 overflow-x-hidden bg-gradient-to-b from-white to-neutral-50/50 min-h-0 lg:min-h-screen">
-      <div className="mx-auto flex w-full max-w-[1600px] flex-col px-4 pb-10 pt-[3.75rem] min-h-0 sm:px-6 sm:pb-8 sm:pt-[3.9rem] md:pt-[4.2rem] md:pb-6 lg:min-h-[calc(100dvh-4rem)] lg:px-8">
+      <div className="mx-auto flex min-h-0 w-full max-w-[1600px] flex-col px-3.5 pb-8 pt-[3.65rem] max-lg:max-w-[100vw] sm:px-6 sm:pb-8 sm:pt-[3.9rem] md:pt-[4.2rem] md:pb-6 lg:min-h-[calc(100dvh-4rem)] lg:px-8 lg:pb-10">
         {/* ~60% spotlight / ~40% philosophy (top) + logos (bottom) on large screens */}
-        <div className="grid min-h-0 flex-1 grid-cols-1 items-stretch gap-6 min-[400px]:gap-7 md:gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(260px,2fr)] lg:gap-7">
-          <div className="grid h-full min-h-0 grid-cols-1 justify-items-stretch gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,0.82fr)] sm:gap-5 lg:-translate-x-6 xl:-translate-x-10 2xl:-translate-x-14">
+        <div className="grid min-h-0 flex-1 grid-cols-1 items-stretch gap-4 max-lg:gap-4 min-[400px]:gap-5 md:gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(260px,2fr)] lg:gap-7">
+          <div className="grid h-full min-h-0 grid-cols-1 justify-items-stretch gap-3 max-lg:gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,0.82fr)] sm:gap-5 lg:-translate-x-6 xl:-translate-x-10 2xl:-translate-x-14">
             <SpotlightCard
               cardKey="spring"
               index={0}
-              className="h-auto min-h-[min(72vw,320px)] aspect-[9/16] sm:min-h-0 lg:h-full lg:aspect-auto lg:min-h-0"
+              className="h-auto w-full min-h-0 max-lg:aspect-[11/16] max-lg:max-h-[min(54dvh,500px)] lg:h-full lg:max-h-none lg:aspect-auto"
             />
-            <div className="grid h-full auto-rows-fr grid-rows-3 gap-3.5 sm:gap-5">
-              <SpotlightCard cardKey="newDrop" index={1} className="min-h-[132px] sm:min-h-0" />
-              <SpotlightCard cardKey="featured" index={2} className="min-h-[132px] sm:min-h-0" />
-              <SpotlightCard cardKey="special" index={3} className="min-h-[132px] sm:min-h-0" />
+            <div className="grid h-full auto-rows-fr grid-rows-3 gap-2.5 max-lg:gap-2.5 sm:gap-5">
+              <SpotlightCard cardKey="newDrop" index={1} className="min-h-[100px] sm:min-h-0" />
+              <SpotlightCard cardKey="featured" index={2} className="min-h-[100px] sm:min-h-0" />
+              <SpotlightCard cardKey="special" index={3} className="min-h-[100px] sm:min-h-0" />
             </div>
           </div>
 
@@ -859,11 +863,11 @@ const SpotlightSection = () => {
                   </p>
                 </div>
 
-                <h2 className="text-balance mb-4 text-2xl font-black uppercase leading-[1.15] text-black sm:mb-5 sm:text-3xl sm:leading-tight md:text-4xl lg:text-[2.35rem] lg:leading-[1.12]">
+                <h2 className="mb-4 text-balance text-xl font-black uppercase leading-[1.15] text-black max-lg:mx-auto max-lg:max-w-[22rem] sm:mb-5 sm:text-2xl sm:leading-tight md:text-3xl lg:mx-0 lg:max-w-none lg:text-[2.35rem] lg:leading-[1.12]">
                   {tPhilosophy.title}
                 </h2>
                 <div className="mx-auto mb-4 h-px w-24 bg-black/20 sm:mb-5" aria-hidden />
-                <p className="text-[15px] leading-[1.65] text-black/70 whitespace-pre-line sm:text-base sm:leading-relaxed md:text-lg lg:text-[1.125rem] lg:leading-relaxed">
+                <p className="text-[14px] leading-[1.6] text-black/70 whitespace-pre-line max-lg:max-w-md max-lg:mx-auto sm:text-base sm:leading-relaxed md:text-lg lg:mx-0 lg:max-w-none lg:text-[1.125rem] lg:leading-relaxed">
                   {tPhilosophy.body}
                 </p>
 
