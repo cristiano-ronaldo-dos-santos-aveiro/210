@@ -4,8 +4,8 @@ import { ShoppingBag, Search, Menu, X, Instagram, MapPin, Phone } from 'lucide-r
 import { cn } from './lib/utils';
 
 /** PNG exports in /photo (210 stack + partner / signature mark) */
-const LOGO_210_SRC = new URL('../photo/IMG_2657.PNG', import.meta.url).href;
-const LOGO_COLLECTIONS_SRC = new URL('../photo/logo-collections.png', import.meta.url).href;
+const LOGO_210_SRC = new URL('../photo/logolar/IMG_2657.PNG', import.meta.url).href;
+const LOGO_COLLECTIONS_SRC = new URL('../photo/logolar/logo-collections.png', import.meta.url).href;
 
 /** Spotlight card backgrounds (replace with your own photos anytime) */
 /** Brand strip: logos from /public/brands/{slug}.png */
@@ -41,11 +41,11 @@ const CONTACT_PHONE_LABEL = '+998 952 100 000';
 
 /** Parfyumeriya spotlight kartasi — slayd tartibi: Crivelli → Tom Ford → Bleu de Chanel → ROJA → Bvlgari */
 const PERFUME_SPOTLIGHT_SLIDES = [
-  new URL('../photo/soatlar/photo_2026-03-22_12-58-53.jpg', import.meta.url).href,
-  new URL('../photo/soatlar/photo_2026-03-22_13-00-18.jpg', import.meta.url).href,
-  new URL('../photo/soatlar/photo_2026-03-22_13-00-08.jpg', import.meta.url).href,
-  new URL('../photo/soatlar/photo_2026-03-22_12-59-59.jpg', import.meta.url).href,
-  new URL('../photo/soatlar/photo_2026-03-22_13-00-14.jpg', import.meta.url).href
+  new URL('../photo/Atirlar/photo_2026-03-22_12-58-53.jpg', import.meta.url).href,
+  new URL('../photo/Atirlar/photo_2026-03-22_13-00-18.jpg', import.meta.url).href,
+  new URL('../photo/Atirlar/photo_2026-03-22_13-00-08.jpg', import.meta.url).href,
+  new URL('../photo/Atirlar/photo_2026-03-22_12-59-59.jpg', import.meta.url).href,
+  new URL('../photo/Atirlar/photo_2026-03-22_13-00-14.jpg', import.meta.url).href
 ] as const;
 
 /** Soatlar spotlight kartasi — premium soat suratlari (tartib: Santos-style → Daytona ice-blue → two-tone Daytona → AP Royal Oak) */
@@ -56,7 +56,15 @@ const WATCH_SPOTLIGHT_SLIDES = [
   new URL('../photo/Soatlar/photo_2026-03-22_13-12-47.jpg', import.meta.url).href
 ] as const;
 
-/** Spotlight slaydlari (parfyumeriya + soatlar) — bir xil tezlik va fade */
+/** Oyoq kiyim / yangi tushirish spotlight kartasi */
+const SHOE_SPOTLIGHT_SLIDES = [
+  new URL('../photo/Oyoq kiyimlar/photo_2025-01-16_12-26-45.jpg', import.meta.url).href,
+  new URL('../photo/Oyoq kiyimlar/photo_2025-01-20_17-45-03.jpg', import.meta.url).href,
+  new URL('../photo/Oyoq kiyimlar/photo_2025-01-17_13-02-15.jpg', import.meta.url).href,
+  new URL('../photo/Oyoq kiyimlar/photo_2025-01-20_11-11-50.jpg', import.meta.url).href
+] as const;
+
+/** Spotlight slaydlari (oyoq kiyim + soatlar + atirlar) — bir xil tezlik va fade */
 const SPOTLIGHT_SLIDE_MS = 2800;
 const SPOTLIGHT_FADE_S = 0.75;
 
@@ -150,7 +158,7 @@ const TRANSLATIONS: Record<Language, Translations> = {
       },
       newDrop: {
         label: "Poyabzal",
-        title: "Oyoq kiymlar"
+        title: "Oyoq kiymlar",
         body: "Teri, sport va klassik siluetlar — cheklangan partiyalar va original modellar."
       },
       special: {
@@ -480,6 +488,7 @@ const SPOTLIGHT_ACCENT: Record<SpotlightKey, string> = {
 
 /** Soatlar va atirlar spotlight kartalarida bir xil crossfade slayd */
 const SPOTLIGHT_SLIDE_SETS: Partial<Record<SpotlightKey, readonly string[]>> = {
+  newDrop: SHOE_SPOTLIGHT_SLIDES,
   featured: WATCH_SPOTLIGHT_SLIDES,
   special: PERFUME_SPOTLIGHT_SLIDES
 };
