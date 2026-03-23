@@ -81,6 +81,7 @@ type StoreBranch = {
   mapsUrl: string;
   photoSrc?: string;
   openHours?: string;
+  addressLine?: string;
 };
 
 const STORE_BRANCHES: readonly StoreBranch[] = [
@@ -93,6 +94,8 @@ const STORE_BRANCHES: readonly StoreBranch[] = [
     photoSrc: NURAFSHON_BRANCH_PHOTO_SRC
     ,
     openHours: '10:00-22:00'
+    ,
+    addressLine: 'Обводная улица Нурафшан, 41'
   },
   {
     name: 'Gulzor',
@@ -803,7 +806,7 @@ const BranchCard: React.FC<{
               className="flex items-center gap-3 text-[13px] sm:text-[14px] text-black/60 hover:text-black transition-colors"
             >
               <MapPin size={18} strokeWidth={1.8} className="shrink-0" />
-              <span className="leading-snug">{address || branch.name}</span>
+              <span className="leading-snug">{branch.addressLine ?? address ?? branch.name}</span>
             </motion.a>
 
             <motion.a
