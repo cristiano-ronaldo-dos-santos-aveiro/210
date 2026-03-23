@@ -64,6 +64,14 @@ const SHOE_SPOTLIGHT_SLIDES = [
   new URL('../photo/Oyoq kiyimlar/photo_2025-01-20_11-11-50.jpg', import.meta.url).href
 ] as const;
 
+/** Bahor kolleksiyasi — yangi “kiyimlar” spotlight slides */
+const SPRING_SPOTLIGHT_SLIDES = [
+  new URL('../photo/Kiyimlar/photo_2026-03-23_17-04-01.jpg', import.meta.url).href,
+  new URL('../photo/Kiyimlar/photo_2026-03-23_17-04-17.jpg', import.meta.url).href,
+  new URL('../photo/Kiyimlar/photo_2026-03-23_17-05-08.jpg', import.meta.url).href,
+  new URL('../photo/Kiyimlar/photo_2026-03-23_17-10-38.jpg', import.meta.url).href
+] as const;
+
 /** Spotlight slaydlari (oyoq kiyim + soatlar + atirlar) — bir xil tezlik va fade */
 const SPOTLIGHT_SLIDE_MS = 2800;
 const SPOTLIGHT_FADE_S = 0.75;
@@ -519,6 +527,7 @@ const SPOTLIGHT_ACCENT: Record<SpotlightKey, string> = {
 
 /** Soatlar va atirlar spotlight kartalarida bir xil crossfade slayd */
 const SPOTLIGHT_SLIDE_SETS: Partial<Record<SpotlightKey, readonly string[]>> = {
+  spring: SPRING_SPOTLIGHT_SLIDES,
   newDrop: SHOE_SPOTLIGHT_SLIDES,
   featured: WATCH_SPOTLIGHT_SLIDES,
   special: PERFUME_SPOTLIGHT_SLIDES
