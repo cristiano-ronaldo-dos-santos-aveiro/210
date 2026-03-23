@@ -900,7 +900,7 @@ const CartFloatingButton: React.FC = () => {
   return (
     <motion.button
       type="button"
-      className="fixed bottom-5 right-5 z-[60] relative inline-flex items-center justify-center rounded-full border border-white/10 bg-black text-white w-12 h-12 shadow-[0_18px_50px_-18px_rgba(0,0,0,0.7)] hover:bg-neutral-900 transition-colors"
+      className="fixed bottom-5 right-5 z-[60] inline-flex items-center justify-center rounded-full border border-white/10 bg-black text-white w-12 h-12 shadow-[0_18px_50px_-18px_rgba(0,0,0,0.7)] hover:bg-neutral-900 transition-colors"
       whileTap={{ scale: 0.95 }}
       aria-label="Cart"
     >
