@@ -1431,7 +1431,7 @@ export default function App() {
 
   return (
     <LangContext.Provider value={{ lang, setLang }}>
-      <div className="min-h-screen overflow-x-hidden bg-white">
+      <div className="min-h-screen bg-white">
         <Navbar />
         <CartFloatingButton />
 

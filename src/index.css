@@ -14,8 +14,14 @@
   html {
     scroll-behavior: smooth;
   }
+  /**
+   * Horizontal spill from transforms (e.g. hero) without overflow-x-hidden on a
+   * tall wrapper — that pattern breaks iOS vertical scroll / pull-to-refresh.
+   * overflow-x: clip on the scrolling root avoids that while clipping sideways.
+   */
   body {
     @apply bg-white text-black antialiased;
+    overflow-x: clip;
     font-family: var(--font-sans);
   }
   ::selection {
