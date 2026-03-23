@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'motion/react';
-import { ShoppingBag, Menu, X, Instagram, MapPin, Phone, ArrowUpRight, Clock, ArrowRight } from 'lucide-react';
+import { ShoppingBag, Search, Instagram, MapPin, Phone, ArrowUpRight, Clock, ArrowRight } from 'lucide-react';
 import { cn } from './lib/utils';
 
 /** PNG exports in /photo (210 stack + partner / signature mark) */
@@ -152,6 +152,8 @@ type Language = 'uz' | 'ru' | 'en';
 interface Translations {
   ui: {
     addToCart: string;
+    /** Search icon — scrolls to clothes / catalog */
+    searchNavigate: string;
   };
   nav: {
     home: string;
@@ -198,7 +200,8 @@ interface Translations {
 const TRANSLATIONS: Record<Language, Translations> = {
   uz: {
     ui: {
-      addToCart: "Savatchaga"
+      addToCart: "Savatchaga",
+      searchNavigate: "Kiyimlarga o‘tish"
     },
     nav: {
       home: "Bosh sahifa",
@@ -274,7 +277,8 @@ const TRANSLATIONS: Record<Language, Translations> = {
   },
   ru: {
     ui: {
-      addToCart: "В корзину"
+      addToCart: "В корзину",
+      searchNavigate: "Перейти к одежде"
     },
     nav: {
       home: "Главная",
@@ -350,7 +354,8 @@ const TRANSLATIONS: Record<Language, Translations> = {
   },
   en: {
     ui: {
-      addToCart: "Add to basket"
+      addToCart: "Add to basket",
+      searchNavigate: "Go to clothes"
     },
     nav: {
       home: "Home",
@@ -438,7 +443,6 @@ const LangContext = React.createContext<{ lang: Language; setLang: (l: Language)
 // --- Components ---
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
   const sectionIds = ['spotlight', 'daily-looks', 'clothes', 'brand-marquee', 'branches'] as const;
   const [activeSection, setActiveSection] = useState<(typeof sectionIds)[number]>('spotlight');
   const visibleRatiosRef = useRef<Record<(typeof sectionIds)[number], number>>({
@@ -450,6 +454,7 @@ const Navbar = () => {
   });
   const { lang, setLang } = React.useContext(LangContext);
   const t = TRANSLATIONS[lang].nav;
+  const ui = TRANSLATIONS[lang].ui;
 
   useEffect(() => {
     const sections = sectionIds
@@ -504,7 +509,13 @@ const Navbar = () => {
         ? 'bg-black/12 text-black'
         : 'text-black/75 hover:bg-black/8 hover:text-black'
     );
-  const iconInBar = 'p-2.5 rounded-full text-white hover:bg-white/10 transition-colors duration-300 hover:scale-[1.06]';
+  const navLinkMobilePill = (id: (typeof sectionIds)[number]) =>
+    cn(
+      'inline-flex shrink-0 items-center justify-center rounded-full px-2 py-1.5 text-[8px] font-medium uppercase leading-none tracking-[0.06em] antialiased transition-all duration-200 min-[400px]:px-2.5 min-[400px]:text-[9px] sm:text-[10px]',
+      activeSection === id
+        ? 'bg-black/12 text-black'
+        : 'text-black/75 active:bg-black/8'
+    );
   const logoSep = 'text-black/30';
 
   return (
@@ -512,167 +523,162 @@ const Navbar = () => {
       initial={false}
       className="relative z-40 bg-transparent"
     >
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10">
-        <div className="flex items-center justify-between h-[3.75rem] md:h-[4rem] gap-3">
-          <motion.a
-            href="#"
-            className="fixed top-2 left-3 z-[96] flex max-lg:scale-[0.92] max-lg:origin-top-left flex-shrink-0 items-center gap-1.5 rounded-full border border-black/12 bg-white/95 px-2.5 py-1.5 shadow-[0_6px_24px_-6px_rgba(0,0,0,0.18)] ring-1 ring-black/[0.06] backdrop-blur-md sm:left-6 sm:gap-2 sm:px-3 sm:py-2 md:gap-2.5 lg:left-10 lg:scale-100"
-            whileHover={{ opacity: 0.98, scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            aria-label="210 × Anpa Limited"
-          >
-            <img
-              src={LOGO_210_SRC}
-              alt="210 Sports Wear"
-              className="h-6 w-auto max-h-8 object-contain object-left md:h-9 md:max-h-9"
-              loading="eager"
-              decoding="async"
-              referrerPolicy="no-referrer"
-            />
-            <span className={cn('text-sm font-light leading-none select-none md:text-base lg:text-lg', logoSep)} aria-hidden>
-              |
-            </span>
-            <img
-              src={LOGO_COLLECTIONS_SRC}
-              alt="Anpa Limited"
-              className="h-5 w-auto max-h-7 object-contain object-left md:h-8 md:max-h-8"
-              loading="eager"
-              decoding="async"
-              referrerPolicy="no-referrer"
-            />
-          </motion.a>
+      {/* Mobile / small tablet: same structure as desktop — logo | scrollable nav+lang pill | search */}
+      <div className="pointer-events-none fixed inset-x-0 top-0 z-[95] flex items-center gap-1.5 px-2 pt-2 sm:gap-2 sm:px-3 md:hidden">
+        <motion.a
+          href="#"
+          className="pointer-events-auto flex shrink-0 items-center gap-1 rounded-full border border-black/12 bg-white/95 px-2 py-1.5 shadow-[0_6px_24px_-6px_rgba(0,0,0,0.18)] ring-1 ring-black/[0.06] backdrop-blur-md min-[400px]:gap-1.5 min-[400px]:px-2.5"
+          whileTap={{ scale: 0.98 }}
+          aria-label="210 × Anpa Limited"
+        >
+          <img
+            src={LOGO_210_SRC}
+            alt="210 Sports Wear"
+            className="h-5 w-auto max-h-7 object-contain object-left min-[400px]:h-6 min-[400px]:max-h-8"
+            loading="eager"
+            decoding="async"
+            referrerPolicy="no-referrer"
+          />
+          <span className={cn('text-xs font-light leading-none select-none min-[400px]:text-sm', logoSep)} aria-hidden>
+            |
+          </span>
+          <img
+            src={LOGO_COLLECTIONS_SRC}
+            alt="Anpa Limited"
+            className="h-4 w-auto max-h-6 object-contain object-left min-[400px]:h-5 min-[400px]:max-h-7"
+            loading="eager"
+            decoding="async"
+            referrerPolicy="no-referrer"
+          />
+        </motion.a>
 
-          {/* One black bar: nav links + languages */}
-          <div className="hidden md:flex fixed top-2 left-1/2 -translate-x-1/2 z-[95] pointer-events-none [&>*]:pointer-events-auto">
-            <div className="flex items-center gap-3 rounded-full border border-black/12 bg-white/90 px-4 py-2 shadow-[0_8px_30px_-10px_rgba(0,0,0,0.2)] ring-1 ring-black/[0.06] backdrop-blur-xl supports-[backdrop-filter]:bg-white/82 lg:gap-4 lg:px-5">
-              <a href="#spotlight" className={navLinkInBar('spotlight')}>
-                {t.home}
-              </a>
-              <a href="#daily-looks" className={navLinkInBar('daily-looks')}>
-                {t.dailyLooks}
-              </a>
-              <a href="#clothes" className={navLinkInBar('clothes')}>
-                {t.clothes}
-              </a>
-              <a href="#branches" className={navLinkInBar('branches')}>
-                {t.branches}
-              </a>
-              <a href="#brand-marquee" className={navLinkInBar('brand-marquee')}>
-                {t.brands}
-              </a>
-              <div className="h-5 w-px shrink-0 bg-black/20" aria-hidden />
-              <div className="flex items-center gap-0.5">
-                {(['uz', 'ru', 'en'] as const).map((l) => (
-                  <button
-                    key={l}
-                    type="button"
-                    onClick={() => setLang(l)}
-                    className={cn(
-                      'h-8 min-w-[2.25rem] rounded-full text-[11px] font-semibold uppercase leading-none tracking-normal text-black/65 transition-colors hover:text-black',
-                      lang === l && 'bg-black/12 text-black'
-                    )}
-                  >
-                    {l}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* phone/search buttons removed */}
-
-          <div className="fixed right-3 top-2 z-[95] flex items-center sm:right-4 md:hidden">
-            <div className="flex scale-[0.92] items-center gap-0.5 rounded-full border border-black/12 bg-white/90 py-0.5 pl-1.5 pr-0.5 shadow-[0_6px_22px_-8px_rgba(0,0,0,0.18)] ring-1 ring-black/[0.06] backdrop-blur-xl supports-[backdrop-filter]:bg-white/82 sm:scale-100 sm:py-1 sm:pl-2 sm:pr-1">
+        <nav
+          aria-label="Main"
+          className="pointer-events-auto min-h-[2.5rem] min-w-0 flex-1 overflow-x-auto overflow-y-hidden overscroll-x-contain scroll-smooth touch-pan-x [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
+          <div className="inline-flex min-h-[2.5rem] w-max max-w-none items-center gap-0.5 rounded-full border border-black/12 bg-white/92 py-1 pl-1.5 pr-1.5 shadow-[0_8px_30px_-10px_rgba(0,0,0,0.2)] ring-1 ring-black/[0.06] backdrop-blur-xl supports-[backdrop-filter]:bg-white/85 min-[400px]:gap-1 min-[400px]:px-2">
+            <a href="#spotlight" className={navLinkMobilePill('spotlight')}>
+              {t.home}
+            </a>
+            <a href="#daily-looks" className={navLinkMobilePill('daily-looks')}>
+              {t.dailyLooks}
+            </a>
+            <a href="#clothes" className={navLinkMobilePill('clothes')}>
+              {t.clothes}
+            </a>
+            <a href="#branches" className={navLinkMobilePill('branches')}>
+              {t.branches}
+            </a>
+            <a href="#brand-marquee" className={navLinkMobilePill('brand-marquee')}>
+              {t.brands}
+            </a>
+            <div className="mx-0.5 h-4 w-px shrink-0 bg-black/20" aria-hidden />
+            <div className="flex shrink-0 items-center gap-0.5 pr-0.5">
               {(['uz', 'ru', 'en'] as const).map((l) => (
                 <button
                   key={l}
                   type="button"
                   onClick={() => setLang(l)}
                   className={cn(
-                    'rounded-full px-2.5 py-1.5 text-[11px] font-semibold uppercase leading-none tracking-normal text-black/65 transition-colors hover:text-black',
+                    'h-7 min-w-[1.75rem] rounded-full text-[9px] font-semibold uppercase leading-none tracking-normal text-black/65 transition-colors min-[400px]:h-8 min-[400px]:min-w-[2rem] min-[400px]:text-[10px]',
                     lang === l && 'bg-black/12 text-black'
                   )}
                 >
                   {l}
                 </button>
               ))}
-              <motion.button
-                type="button"
-                onClick={() => setIsOpen(!isOpen)}
-                className="p-2 rounded-full text-black hover:bg-black/5 transition-colors"
-                whileTap={{ scale: 0.92 }}
-                aria-expanded={isOpen}
-                aria-label="Menu"
-              >
-                {isOpen ? <X size={22} strokeWidth={1.75} /> : <Menu size={22} strokeWidth={1.75} />}
-              </motion.button>
             </div>
+          </div>
+        </nav>
+
+        <motion.a
+          href="#clothes"
+          className="pointer-events-auto flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-black/12 bg-white/95 text-black shadow-[0_6px_22px_-8px_rgba(0,0,0,0.18)] ring-1 ring-black/[0.06] backdrop-blur-md transition-colors active:bg-black/[0.04]"
+          whileTap={{ scale: 0.96 }}
+          aria-label={ui.searchNavigate}
+        >
+          <Search size={18} strokeWidth={1.75} />
+        </motion.a>
+      </div>
+
+      <div className="h-[3.65rem] shrink-0 sm:h-[3.75rem] md:hidden" aria-hidden />
+
+      <div className="mx-auto hidden h-[3.75rem] max-w-[1600px] px-4 md:block md:h-[4rem] lg:px-10" aria-hidden />
+
+      {/* md+: fixed logo + centered bar + search (matches desktop mock) */}
+      <motion.a
+        href="#"
+        className="fixed top-2 left-3 z-[96] hidden items-center gap-2 rounded-full border border-black/12 bg-white/95 px-3 py-2 shadow-[0_6px_24px_-6px_rgba(0,0,0,0.18)] ring-1 ring-black/[0.06] backdrop-blur-md sm:left-6 md:flex md:gap-2.5 lg:left-10"
+        whileHover={{ opacity: 0.98, scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        aria-label="210 × Anpa Limited"
+      >
+        <img
+          src={LOGO_210_SRC}
+          alt="210 Sports Wear"
+          className="h-7 w-auto max-h-9 object-contain object-left md:h-9 md:max-h-9"
+          loading="eager"
+          decoding="async"
+          referrerPolicy="no-referrer"
+        />
+        <span className={cn('text-sm font-light leading-none select-none md:text-base lg:text-lg', logoSep)} aria-hidden>
+          |
+        </span>
+        <img
+          src={LOGO_COLLECTIONS_SRC}
+          alt="Anpa Limited"
+          className="h-6 w-auto max-h-8 object-contain object-left md:h-8 md:max-h-8"
+          loading="eager"
+          decoding="async"
+          referrerPolicy="no-referrer"
+        />
+      </motion.a>
+
+      <div className="hidden md:flex fixed top-2 left-1/2 z-[95] -translate-x-1/2 pointer-events-none [&>*]:pointer-events-auto">
+        <div className="flex items-center gap-3 rounded-full border border-black/12 bg-white/90 px-4 py-2 shadow-[0_8px_30px_-10px_rgba(0,0,0,0.2)] ring-1 ring-black/[0.06] backdrop-blur-xl supports-[backdrop-filter]:bg-white/82 lg:gap-4 lg:px-5">
+          <a href="#spotlight" className={navLinkInBar('spotlight')}>
+            {t.home}
+          </a>
+          <a href="#daily-looks" className={navLinkInBar('daily-looks')}>
+            {t.dailyLooks}
+          </a>
+          <a href="#clothes" className={navLinkInBar('clothes')}>
+            {t.clothes}
+          </a>
+          <a href="#branches" className={navLinkInBar('branches')}>
+            {t.branches}
+          </a>
+          <a href="#brand-marquee" className={navLinkInBar('brand-marquee')}>
+            {t.brands}
+          </a>
+          <div className="h-5 w-px shrink-0 bg-black/20" aria-hidden />
+          <div className="flex items-center gap-0.5">
+            {(['uz', 'ru', 'en'] as const).map((l) => (
+              <button
+                key={l}
+                type="button"
+                onClick={() => setLang(l)}
+                className={cn(
+                  'h-8 min-w-[2.25rem] rounded-full text-[11px] font-semibold uppercase leading-none tracking-normal text-black/65 transition-colors hover:text-black',
+                  lang === l && 'bg-black/12 text-black'
+                )}
+              >
+                {l}
+              </button>
+            ))}
           </div>
         </div>
       </div>
 
-      {isOpen && (
-        <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: 'auto' }}
-          exit={{ opacity: 0, height: 0 }}
-          className="md:hidden fixed top-[3.9rem] left-4 right-4 z-[94] overflow-hidden rounded-2xl border border-black/12 bg-white/92 px-4 pt-4 pb-5 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.2)] ring-1 ring-black/[0.06] backdrop-blur-xl supports-[backdrop-filter]:bg-white/85"
-        >
-          <div className="rounded-2xl bg-black overflow-hidden">
-            <a
-              href="#spotlight"
-              onClick={() => setIsOpen(false)}
-                className={cn(
-                  'block border-b border-white/10 py-3.5 text-center text-sm font-medium uppercase leading-snug tracking-[0.08em] text-white transition-colors antialiased',
-                  activeSection === 'spotlight' ? 'bg-white/[0.09]' : 'hover:bg-white/[0.06]'
-                )}
-            >
-              {t.home}
-            </a>
-            <a
-              href="#daily-looks"
-              onClick={() => setIsOpen(false)}
-                className={cn(
-                  'block border-b border-white/10 py-3.5 text-center text-sm font-medium uppercase leading-snug tracking-[0.08em] text-white transition-colors antialiased',
-                  activeSection === 'daily-looks' ? 'bg-white/[0.09]' : 'hover:bg-white/[0.06]'
-                )}
-            >
-              {t.dailyLooks}
-            </a>
-            <a
-              href="#clothes"
-              onClick={() => setIsOpen(false)}
-                className={cn(
-                  'block border-b border-white/10 py-3.5 text-center text-sm font-medium uppercase leading-snug tracking-[0.08em] text-white transition-colors antialiased',
-                  activeSection === 'clothes' ? 'bg-white/[0.09]' : 'hover:bg-white/[0.06]'
-                )}
-            >
-              {t.clothes}
-            </a>
-            <a
-              href="#branches"
-              onClick={() => setIsOpen(false)}
-                className={cn(
-                  'block border-b border-white/10 py-3.5 text-center text-sm font-medium uppercase leading-snug tracking-[0.08em] text-white transition-colors antialiased',
-                  activeSection === 'branches' ? 'bg-white/[0.09]' : 'hover:bg-white/[0.06]'
-                )}
-            >
-              {t.branches}
-            </a>
-            <a
-              href="#brand-marquee"
-              onClick={() => setIsOpen(false)}
-              className={cn(
-                'block py-3.5 text-center text-sm font-medium uppercase leading-snug tracking-[0.08em] text-white transition-colors antialiased',
-                activeSection === 'brand-marquee' ? 'bg-white/[0.09]' : 'hover:bg-white/[0.06]'
-              )}
-            >
-              {t.brands}
-            </a>
-          </div>
-          <div />
-        </motion.div>
-      )}
+      <motion.a
+        href="#clothes"
+        className="fixed top-2 right-3 z-[96] hidden h-10 w-10 items-center justify-center rounded-full border border-black/12 bg-white/95 text-black shadow-[0_6px_24px_-6px_rgba(0,0,0,0.18)] ring-1 ring-black/[0.06] backdrop-blur-md transition-colors hover:bg-black/[0.03] sm:right-6 md:flex lg:right-10"
+        whileHover={{ scale: 1.03 }}
+        whileTap={{ scale: 0.96 }}
+        aria-label={ui.searchNavigate}
+      >
+        <Search size={20} strokeWidth={1.75} />
+      </motion.a>
     </motion.nav>
   );
 };
@@ -783,7 +789,7 @@ const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number; className?
       whileTap={{ scale: 0.985 }}
       whileHover={{ y: -4 }}
       className={cn(
-        'group relative h-full w-full min-h-[200px] overflow-hidden rounded-xl border border-black/[0.08] bg-neutral-900 shadow-[0_20px_48px_-30px_rgba(0,0,0,0.42)] touch-pan-y sm:min-h-0 lg:rounded-2xl',
+        'group relative h-full w-full min-h-[200px] overflow-hidden rounded-2xl border border-black/[0.08] bg-neutral-900 shadow-[0_20px_48px_-30px_rgba(0,0,0,0.42)] touch-pan-y sm:min-h-0',
         className
       )}
     >
@@ -854,7 +860,7 @@ const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number; className?
           />
         )}
         <div className={cn('absolute inset-0 bg-gradient-to-t', overlay)} />
-        <div className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-inset ring-white/10 lg:rounded-2xl" />
+        <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/10" />
       </div>
       <div className="pointer-events-none relative z-[2] flex h-full min-h-0 flex-col justify-end p-2 text-left sm:p-3 lg:p-4">
         <span className="mb-0.5 inline-flex w-fit max-w-[95%] truncate rounded-full border border-white/20 bg-white/15 px-1.5 py-0.5 text-[6px] font-bold uppercase tracking-[0.12em] text-white/90 backdrop-blur-md sm:mb-1 sm:px-2.5 sm:py-1 sm:text-[8px] lg:mb-1.5 lg:max-w-none lg:overflow-visible lg:whitespace-normal lg:text-[9px] lg:tracking-[0.2em]">
@@ -890,23 +896,24 @@ const SpotlightSection = () => {
 
   return (
     <section id="spotlight" className="scroll-mt-20 bg-gradient-to-b from-white to-neutral-50/50 min-h-0 overflow-x-hidden lg:min-h-screen lg:scroll-mt-24">
-      <div className="mx-auto flex min-h-0 w-full max-w-[1600px] flex-col px-3 pb-5 pt-[3.35rem] max-lg:max-w-[100vw] sm:px-6 sm:pb-8 sm:pt-[3.9rem] md:pb-6 md:pt-[4.2rem] lg:min-h-[calc(100dvh-4rem)] lg:px-8 lg:pb-10">
-        {/* ~60% spotlight / ~40% philosophy (top) + logos (bottom) on large screens */}
-        <div className="grid min-h-0 flex-1 grid-cols-1 items-stretch gap-3 min-[400px]:gap-4 md:gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(260px,2fr)] lg:gap-7">
-          <div className="grid h-full min-h-0 grid-cols-1 justify-items-stretch gap-2.5 sm:grid-cols-[minmax(0,1fr)_minmax(0,0.82fr)] sm:gap-5 lg:-translate-x-6 xl:-translate-x-10 2xl:-translate-x-14">
+      <div className="mx-auto flex min-h-0 w-full max-w-[1600px] flex-col px-3 pb-5 pt-[3.2rem] max-lg:max-w-[100vw] sm:px-6 sm:pb-8 sm:pt-[3.85rem] md:pb-6 md:pt-[4.2rem] lg:min-h-[calc(100dvh-4rem)] lg:px-8 lg:pb-10">
+        {/* Same desktop split: spotlight ~60% | philosophy ~40% from min-[380px]; stacked only on very narrow phones */}
+        <div className="grid min-h-0 flex-1 grid-cols-1 items-stretch gap-3 min-[380px]:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] min-[380px]:gap-2.5 min-[420px]:gap-3 sm:gap-4 md:gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(260px,2fr)] lg:gap-7">
+          {/* Left: large spring + three stacked cards (always two columns like desktop) */}
+          <div className="grid h-full min-h-0 grid-cols-[minmax(0,1fr)_minmax(0,0.82fr)] items-stretch gap-1.5 sm:gap-4 lg:-translate-x-6 lg:gap-5 xl:-translate-x-10 2xl:-translate-x-14">
             <SpotlightCard
               cardKey="spring"
               index={0}
-              className="h-auto w-full min-h-0 max-lg:aspect-[4/5] max-lg:max-h-[min(42dvh,380px)] sm:max-lg:max-h-[min(46dvh,440px)] lg:h-full lg:max-h-none lg:aspect-auto"
+              className="h-full w-full min-h-[min(48vw,200px)] max-lg:aspect-[9/16] max-lg:max-h-[min(56dvh,480px)] min-[380px]:max-lg:aspect-auto min-[380px]:max-lg:max-h-none lg:aspect-auto lg:h-full"
             />
-            <div className="grid h-full auto-rows-fr grid-rows-3 gap-2 sm:gap-5">
-              <SpotlightCard cardKey="newDrop" index={1} className="min-h-[84px] sm:min-h-0" />
-              <SpotlightCard cardKey="featured" index={2} className="min-h-[84px] sm:min-h-0" />
-              <SpotlightCard cardKey="special" index={3} className="min-h-[84px] sm:min-h-0" />
+            <div className="grid h-full min-h-0 auto-rows-fr grid-rows-3 gap-1.5 sm:gap-4 lg:gap-5">
+              <SpotlightCard cardKey="newDrop" index={1} className="min-h-[68px] min-[380px]:min-h-0" />
+              <SpotlightCard cardKey="featured" index={2} className="min-h-[68px] min-[380px]:min-h-0" />
+              <SpotlightCard cardKey="special" index={3} className="min-h-[68px] min-[380px]:min-h-0" />
             </div>
           </div>
 
-          <div className="flex min-h-0 w-full max-w-lg flex-col items-stretch gap-3 self-center sm:max-w-none sm:gap-5 md:gap-5 lg:h-full lg:max-w-none lg:gap-5">
+          <div className="flex min-h-0 w-full min-w-0 max-w-lg flex-col items-stretch gap-3 self-stretch min-[380px]:max-w-none sm:gap-5 md:gap-5 lg:h-full lg:gap-5">
             <SectionReveal className="w-full shrink-0 lg:translate-x-5 xl:translate-x-8 2xl:translate-x-10">
               <div
                 id="philosophy"
