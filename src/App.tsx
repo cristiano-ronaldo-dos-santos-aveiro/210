@@ -746,7 +746,7 @@ const SpotlightCrossfadeSlideshow: React.FC<{
         />
       ))}
       {slides.length > 1 && (
-        <div className="absolute bottom-12 left-0 right-0 z-[12] flex justify-center gap-1.5 px-2 pointer-events-none sm:bottom-[4.25rem] lg:bottom-16">
+        <div className="pointer-events-none absolute bottom-16 left-0 right-0 z-[12] flex justify-center gap-1.5 px-2 sm:bottom-[4.25rem]">
           {slides.map((_, idx) => (
             <span
               key={idx}
@@ -789,7 +789,7 @@ const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number; className?
       whileTap={{ scale: 0.985 }}
       whileHover={{ y: -4 }}
       className={cn(
-        'group relative h-full w-full min-h-[200px] overflow-hidden rounded-2xl border border-black/[0.08] bg-neutral-900 shadow-[0_20px_48px_-30px_rgba(0,0,0,0.42)] touch-pan-y sm:min-h-0',
+        'group relative h-full w-full min-h-0 overflow-hidden rounded-2xl border border-black/[0.08] bg-neutral-900 shadow-[0_20px_48px_-30px_rgba(0,0,0,0.42)] touch-pan-y',
         className
       )}
     >
@@ -862,27 +862,27 @@ const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number; className?
         <div className={cn('absolute inset-0 bg-gradient-to-t', overlay)} />
         <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/10" />
       </div>
-      <div className="pointer-events-none relative z-[2] flex h-full min-h-0 flex-col justify-end p-2 text-left sm:p-3 lg:p-4">
-        <span className="mb-0.5 inline-flex w-fit max-w-[95%] truncate rounded-full border border-white/20 bg-white/15 px-1.5 py-0.5 text-[6px] font-bold uppercase tracking-[0.12em] text-white/90 backdrop-blur-md sm:mb-1 sm:px-2.5 sm:py-1 sm:text-[8px] lg:mb-1.5 lg:max-w-none lg:overflow-visible lg:whitespace-normal lg:text-[9px] lg:tracking-[0.2em]">
+      <div className="pointer-events-none relative z-[2] flex h-full min-h-0 flex-col justify-end p-4 text-left">
+        <span className="mb-1.5 inline-flex w-fit rounded-full border border-white/20 bg-white/15 px-2 py-1 text-[9px] font-bold uppercase tracking-[0.2em] text-white/90 backdrop-blur-md">
           {copy.label}
         </span>
-        <h2 className="text-[10px] font-black uppercase leading-tight tracking-tight text-white drop-shadow-sm line-clamp-3 sm:text-xs lg:line-clamp-none lg:text-[15px]">
+        <h2 className="text-[15px] font-black uppercase leading-tight tracking-tight text-white drop-shadow-sm line-clamp-3 lg:line-clamp-none">
           {copy.title}
         </h2>
-        <p className="mt-0.5 line-clamp-2 text-[8px] leading-snug text-white/85 sm:mt-1 sm:text-[10px] lg:text-xs">
+        <p className="mt-1 line-clamp-2 text-xs leading-snug text-white/85 lg:line-clamp-2">
           {copy.body}
         </p>
-        <div className="pointer-events-auto mt-1 flex items-center justify-end gap-1.5 border-t border-white/20 pt-1 sm:mt-2 sm:gap-2 sm:pt-2">
+        <div className="pointer-events-auto mt-2 flex items-center justify-end gap-2 border-t border-white/20 pt-2">
           <button
             type="button"
-            className="inline-flex size-7 shrink-0 items-center justify-center rounded-full border border-white/35 bg-white/15 text-white backdrop-blur-md transition-colors hover:bg-white/25 sm:size-8 lg:size-9 lg:p-2"
+            className="inline-flex size-9 shrink-0 items-center justify-center rounded-full border border-white/35 bg-white/15 p-2 text-white backdrop-blur-md transition-colors hover:bg-white/25"
             aria-label={ui.addToCart}
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
             }}
           >
-            <ShoppingBag className="h-3 w-3 sm:h-3.5 sm:w-3.5 lg:h-4 lg:w-4" strokeWidth={1.85} />
+            <ShoppingBag className="h-4 w-4" strokeWidth={1.85} />
           </button>
         </div>
       </div>
@@ -896,89 +896,84 @@ const SpotlightSection = () => {
 
   return (
     <section id="spotlight" className="scroll-mt-20 bg-gradient-to-b from-white to-neutral-50/50 min-h-0 overflow-x-hidden lg:min-h-screen lg:scroll-mt-24">
-      <div className="mx-auto flex min-h-0 w-full max-w-[1600px] flex-col px-3 pb-5 pt-[3.2rem] max-lg:max-w-[100vw] sm:px-6 sm:pb-8 sm:pt-[3.85rem] md:pb-6 md:pt-[4.2rem] lg:min-h-[calc(100dvh-4rem)] lg:px-8 lg:pb-10">
-        {/* Same desktop split: spotlight ~60% | philosophy ~40% from min-[380px]; stacked only on very narrow phones */}
-        <div className="grid min-h-0 flex-1 grid-cols-1 items-stretch gap-3 min-[380px]:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] min-[380px]:gap-2.5 min-[420px]:gap-3 sm:gap-4 md:gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(260px,2fr)] lg:gap-7">
-          {/* Left: large spring + three stacked cards (always two columns like desktop) */}
-          <div className="grid h-full min-h-0 grid-cols-[minmax(0,1fr)_minmax(0,0.82fr)] items-stretch gap-1.5 sm:gap-4 lg:-translate-x-6 lg:gap-5 xl:-translate-x-10 2xl:-translate-x-14">
-            <SpotlightCard
-              cardKey="spring"
-              index={0}
-              className="h-full w-full min-h-[min(48vw,200px)] max-lg:aspect-[9/16] max-lg:max-h-[min(56dvh,480px)] min-[380px]:max-lg:aspect-auto min-[380px]:max-lg:max-h-none lg:aspect-auto lg:h-full"
-            />
-            <div className="grid h-full min-h-0 auto-rows-fr grid-rows-3 gap-1.5 sm:gap-4 lg:gap-5">
-              <SpotlightCard cardKey="newDrop" index={1} className="min-h-[68px] min-[380px]:min-h-0" />
-              <SpotlightCard cardKey="featured" index={2} className="min-h-[68px] min-[380px]:min-h-0" />
-              <SpotlightCard cardKey="special" index={3} className="min-h-[68px] min-[380px]:min-h-0" />
+      <div className="mx-auto flex min-h-0 w-full max-w-[1600px] flex-col px-2 pb-4 pt-[3.15rem] max-lg:max-w-[100vw] sm:px-4 sm:pb-5 sm:pt-[3.75rem] md:px-6 md:pb-6 md:pt-[4.2rem] lg:min-h-[calc(100dvh-4rem)] lg:px-8 lg:pb-10 lg:pt-[3.65rem]">
+        {/* Below lg: uniform zoom shrinks the whole landing like desktop without changing card proportions; lg+ unchanged */}
+        <div className="w-full max-lg:[zoom:0.86] lg:[zoom:1]">
+          <div className="grid min-h-0 flex-1 grid-cols-1 items-stretch gap-7 min-[360px]:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:grid-cols-[minmax(0,3fr)_minmax(260px,2fr)]">
+            <div className="grid h-full min-h-0 grid-cols-[minmax(0,1fr)_minmax(0,0.82fr)] items-stretch gap-5 max-lg:min-h-[min(50dvh,480px)] lg:-translate-x-6 xl:-translate-x-10 2xl:-translate-x-14">
+              <SpotlightCard cardKey="spring" index={0} className="h-full min-h-0 w-full" />
+              <div className="grid h-full min-h-0 auto-rows-fr grid-rows-3 gap-5">
+                <SpotlightCard cardKey="newDrop" index={1} className="min-h-0" />
+                <SpotlightCard cardKey="featured" index={2} className="min-h-0" />
+                <SpotlightCard cardKey="special" index={3} className="min-h-0" />
+              </div>
             </div>
-          </div>
 
-          <div className="flex min-h-0 w-full min-w-0 max-w-lg flex-col items-stretch gap-3 self-stretch min-[380px]:max-w-none sm:gap-5 md:gap-5 lg:h-full lg:gap-5">
-            <SectionReveal className="w-full shrink-0 lg:translate-x-5 xl:translate-x-8 2xl:translate-x-10">
-              <div
-                id="philosophy"
-                className="scroll-mt-24 relative rounded-xl border border-black/10 bg-white px-4 py-5 text-center shadow-[0_18px_60px_-40px_rgba(0,0,0,0.35)] sm:rounded-3xl sm:px-7 sm:py-8 md:px-8 md:py-9 lg:px-9 lg:py-10"
-              >
-                <div className="absolute -left-3 -top-3 h-8 w-8 rounded-full bg-black/5 blur-[0.5px] sm:-left-5 sm:-top-5 sm:h-12 sm:w-12" aria-hidden />
-                <div className="absolute -bottom-4 -right-4 h-10 w-10 rounded-full bg-black/5 blur-[0.5px] sm:-bottom-6 sm:-right-6 sm:h-14 sm:w-14" aria-hidden />
-
-                <div className="mb-2 flex items-center justify-center gap-2 sm:mb-4 sm:gap-3">
-                  <span className="h-2 w-2 shrink-0 rounded-full bg-black sm:h-3 sm:w-3" aria-hidden />
-                  <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-black/55 sm:text-sm sm:tracking-[0.28em]">
-                    {tPhilosophy.label}
-                  </p>
-                </div>
-
-                <h2 className="mb-3 text-balance text-lg font-black uppercase leading-[1.12] text-black max-lg:mx-auto max-lg:max-w-[20rem] sm:mb-5 sm:text-2xl sm:leading-tight md:text-3xl lg:mx-0 lg:max-w-none lg:text-[2.35rem] lg:leading-[1.12]">
-                  {tPhilosophy.title}
-                </h2>
-                <div className="mx-auto mb-3 h-px w-20 bg-black/20 sm:mb-5 sm:w-24" aria-hidden />
-                <p className="text-[13px] leading-snug text-black/70 whitespace-pre-line max-lg:mx-auto max-lg:max-w-md sm:text-base sm:leading-relaxed md:text-lg lg:mx-0 lg:max-w-none lg:text-[1.125rem] lg:leading-relaxed">
-                  {tPhilosophy.body}
-                </p>
-
-                <div className="mt-4 flex flex-wrap justify-center gap-1.5 sm:mt-5 sm:gap-2.5 md:gap-3">
-                  {PHILOSOPHY_BADGES_BY_LANG[lang].map((item) => (
-                    <span
-                      key={`${lang}-${item}`}
-                      className="inline-flex items-center rounded-full border border-black/15 bg-black/[0.03] px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.08em] text-black/70 sm:px-3.5 sm:py-2 sm:text-[11px] sm:tracking-[0.12em] md:px-4"
-                    >
-                      {item}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </SectionReveal>
-
-            <SectionReveal className="flex min-h-[7.5rem] flex-1 flex-col basis-0 sm:min-h-[11rem] lg:min-h-0">
-              <div className="flex min-h-0 flex-1 items-center justify-center py-4 sm:py-8 lg:py-4">
+            <div className="flex min-h-0 w-full min-w-0 flex-col items-stretch gap-5 self-stretch lg:h-full">
+              <SectionReveal className="w-full shrink-0 lg:translate-x-5 xl:translate-x-8 2xl:translate-x-10">
                 <div
-                  className="flex w-full max-w-md flex-nowrap items-center justify-center gap-3 sm:max-w-none sm:gap-8 md:gap-11 max-lg:translate-x-0 lg:max-w-none lg:translate-x-6 lg:gap-12 xl:translate-x-10 xl:gap-16 2xl:translate-x-12"
-                  aria-label="210 × Anpa Limited"
+                  id="philosophy"
+                  className="scroll-mt-24 relative rounded-3xl border border-black/10 bg-white px-9 py-10 text-center shadow-[0_18px_60px_-40px_rgba(0,0,0,0.35)]"
                 >
-                  <img
-                    src={LOGO_210_SRC}
-                    alt="210 Sports Wear"
-                    className="h-[clamp(3.25rem,26vw,6.25rem)] w-auto max-w-[46%] object-contain object-center sm:h-[clamp(6.25rem,34vw,12rem)] lg:h-[clamp(7.5rem,min(32vh,15rem),15rem)] xl:h-[clamp(8.5rem,min(36vh,17rem),17rem)]"
-                    loading="eager"
-                    decoding="async"
-                    referrerPolicy="no-referrer"
-                  />
-                  <span
-                    className="h-[clamp(2.75rem,22vw,5.5rem)] w-px shrink-0 bg-black/15 sm:h-[clamp(5.75rem,30vw,11.5rem)] lg:h-[clamp(6.5rem,min(28vh,13rem),13rem)] xl:h-[clamp(7.5rem,min(32vh,15rem),15rem)]"
-                    aria-hidden
-                  />
-                  <img
-                    src={LOGO_COLLECTIONS_SRC}
-                    alt="Anpa Limited"
-                    className="h-[clamp(3rem,28vw,6rem)] w-auto max-w-[46%] object-contain object-center sm:h-[clamp(6rem,32vw,11.5rem)] lg:h-[clamp(7rem,min(28vh,13.5rem),13.5rem)] xl:h-[clamp(8rem,min(32vh,15.5rem),15.5rem)]"
-                    loading="eager"
-                    decoding="async"
-                    referrerPolicy="no-referrer"
-                  />
+                  <div className="absolute -left-5 -top-5 h-12 w-12 rounded-full bg-black/5 blur-[0.5px]" aria-hidden />
+                  <div className="absolute -bottom-6 -right-6 h-14 w-14 rounded-full bg-black/5 blur-[0.5px]" aria-hidden />
+
+                  <div className="mb-4 flex items-center justify-center gap-3">
+                    <span className="h-3 w-3 shrink-0 rounded-full bg-black" aria-hidden />
+                    <p className="text-sm font-bold uppercase tracking-[0.28em] text-black/55">{tPhilosophy.label}</p>
+                  </div>
+
+                  <h2 className="mb-5 text-balance text-[2.35rem] font-black uppercase leading-[1.12] text-black">
+                    {tPhilosophy.title}
+                  </h2>
+                  <div className="mx-auto mb-5 h-px w-24 bg-black/20" aria-hidden />
+                  <p className="whitespace-pre-line text-[1.125rem] leading-relaxed text-black/70">
+                    {tPhilosophy.body}
+                  </p>
+
+                  <div className="mt-5 flex flex-wrap justify-center gap-2.5 md:gap-3">
+                    {PHILOSOPHY_BADGES_BY_LANG[lang].map((item) => (
+                      <span
+                        key={`${lang}-${item}`}
+                        className="inline-flex items-center rounded-full border border-black/15 bg-black/[0.03] px-3.5 py-2 text-[11px] font-bold uppercase tracking-[0.12em] text-black/70 md:px-4"
+                      >
+                        {item}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            </SectionReveal>
+              </SectionReveal>
+
+              <SectionReveal className="flex min-h-0 flex-1 flex-col basis-0">
+                <div className="flex min-h-0 flex-1 items-center justify-center py-4">
+                  <div
+                    className="flex w-full max-w-none flex-nowrap items-center justify-center gap-12 max-lg:translate-x-0 lg:translate-x-6 xl:gap-16 xl:translate-x-10 2xl:translate-x-12"
+                    aria-label="210 × Anpa Limited"
+                  >
+                    <img
+                      src={LOGO_210_SRC}
+                      alt="210 Sports Wear"
+                      className="h-[clamp(7.5rem,min(32vh,15rem),15rem)] w-auto max-w-[46%] object-contain object-center xl:h-[clamp(8.5rem,min(36vh,17rem),17rem)]"
+                      loading="eager"
+                      decoding="async"
+                      referrerPolicy="no-referrer"
+                    />
+                    <span
+                      className="h-[clamp(6.5rem,min(28vh,13rem),13rem)] w-px shrink-0 bg-black/15 xl:h-[clamp(7.5rem,min(32vh,15rem),15rem)]"
+                      aria-hidden
+                    />
+                    <img
+                      src={LOGO_COLLECTIONS_SRC}
+                      alt="Anpa Limited"
+                      className="h-[clamp(7rem,min(28vh,13.5rem),13.5rem)] w-auto max-w-[46%] object-contain object-center xl:h-[clamp(8rem,min(32vh,15.5rem),15.5rem)]"
+                      loading="eager"
+                      decoding="async"
+                      referrerPolicy="no-referrer"
+                    />
+                  </div>
+                </div>
+              </SectionReveal>
+            </div>
           </div>
         </div>
       </div>
