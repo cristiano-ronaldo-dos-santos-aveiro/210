@@ -591,35 +591,6 @@ const SpotlightSection = () => {
   return (
     <section id="spotlight" className="bg-gradient-to-b from-white to-neutral-50/50 scroll-mt-24">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-[4.85rem] md:pt-[5.1rem] pb-10 md:pb-14">
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45 }}
-          className="mb-6 md:mb-8 flex flex-col items-center justify-center"
-          aria-label="210 × Anpa Limited"
-        >
-          <div className="flex items-center justify-center gap-2.5 md:gap-3.5 min-h-[2.75rem] md:min-h-[3.25rem]">
-            <img
-              src={LOGO_210_SRC}
-              alt="210 Sports Wear"
-              className="h-[1.9rem] sm:h-[2.15rem] md:h-[2.45rem] w-auto max-h-[2.45rem] object-contain object-center"
-              loading="eager"
-              decoding="async"
-              referrerPolicy="no-referrer"
-            />
-            <span className="text-black/30 text-xl sm:text-2xl md:text-3xl font-light leading-none select-none" aria-hidden>
-              |
-            </span>
-            <img
-              src={LOGO_COLLECTIONS_SRC}
-              alt="Anpa Limited"
-              className="h-[1.65rem] sm:h-[1.85rem] md:h-[2.1rem] w-auto max-h-[2.1rem] object-contain object-center"
-              loading="eager"
-              decoding="async"
-              referrerPolicy="no-referrer"
-            />
-          </div>
-        </motion.div>
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(320px,0.95fr)] gap-4 md:gap-5 items-start">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             {SPOTLIGHT_ORDER.map((key, i) => (
