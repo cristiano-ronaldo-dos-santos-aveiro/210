@@ -552,7 +552,7 @@ const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number }> = ({ car
       transition={{ delay: index * 0.08, type: 'spring', stiffness: 76, damping: 22 }}
       whileTap={{ scale: 0.985 }}
       whileHover={{ y: -4 }}
-      className="group relative w-full h-full min-h-[260px] sm:min-h-[300px] rounded-2xl overflow-hidden border border-black/[0.08] shadow-[0_20px_48px_-30px_rgba(0,0,0,0.42)] bg-neutral-900"
+      className="group relative w-full h-full min-h-[220px] sm:min-h-0 rounded-2xl overflow-hidden border border-black/[0.08] shadow-[0_20px_48px_-30px_rgba(0,0,0,0.42)] bg-neutral-900"
       aria-label={`${copy.title} — open in Telegram`}
     >
       <div className="absolute inset-0">
@@ -596,8 +596,8 @@ const SpotlightSection = () => {
   return (
     <section id="spotlight" className="bg-gradient-to-b from-white to-neutral-50/50 scroll-mt-24 min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-[4.2rem] md:pt-[4.5rem] pb-8 md:pb-10 min-h-[calc(100vh-4rem)] flex flex-col">
-        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.12fr)_minmax(360px,0.88fr)] gap-5 md:gap-6 items-stretch flex-1">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 auto-rows-fr">
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.18fr)_minmax(360px,0.82fr)] gap-5 md:gap-6 items-stretch flex-1">
+          <div className="grid grid-cols-1 sm:grid-cols-2 sm:grid-rows-2 gap-4 sm:gap-5 auto-rows-fr h-full">
             {SPOTLIGHT_ORDER.map((key, i) => (
               <SpotlightCard key={key} cardKey={key} index={i} />
             ))}
