@@ -289,21 +289,21 @@ const Navbar = () => {
   const t = TRANSLATIONS[lang].nav;
 
   const navLinkInBar =
-    'text-[10px] font-semibold uppercase tracking-[0.2em] text-white/75 hover:text-white transition-colors';
-  const iconInBar = 'p-2.5 rounded-full text-white hover:bg-white/10 transition-colors';
+    'inline-flex items-center justify-center px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-white/75 hover:text-white hover:bg-white/10 rounded-full transition-all duration-300';
+  const iconInBar = 'p-2.5 rounded-full text-white hover:bg-white/10 transition-colors duration-300 hover:scale-[1.06]';
   const logoSep = 'text-black/30';
 
   return (
     <motion.nav
       initial={false}
-      className="fixed top-0 left-0 right-0 z-50 border-b border-black/[0.08] bg-white/95 backdrop-blur-xl shadow-[0_1px_0_0_rgba(0,0,0,0.04)]"
+      className="fixed top-0 left-0 right-0 z-50 border-b border-black/[0.06] bg-white/70 backdrop-blur-2xl shadow-[0_10px_40px_-25px_rgba(0,0,0,0.35)]"
     >
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10">
         <div className="flex items-center justify-between h-[3.75rem] md:h-[4rem] gap-3">
           <motion.a
             href="#"
             className="flex-shrink-0 flex items-center gap-2 md:gap-2.5 z-10"
-            whileHover={{ opacity: 0.92 }}
+            whileHover={{ opacity: 0.98, scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             aria-label="210 × Anpa Limited"
           >
@@ -330,7 +330,7 @@ const Navbar = () => {
 
           {/* One black bar: nav links + languages */}
           <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 pointer-events-none [&>*]:pointer-events-auto">
-            <div className="flex items-center rounded-full bg-black px-4 lg:px-5 py-2 gap-3 lg:gap-4 shadow-md">
+            <div className="flex items-center rounded-full bg-gradient-to-b from-black/95 to-neutral-900/95 px-4 lg:px-5 py-2 gap-3 lg:gap-4 shadow-md border border-white/10">
               <a href="#spotlight" className={navLinkInBar}>
                 {t.collections}
               </a>
@@ -726,7 +726,7 @@ const BranchCard: React.FC<{
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-40px' }}
       transition={{ delay: index * 0.06, type: 'spring', stiffness: 80, damping: 22 }}
-      className="relative rounded-xl border border-black/[0.08] bg-white px-4 py-4 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.12)] flex flex-col items-center text-center gap-3"
+      className="relative group rounded-xl border border-black/[0.08] bg-white px-4 py-4 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.12)]"
     >
       <motion.a
         href={branch.mapsUrl}
@@ -734,61 +734,73 @@ const BranchCard: React.FC<{
         rel="noopener noreferrer"
         aria-label={`${branch.name} — ${actionMaps}`}
         whileTap={{ scale: 0.96 }}
+        whileHover={{ scale: 1.07 }}
+        transition={{ duration: 0.35, ease: [0.22, 0.61, 0.36, 1] }}
         className="absolute top-3 right-3 z-20 inline-flex items-center justify-center rounded-full border border-black/10 bg-white/90 text-black p-2.5 hover:bg-white transition-colors shadow-sm"
       >
         <ArrowUpRight size={18} strokeWidth={1.75} />
       </motion.a>
 
       <div
-        className="relative w-full aspect-[4/5] max-h-[220px] sm:max-h-[240px] rounded-lg overflow-hidden bg-gradient-to-br from-neutral-100 via-neutral-50 to-neutral-200 ring-1 ring-black/[0.06]"
+        className="flex flex-col items-center text-center gap-3 transition-transform duration-700 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:scale-[1.035] will-change-transform"
       >
-        {branch.photoSrc ? (
-          <img
-            src={branch.photoSrc}
-            alt={branch.name}
-            className="absolute inset-0 h-full w-full object-cover object-center"
-            loading="eager"
-            decoding="async"
-          />
-        ) : (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-[10px] font-bold uppercase tracking-[0.35em] text-black/25">210</span>
-          </div>
-        )}
-      </div>
-      <div className="flex items-center justify-center gap-2 text-black pt-0.5">
-        <MapPin size={18} className="text-black/45 shrink-0" strokeWidth={2} aria-hidden />
-        <h3 className="text-base sm:text-lg font-black uppercase tracking-tight">{branch.name}</h3>
-      </div>
-      <div className="flex items-center justify-center gap-2 w-full pt-1">
-        <motion.a
-          href={branch.instagram}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={iconBtn}
-          aria-label={`${branch.name} — ${actionInstagram}`}
-          whileTap={{ scale: 0.96 }}
+        <div
+          className="relative w-full aspect-[4/5] max-h-[220px] sm:max-h-[240px] rounded-lg overflow-hidden bg-gradient-to-br from-neutral-100 via-neutral-50 to-neutral-200 ring-1 ring-black/[0.06]"
         >
-          <Instagram size={18} strokeWidth={1.75} />
-        </motion.a>
-        <motion.a
-          href={branch.phoneTel}
-          className={iconBtn}
-          aria-label={`${branch.name} — ${actionPhone}: ${branch.phoneLabel}`}
-          whileTap={{ scale: 0.96 }}
-        >
-          <Phone size={18} strokeWidth={1.75} />
-        </motion.a>
-        <motion.a
-          href={branch.mapsUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={iconBtn}
-          aria-label={`${branch.name} — ${actionMaps}`}
-          whileTap={{ scale: 0.96 }}
-        >
-          <MapPin size={18} strokeWidth={1.75} />
-        </motion.a>
+          {branch.photoSrc ? (
+            <img
+              src={branch.photoSrc}
+              alt={branch.name}
+              className="absolute inset-0 h-full w-full object-cover object-center"
+              loading="eager"
+              decoding="async"
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-[10px] font-bold uppercase tracking-[0.35em] text-black/25">210</span>
+            </div>
+          )}
+        </div>
+        <div className="flex items-center justify-center gap-2 text-black pt-0.5">
+          <MapPin size={18} className="text-black/45 shrink-0" strokeWidth={2} aria-hidden />
+          <h3 className="text-base sm:text-lg font-black uppercase tracking-tight">{branch.name}</h3>
+        </div>
+        <div className="flex items-center justify-center gap-2 w-full pt-1">
+          <motion.a
+            href={branch.instagram}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={iconBtn}
+            aria-label={`${branch.name} — ${actionInstagram}`}
+            whileTap={{ scale: 0.96 }}
+            whileHover={{ scale: 1.07 }}
+            transition={{ duration: 0.35, ease: [0.22, 0.61, 0.36, 1] }}
+          >
+            <Instagram size={18} strokeWidth={1.75} />
+          </motion.a>
+          <motion.a
+            href={branch.phoneTel}
+            className={iconBtn}
+            aria-label={`${branch.name} — ${actionPhone}: ${branch.phoneLabel}`}
+            whileTap={{ scale: 0.96 }}
+            whileHover={{ scale: 1.07 }}
+            transition={{ duration: 0.35, ease: [0.22, 0.61, 0.36, 1] }}
+          >
+            <Phone size={18} strokeWidth={1.75} />
+          </motion.a>
+          <motion.a
+            href={branch.mapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={iconBtn}
+            aria-label={`${branch.name} — ${actionMaps}`}
+            whileTap={{ scale: 0.96 }}
+            whileHover={{ scale: 1.07 }}
+            transition={{ duration: 0.35, ease: [0.22, 0.61, 0.36, 1] }}
+          >
+            <MapPin size={18} strokeWidth={1.75} />
+          </motion.a>
+        </div>
       </div>
     </motion.article>
   );
