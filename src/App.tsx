@@ -392,7 +392,7 @@ const Navbar = () => {
             </div>
           </div>
 
-          {/* One black bar: phone, search, cart */}
+          {/* One black bar: phone, search */}
           <div className="hidden md:flex items-center rounded-full bg-black px-1 py-1 gap-0.5 z-10 shadow-md">
             <motion.a
               href={CONTACT_PHONE_TEL}
@@ -404,17 +404,6 @@ const Navbar = () => {
             </motion.a>
             <motion.button type="button" className={iconInBar} whileTap={{ scale: 0.94 }} aria-label="Search">
               <Search size={20} strokeWidth={1.75} />
-            </motion.button>
-            <motion.button
-              type="button"
-              className={cn('relative', iconInBar)}
-              whileTap={{ scale: 0.94 }}
-              aria-label="Cart"
-            >
-              <ShoppingBag size={20} strokeWidth={1.75} />
-              <span className="absolute top-1.5 right-1.5 min-w-[14px] h-[14px] px-0.5 flex items-center justify-center bg-white text-black text-[9px] font-bold rounded-full leading-none">
-                0
-              </span>
             </motion.button>
           </div>
 
@@ -500,12 +489,6 @@ const Navbar = () => {
               aria-label="Search"
             >
               <Search size={20} strokeWidth={1.75} />
-            </button>
-            <button type="button" className="relative p-2.5 rounded-full text-white hover:bg-white/10 transition-colors" aria-label="Cart">
-              <ShoppingBag size={20} strokeWidth={1.75} />
-              <span className="absolute top-1 right-1 min-w-[14px] h-[14px] flex items-center justify-center bg-white text-black text-[9px] font-bold rounded-full">
-                0
-              </span>
             </button>
           </div>
         </motion.div>
@@ -913,6 +896,22 @@ const BranchesSection = () => {
   );
 };
 
+const CartFloatingButton: React.FC = () => {
+  return (
+    <motion.button
+      type="button"
+      className="fixed bottom-5 right-5 z-[60] relative inline-flex items-center justify-center rounded-full border border-white/10 bg-black text-white w-12 h-12 shadow-[0_18px_50px_-18px_rgba(0,0,0,0.7)] hover:bg-neutral-900 transition-colors"
+      whileTap={{ scale: 0.95 }}
+      aria-label="Cart"
+    >
+      <ShoppingBag size={20} strokeWidth={1.75} />
+      <span className="absolute top-2 right-2 min-w-[14px] h-[14px] px-0.5 flex items-center justify-center bg-white text-black text-[9px] font-bold rounded-full leading-none">
+        0
+      </span>
+    </motion.button>
+  );
+};
+
 const Footer = () => {
   return (
     <motion.footer
@@ -990,6 +989,7 @@ export default function App() {
     <LangContext.Provider value={{ lang, setLang }}>
       <div className="min-h-screen bg-white">
         <Navbar />
+        <CartFloatingButton />
 
         <main>
           <SpotlightSection />
