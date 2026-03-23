@@ -257,7 +257,7 @@ const TRANSLATIONS: Record<Language, Translations> = {
     dailyLooks: {
       label: "Kunlik look",
       title: "Bugungi obraz",
-      body: "Har kuni yangi look joylanadi. Chapdagi 9:16 kartada asosiy outfit, o'ng tomonda esa qismlar va narxlar beriladi.",
+      body: "",
       priceLabel: "Narx",
       updatedLabel: "Har kuni yangilanadi",
       items: [
@@ -334,7 +334,7 @@ const TRANSLATIONS: Record<Language, Translations> = {
     dailyLooks: {
       label: "Образ дня",
       title: "Сегодняшний образ",
-      body: "Каждый день здесь будет новый look. Слева — главная карточка 9:16, справа — состав и цены.",
+      body: "",
       priceLabel: "Цена",
       updatedLabel: "Обновляется ежедневно",
       items: [
@@ -411,7 +411,7 @@ const TRANSLATIONS: Record<Language, Translations> = {
     dailyLooks: {
       label: "Daily look",
       title: "Look of the day",
-      body: "A new look appears here every day. Left side is a large 9:16 card; right side shows pieces and prices.",
+      body: "",
       priceLabel: "Price",
       updatedLabel: "Updated daily",
       items: [
@@ -1062,8 +1062,16 @@ const DailyLooksSection = () => {
               <h2 className="text-balance text-center text-2xl font-black uppercase leading-tight text-black sm:text-left md:text-3xl">
                 {t.title}
               </h2>
-              <p className="mt-3 text-center text-sm leading-relaxed text-black/65 sm:text-left md:text-base">{t.body}</p>
-              <div className="mx-auto mt-5 h-px w-24 bg-black/15 sm:mx-0" aria-hidden />
+              {t.body.trim() ? (
+                <p className="mt-3 text-center text-sm leading-relaxed text-black/65 sm:text-left md:text-base">{t.body}</p>
+              ) : null}
+              <div
+                className={cn(
+                  'mx-auto h-px w-24 bg-black/15 sm:mx-0',
+                  t.body.trim() ? 'mt-5' : 'mt-4'
+                )}
+                aria-hidden
+              />
 
               <div className="mt-5 space-y-2.5 sm:space-y-3">
                 {t.items.map((item) => (
