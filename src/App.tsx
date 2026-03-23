@@ -81,7 +81,7 @@ type StoreBranch = {
   mapsUrl: string;
   photoSrc?: string;
   openHours?: string;
-  addressLine?: string;
+  addressLineByLang?: Partial<Record<Language, string>>;
 };
 
 const STORE_BRANCHES: readonly StoreBranch[] = [
@@ -95,7 +95,11 @@ const STORE_BRANCHES: readonly StoreBranch[] = [
     ,
     openHours: '10:00-22:00'
     ,
-    addressLine: 'Обводная улица Нурафшан, 41'
+    addressLineByLang: {
+      uz: 'Нурафшан обвод кўчаси, 41',
+      ru: 'Обводная улица Нурафшан, 41',
+      en: 'Obvodnaya street Nurafshon, 41'
+    }
   },
   {
     name: 'Gulzor',
@@ -105,7 +109,11 @@ const STORE_BRANCHES: readonly StoreBranch[] = [
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=210+Gulzor%2C+Uzbekistan',
     photoSrc: GULZOR_BRANCH_PHOTO_SRC,
     openHours: '10:00-22:00',
-    addressLine: 'Малая кольцевая дорога, 135'
+    addressLineByLang: {
+      uz: 'Кичик ҳалқа йўли, 135',
+      ru: 'Малая кольцевая дорога, 135',
+      en: 'Small ring road, 135'
+    }
   },
   {
     name: 'Nukus',
@@ -115,7 +123,11 @@ const STORE_BRANCHES: readonly StoreBranch[] = [
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=210+Nukus%2C+Uzbekistan',
     photoSrc: NUKUS_BRANCH_PHOTO_SRC,
     openHours: '10:00-22:00',
-    addressLine: 'улица Шифонур, 3А'
+    addressLineByLang: {
+      uz: 'Шифонур кўчаси, 3А',
+      ru: 'улица Шифонур, 3А',
+      en: 'Shifonur street, 3A'
+    }
   }
 ];
 
@@ -742,6 +754,7 @@ const BranchCard: React.FC<{
   actionMaps: string;
   index: number;
 }> = ({ branch, actionInstagram, actionPhone, actionMaps, index }) => {
+  const { lang } = React.useContext(LangContext);
   const getAddressFromMaps = (mapsUrl: string) => {
     try {
       const u = new URL(mapsUrl);
@@ -755,6 +768,7 @@ const BranchCard: React.FC<{
   };
 
   const address = getAddressFromMaps(branch.mapsUrl);
+  const addressText = branch.addressLineByLang?.[lang] ?? address;
 
   return (
     <motion.article
@@ -808,7 +822,7 @@ const BranchCard: React.FC<{
               className="flex items-center gap-3 text-[13px] sm:text-[14px] text-black/60 hover:text-black transition-colors"
             >
               <MapPin size={18} strokeWidth={1.8} className="shrink-0" />
-              <span className="leading-snug">{branch.addressLine ?? address ?? branch.name}</span>
+              <span className="leading-snug">{addressText ?? branch.name}</span>
             </motion.a>
 
             <motion.a
