@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
-import { ShoppingBag, Search, Menu, X, Instagram, MapPin, Phone, ArrowUpRight, Clock, ArrowRight } from 'lucide-react';
+import { ShoppingBag, Menu, X, Instagram, MapPin, Phone, ArrowUpRight, Clock, ArrowRight } from 'lucide-react';
 import { cn } from './lib/utils';
 
 /** PNG exports in /photo (210 stack + partner / signature mark) */
@@ -392,20 +392,7 @@ const Navbar = () => {
             </div>
           </div>
 
-          {/* One black bar: phone, search */}
-          <div className="hidden md:flex items-center rounded-full bg-black px-1 py-1 gap-0.5 z-10 shadow-md">
-            <motion.a
-              href={CONTACT_PHONE_TEL}
-              className={iconInBar}
-              whileTap={{ scale: 0.94 }}
-              aria-label={`Call ${CONTACT_PHONE_LABEL}`}
-            >
-              <Phone size={20} strokeWidth={1.75} />
-            </motion.a>
-            <motion.button type="button" className={iconInBar} whileTap={{ scale: 0.94 }} aria-label="Search">
-              <Search size={20} strokeWidth={1.75} />
-            </motion.button>
-          </div>
+          {/* phone/search buttons removed */}
 
           <div className="md:hidden flex items-center z-10">
             <div className="flex items-center rounded-full bg-black pl-2 pr-1 py-1 gap-0.5 shadow-md">
@@ -474,23 +461,7 @@ const Navbar = () => {
               {t.brands}
             </a>
           </div>
-          <div className="flex justify-center items-center rounded-full bg-black px-2 py-2 gap-1 mt-5 shadow-md">
-            <motion.a
-              href={CONTACT_PHONE_TEL}
-              className="p-2.5 rounded-full text-white hover:bg-white/10 transition-colors"
-              whileTap={{ scale: 0.96 }}
-              aria-label={`Call ${CONTACT_PHONE_LABEL}`}
-            >
-              <Phone size={20} strokeWidth={1.75} />
-            </motion.a>
-            <button
-              type="button"
-              className="p-2.5 rounded-full text-white hover:bg-white/10 transition-colors"
-              aria-label="Search"
-            >
-              <Search size={20} strokeWidth={1.75} />
-            </button>
-          </div>
+          <div />
         </motion.div>
       )}
     </motion.nav>
