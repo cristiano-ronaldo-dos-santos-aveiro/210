@@ -608,7 +608,7 @@ const SpotlightSection = () => {
             <img
               src={LOGO_210_SRC}
               alt="210 Sports Wear"
-              className="h-[1.75rem] sm:h-[2rem] md:h-[2.25rem] w-auto max-h-[2.25rem] object-contain object-center"
+              className="h-[1.9rem] sm:h-[2.15rem] md:h-[2.45rem] w-auto max-h-[2.45rem] object-contain object-center"
               loading="eager"
               decoding="async"
               referrerPolicy="no-referrer"
@@ -619,7 +619,7 @@ const SpotlightSection = () => {
             <img
               src={LOGO_COLLECTIONS_SRC}
               alt="Anpa Limited"
-              className="h-[1.5rem] sm:h-[1.75rem] md:h-[2rem] w-auto max-h-[2rem] object-contain object-center"
+              className="h-[1.65rem] sm:h-[1.85rem] md:h-[2.1rem] w-auto max-h-[2.1rem] object-contain object-center"
               loading="eager"
               decoding="async"
               referrerPolicy="no-referrer"
