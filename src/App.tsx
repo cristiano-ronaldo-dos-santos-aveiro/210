@@ -701,16 +701,19 @@ const SLIDE_OBJECT_POSITION_BY_FILENAME: Record<string, string> = {
   'photo_2025-01-20_17-45-03.jpg': 'object-[50%_70%]'
 };
 
-const SpotlightCrossfadeSlideshow: React.FC<{ slides: readonly string[]; label: string }> = ({ slides, label }) => {
-  const [active, setActive] = useState(0);
-
+const SpotlightCrossfadeSlideshow: React.FC<{
+  slides: readonly string[];
+  label: string;
+  active: number;
+  setActive: React.Dispatch<React.SetStateAction<number>>;
+}> = ({ slides, label, active, setActive }) => {
   useEffect(() => {
     if (slides.length <= 1) return;
     const id = window.setInterval(() => {
       setActive((i) => (i + 1) % slides.length);
     }, SPOTLIGHT_SLIDE_MS);
     return () => clearInterval(id);
-  }, [slides.length]);
+  }, [slides.length, setActive]);
 
   return (
     <>
@@ -737,7 +740,7 @@ const SpotlightCrossfadeSlideshow: React.FC<{ slides: readonly string[]; label: 
         />
       ))}
       {slides.length > 1 && (
-        <div className="absolute bottom-16 sm:bottom-[4.25rem] left-0 right-0 flex justify-center gap-1.5 px-2 z-[12] pointer-events-none">
+        <div className="absolute bottom-12 left-0 right-0 z-[12] flex justify-center gap-1.5 px-2 pointer-events-none sm:bottom-[4.25rem] lg:bottom-16">
           {slides.map((_, idx) => (
             <span
               key={idx}
@@ -753,12 +756,24 @@ const SpotlightCrossfadeSlideshow: React.FC<{ slides: readonly string[]; label: 
   );
 };
 
+const SPOTLIGHT_SWIPE_MIN_PX = 44;
+const SPOTLIGHT_SWIPE_DOMINANCE = 1.15;
+
 const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number; className?: string }> = ({ cardKey, index, className }) => {
   const { lang } = React.useContext(LangContext);
   const copy = TRANSLATIONS[lang].cards[cardKey];
   const ui = TRANSLATIONS[lang].ui;
   const overlay = SPOTLIGHT_ACCENT[cardKey];
   const slideSet = SPOTLIGHT_SLIDE_SETS[cardKey];
+  const [slideIndex, setSlideIndex] = useState(0);
+  const swipeTouchRef = useRef<{ x: number; y: number } | null>(null);
+  const blockTelegramClickRef = useRef(false);
+
+  useEffect(() => {
+    setSlideIndex(0);
+  }, [cardKey, lang]);
+
+  const swipeable = Boolean(slideSet && slideSet.length > 1);
 
   return (
     <motion.div
@@ -768,7 +783,7 @@ const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number; className?
       whileTap={{ scale: 0.985 }}
       whileHover={{ y: -4 }}
       className={cn(
-        'group relative h-full w-full min-h-[200px] overflow-hidden rounded-xl border border-black/[0.08] bg-neutral-900 shadow-[0_20px_48px_-30px_rgba(0,0,0,0.42)] sm:min-h-0 lg:rounded-2xl',
+        'group relative h-full w-full min-h-[200px] overflow-hidden rounded-xl border border-black/[0.08] bg-neutral-900 shadow-[0_20px_48px_-30px_rgba(0,0,0,0.42)] touch-pan-y sm:min-h-0 lg:rounded-2xl',
         className
       )}
     >
@@ -776,13 +791,57 @@ const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number; className?
         href={CONTACT_TELEGRAM}
         target="_blank"
         rel="noopener noreferrer"
-        className="absolute inset-0 z-[1]"
+        className="absolute inset-0 z-[1] touch-pan-y"
         aria-label={`${copy.title} — open in Telegram`}
+        onTouchStart={
+          swipeable
+            ? (e) => {
+                if (e.touches.length !== 1) return;
+                const t = e.touches[0];
+                swipeTouchRef.current = { x: t.clientX, y: t.clientY };
+              }
+            : undefined
+        }
+        onTouchEnd={
+          swipeable
+            ? (e: React.TouchEvent) => {
+                const start = swipeTouchRef.current;
+                swipeTouchRef.current = null;
+                if (!start || !slideSet) return;
+                const t = e.changedTouches[0];
+                const dx = t.clientX - start.x;
+                const dy = t.clientY - start.y;
+                if (Math.abs(dx) < SPOTLIGHT_SWIPE_MIN_PX) return;
+                if (Math.abs(dx) < Math.abs(dy) * SPOTLIGHT_SWIPE_DOMINANCE) return;
+                blockTelegramClickRef.current = true;
+                if (dx < 0) {
+                  setSlideIndex((i) => (i + 1) % slideSet.length);
+                } else {
+                  setSlideIndex((i) => (i - 1 + slideSet.length) % slideSet.length);
+                }
+              }
+            : undefined
+        }
+        onClick={
+          swipeable
+            ? (e) => {
+                if (blockTelegramClickRef.current) {
+                  e.preventDefault();
+                  blockTelegramClickRef.current = false;
+                }
+              }
+            : undefined
+        }
       />
       <div className="absolute inset-0">
         {slideSet ? (
-          <div className="absolute inset-0 overflow-hidden">
-            <SpotlightCrossfadeSlideshow slides={slideSet} label={copy.title} />
+          <div className="absolute inset-0 overflow-hidden touch-pan-y">
+            <SpotlightCrossfadeSlideshow
+              slides={slideSet}
+              label={copy.title}
+              active={slideIndex}
+              setActive={setSlideIndex}
+            />
           </div>
         ) : (
           <img
@@ -797,27 +856,27 @@ const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number; className?
         <div className={cn('absolute inset-0 bg-gradient-to-t', overlay)} />
         <div className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-inset ring-white/10 lg:rounded-2xl" />
       </div>
-      <div className="pointer-events-none relative z-[2] flex h-full min-h-0 flex-col justify-end p-2.5 text-left max-lg:p-2.5 sm:p-3 lg:p-4">
-        <span className="mb-1 inline-flex w-fit rounded-full border border-white/20 bg-white/15 px-2 py-0.5 text-[7px] font-bold uppercase tracking-[0.14em] text-white/90 backdrop-blur-md max-lg:max-w-[95%] max-lg:truncate sm:px-2.5 sm:py-1 sm:text-[8px] lg:mb-1.5 lg:text-[9px] lg:tracking-[0.2em]">
+      <div className="pointer-events-none relative z-[2] flex h-full min-h-0 flex-col justify-end p-2 text-left sm:p-3 lg:p-4">
+        <span className="mb-0.5 inline-flex w-fit max-w-[95%] truncate rounded-full border border-white/20 bg-white/15 px-1.5 py-0.5 text-[6px] font-bold uppercase tracking-[0.12em] text-white/90 backdrop-blur-md sm:mb-1 sm:px-2.5 sm:py-1 sm:text-[8px] lg:mb-1.5 lg:max-w-none lg:overflow-visible lg:whitespace-normal lg:text-[9px] lg:tracking-[0.2em]">
           {copy.label}
         </span>
-        <h2 className="text-[11px] font-black uppercase leading-tight tracking-tight text-white drop-shadow-sm max-lg:line-clamp-3 sm:text-xs lg:line-clamp-none lg:text-[15px]">
+        <h2 className="text-[10px] font-black uppercase leading-tight tracking-tight text-white drop-shadow-sm line-clamp-3 sm:text-xs lg:line-clamp-none lg:text-[15px]">
           {copy.title}
         </h2>
-        <p className="mt-0.5 text-[9px] leading-snug text-white/85 line-clamp-2 max-lg:line-clamp-2 sm:mt-1 sm:text-[10px] lg:text-xs lg:line-clamp-2">
+        <p className="mt-0.5 line-clamp-2 text-[8px] leading-snug text-white/85 sm:mt-1 sm:text-[10px] lg:text-xs">
           {copy.body}
         </p>
-        <div className="pointer-events-auto mt-1.5 flex items-center justify-end gap-2 border-t border-white/20 pt-1.5 sm:mt-2 sm:pt-2">
+        <div className="pointer-events-auto mt-1 flex items-center justify-end gap-1.5 border-t border-white/20 pt-1 sm:mt-2 sm:gap-2 sm:pt-2">
           <button
             type="button"
-            className="inline-flex size-8 shrink-0 items-center justify-center rounded-full border border-white/35 bg-white/15 text-white backdrop-blur-md transition-colors hover:bg-white/25 max-lg:size-7 lg:size-9 lg:p-2"
+            className="inline-flex size-7 shrink-0 items-center justify-center rounded-full border border-white/35 bg-white/15 text-white backdrop-blur-md transition-colors hover:bg-white/25 sm:size-8 lg:size-9 lg:p-2"
             aria-label={ui.addToCart}
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
             }}
           >
-            <ShoppingBag className="h-3.5 w-3.5 lg:h-4 lg:w-4" strokeWidth={1.85} />
+            <ShoppingBag className="h-3 w-3 sm:h-3.5 sm:w-3.5 lg:h-4 lg:w-4" strokeWidth={1.85} />
           </button>
         </div>
       </div>
@@ -830,52 +889,52 @@ const SpotlightSection = () => {
   const tPhilosophy = TRANSLATIONS[lang].philosophy;
 
   return (
-    <section id="spotlight" className="scroll-mt-24 overflow-x-hidden bg-gradient-to-b from-white to-neutral-50/50 min-h-0 lg:min-h-screen">
-      <div className="mx-auto flex min-h-0 w-full max-w-[1600px] flex-col px-3.5 pb-8 pt-[3.65rem] max-lg:max-w-[100vw] sm:px-6 sm:pb-8 sm:pt-[3.9rem] md:pt-[4.2rem] md:pb-6 lg:min-h-[calc(100dvh-4rem)] lg:px-8 lg:pb-10">
+    <section id="spotlight" className="scroll-mt-20 bg-gradient-to-b from-white to-neutral-50/50 min-h-0 overflow-x-hidden lg:min-h-screen lg:scroll-mt-24">
+      <div className="mx-auto flex min-h-0 w-full max-w-[1600px] flex-col px-3 pb-5 pt-[3.35rem] max-lg:max-w-[100vw] sm:px-6 sm:pb-8 sm:pt-[3.9rem] md:pb-6 md:pt-[4.2rem] lg:min-h-[calc(100dvh-4rem)] lg:px-8 lg:pb-10">
         {/* ~60% spotlight / ~40% philosophy (top) + logos (bottom) on large screens */}
-        <div className="grid min-h-0 flex-1 grid-cols-1 items-stretch gap-4 max-lg:gap-4 min-[400px]:gap-5 md:gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(260px,2fr)] lg:gap-7">
-          <div className="grid h-full min-h-0 grid-cols-1 justify-items-stretch gap-3 max-lg:gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,0.82fr)] sm:gap-5 lg:-translate-x-6 xl:-translate-x-10 2xl:-translate-x-14">
+        <div className="grid min-h-0 flex-1 grid-cols-1 items-stretch gap-3 min-[400px]:gap-4 md:gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(260px,2fr)] lg:gap-7">
+          <div className="grid h-full min-h-0 grid-cols-1 justify-items-stretch gap-2.5 sm:grid-cols-[minmax(0,1fr)_minmax(0,0.82fr)] sm:gap-5 lg:-translate-x-6 xl:-translate-x-10 2xl:-translate-x-14">
             <SpotlightCard
               cardKey="spring"
               index={0}
-              className="h-auto w-full min-h-0 max-lg:aspect-[11/16] max-lg:max-h-[min(54dvh,500px)] lg:h-full lg:max-h-none lg:aspect-auto"
+              className="h-auto w-full min-h-0 max-lg:aspect-[4/5] max-lg:max-h-[min(42dvh,380px)] sm:max-lg:max-h-[min(46dvh,440px)] lg:h-full lg:max-h-none lg:aspect-auto"
             />
-            <div className="grid h-full auto-rows-fr grid-rows-3 gap-2.5 max-lg:gap-2.5 sm:gap-5">
-              <SpotlightCard cardKey="newDrop" index={1} className="min-h-[100px] sm:min-h-0" />
-              <SpotlightCard cardKey="featured" index={2} className="min-h-[100px] sm:min-h-0" />
-              <SpotlightCard cardKey="special" index={3} className="min-h-[100px] sm:min-h-0" />
+            <div className="grid h-full auto-rows-fr grid-rows-3 gap-2 sm:gap-5">
+              <SpotlightCard cardKey="newDrop" index={1} className="min-h-[84px] sm:min-h-0" />
+              <SpotlightCard cardKey="featured" index={2} className="min-h-[84px] sm:min-h-0" />
+              <SpotlightCard cardKey="special" index={3} className="min-h-[84px] sm:min-h-0" />
             </div>
           </div>
 
-          <div className="flex min-h-0 w-full max-w-lg flex-col items-stretch gap-5 self-center sm:max-w-none md:gap-5 lg:h-full lg:max-w-none">
+          <div className="flex min-h-0 w-full max-w-lg flex-col items-stretch gap-3 self-center sm:max-w-none sm:gap-5 md:gap-5 lg:h-full lg:max-w-none lg:gap-5">
             <SectionReveal className="w-full shrink-0 lg:translate-x-5 xl:translate-x-8 2xl:translate-x-10">
               <div
                 id="philosophy"
-                className="scroll-mt-24 relative rounded-2xl border border-black/10 bg-white px-5 py-7 text-center shadow-[0_18px_60px_-40px_rgba(0,0,0,0.35)] sm:rounded-3xl sm:px-7 sm:py-8 md:px-8 md:py-9 lg:px-9 lg:py-10"
+                className="scroll-mt-24 relative rounded-xl border border-black/10 bg-white px-4 py-5 text-center shadow-[0_18px_60px_-40px_rgba(0,0,0,0.35)] sm:rounded-3xl sm:px-7 sm:py-8 md:px-8 md:py-9 lg:px-9 lg:py-10"
               >
-                <div className="absolute -top-4 -left-4 h-10 w-10 rounded-full bg-black/5 blur-[0.5px] sm:-top-5 sm:-left-5 sm:h-12 sm:w-12" aria-hidden />
-                <div className="absolute -bottom-5 -right-5 h-12 w-12 rounded-full bg-black/5 blur-[0.5px] sm:-bottom-6 sm:-right-6 sm:h-14 sm:w-14" aria-hidden />
+                <div className="absolute -left-3 -top-3 h-8 w-8 rounded-full bg-black/5 blur-[0.5px] sm:-left-5 sm:-top-5 sm:h-12 sm:w-12" aria-hidden />
+                <div className="absolute -bottom-4 -right-4 h-10 w-10 rounded-full bg-black/5 blur-[0.5px] sm:-bottom-6 sm:-right-6 sm:h-14 sm:w-14" aria-hidden />
 
-                <div className="mb-3 flex items-center justify-center gap-2.5 sm:mb-4 sm:gap-3">
-                  <span className="h-2.5 w-2.5 shrink-0 rounded-full bg-black sm:h-3 sm:w-3" aria-hidden />
-                  <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-black/55 sm:text-sm sm:tracking-[0.28em]">
+                <div className="mb-2 flex items-center justify-center gap-2 sm:mb-4 sm:gap-3">
+                  <span className="h-2 w-2 shrink-0 rounded-full bg-black sm:h-3 sm:w-3" aria-hidden />
+                  <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-black/55 sm:text-sm sm:tracking-[0.28em]">
                     {tPhilosophy.label}
                   </p>
                 </div>
 
-                <h2 className="mb-4 text-balance text-xl font-black uppercase leading-[1.15] text-black max-lg:mx-auto max-lg:max-w-[22rem] sm:mb-5 sm:text-2xl sm:leading-tight md:text-3xl lg:mx-0 lg:max-w-none lg:text-[2.35rem] lg:leading-[1.12]">
+                <h2 className="mb-3 text-balance text-lg font-black uppercase leading-[1.12] text-black max-lg:mx-auto max-lg:max-w-[20rem] sm:mb-5 sm:text-2xl sm:leading-tight md:text-3xl lg:mx-0 lg:max-w-none lg:text-[2.35rem] lg:leading-[1.12]">
                   {tPhilosophy.title}
                 </h2>
-                <div className="mx-auto mb-4 h-px w-24 bg-black/20 sm:mb-5" aria-hidden />
-                <p className="text-[14px] leading-[1.6] text-black/70 whitespace-pre-line max-lg:max-w-md max-lg:mx-auto sm:text-base sm:leading-relaxed md:text-lg lg:mx-0 lg:max-w-none lg:text-[1.125rem] lg:leading-relaxed">
+                <div className="mx-auto mb-3 h-px w-20 bg-black/20 sm:mb-5 sm:w-24" aria-hidden />
+                <p className="text-[13px] leading-snug text-black/70 whitespace-pre-line max-lg:mx-auto max-lg:max-w-md sm:text-base sm:leading-relaxed md:text-lg lg:mx-0 lg:max-w-none lg:text-[1.125rem] lg:leading-relaxed">
                   {tPhilosophy.body}
                 </p>
 
-                <div className="mt-5 flex flex-wrap justify-center gap-2 sm:gap-2.5 md:gap-3">
+                <div className="mt-4 flex flex-wrap justify-center gap-1.5 sm:mt-5 sm:gap-2.5 md:gap-3">
                   {PHILOSOPHY_BADGES_BY_LANG[lang].map((item) => (
                     <span
                       key={`${lang}-${item}`}
-                      className="inline-flex items-center rounded-full border border-black/15 bg-black/[0.03] px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.1em] text-black/70 sm:px-3.5 sm:py-2 sm:text-[11px] sm:tracking-[0.12em] md:px-4"
+                      className="inline-flex items-center rounded-full border border-black/15 bg-black/[0.03] px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.08em] text-black/70 sm:px-3.5 sm:py-2 sm:text-[11px] sm:tracking-[0.12em] md:px-4"
                     >
                       {item}
                     </span>
@@ -884,28 +943,28 @@ const SpotlightSection = () => {
               </div>
             </SectionReveal>
 
-            <SectionReveal className="flex min-h-[10rem] flex-1 flex-col basis-0 sm:min-h-[11rem] lg:min-h-0">
-              <div className="flex min-h-0 flex-1 items-center justify-center py-7 sm:py-8 lg:py-4">
+            <SectionReveal className="flex min-h-[7.5rem] flex-1 flex-col basis-0 sm:min-h-[11rem] lg:min-h-0">
+              <div className="flex min-h-0 flex-1 items-center justify-center py-4 sm:py-8 lg:py-4">
                 <div
-                  className="flex w-full max-w-md flex-nowrap items-center justify-center gap-5 sm:max-w-none sm:gap-8 md:gap-11 max-lg:translate-x-0 lg:max-w-none lg:translate-x-6 lg:gap-12 xl:translate-x-10 xl:gap-16 2xl:translate-x-12"
+                  className="flex w-full max-w-md flex-nowrap items-center justify-center gap-3 sm:max-w-none sm:gap-8 md:gap-11 max-lg:translate-x-0 lg:max-w-none lg:translate-x-6 lg:gap-12 xl:translate-x-10 xl:gap-16 2xl:translate-x-12"
                   aria-label="210 × Anpa Limited"
                 >
                   <img
                     src={LOGO_210_SRC}
                     alt="210 Sports Wear"
-                    className="h-[clamp(4.75rem,38vw,9.5rem)] w-auto max-w-[46%] object-contain object-center sm:h-[clamp(6.25rem,34vw,12rem)] lg:h-[clamp(7.5rem,min(32vh,15rem),15rem)] xl:h-[clamp(8.5rem,min(36vh,17rem),17rem)]"
+                    className="h-[clamp(3.25rem,26vw,6.25rem)] w-auto max-w-[46%] object-contain object-center sm:h-[clamp(6.25rem,34vw,12rem)] lg:h-[clamp(7.5rem,min(32vh,15rem),15rem)] xl:h-[clamp(8.5rem,min(36vh,17rem),17rem)]"
                     loading="eager"
                     decoding="async"
                     referrerPolicy="no-referrer"
                   />
                   <span
-                    className="h-[clamp(4.25rem,32vw,8.5rem)] w-px shrink-0 bg-black/15 sm:h-[clamp(5.75rem,30vw,11.5rem)] lg:h-[clamp(6.5rem,min(28vh,13rem),13rem)] xl:h-[clamp(7.5rem,min(32vh,15rem),15rem)]"
+                    className="h-[clamp(2.75rem,22vw,5.5rem)] w-px shrink-0 bg-black/15 sm:h-[clamp(5.75rem,30vw,11.5rem)] lg:h-[clamp(6.5rem,min(28vh,13rem),13rem)] xl:h-[clamp(7.5rem,min(32vh,15rem),15rem)]"
                     aria-hidden
                   />
                   <img
                     src={LOGO_COLLECTIONS_SRC}
                     alt="Anpa Limited"
-                    className="h-[clamp(4.5rem,36vw,9rem)] w-auto max-w-[46%] object-contain object-center sm:h-[clamp(6rem,32vw,11.5rem)] lg:h-[clamp(7rem,min(28vh,13.5rem),13.5rem)] xl:h-[clamp(8rem,min(32vh,15.5rem),15.5rem)]"
+                    className="h-[clamp(3rem,28vw,6rem)] w-auto max-w-[46%] object-contain object-center sm:h-[clamp(6rem,32vw,11.5rem)] lg:h-[clamp(7rem,min(28vh,13.5rem),13.5rem)] xl:h-[clamp(8rem,min(32vh,15.5rem),15.5rem)]"
                     loading="eager"
                     decoding="async"
                     referrerPolicy="no-referrer"
@@ -1055,7 +1114,7 @@ const ClothesSection = () => {
 
       {/* Horizontal row: equal space at start/end when row is shorter than viewport; scroll when needed */}
       <div
-        className="overflow-x-auto overflow-y-hidden scroll-smooth pb-2 [scrollbar-width:thin] [-webkit-overflow-scrolling:touch] [scroll-padding-inline:1rem] sm:[scroll-padding-inline:1.5rem] lg:[scroll-padding-inline:2.5rem]"
+        className="touch-pan-x overscroll-x-contain overflow-x-auto overflow-y-hidden scroll-smooth pb-2 [scrollbar-width:thin] [-webkit-overflow-scrolling:touch] [scroll-padding-inline:1rem] sm:[scroll-padding-inline:1.5rem] lg:[scroll-padding-inline:2.5rem]"
         role="region"
         aria-label={t.title}
       >

@@ -11,8 +11,17 @@
 }
 
 @layer base {
+  /**
+   * Smooth scroll only for mouse/desktop: on phones it fights native momentum
+   * and makes the page feel less responsive when swiping vertically.
+   */
   html {
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    html {
+      scroll-behavior: smooth;
+    }
   }
   /**
    * Horizontal spill from transforms (e.g. hero) without overflow-x-hidden on a
