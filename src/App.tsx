@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'motion/react';
-import { ShoppingBag, Search, Instagram, MapPin, Phone, ArrowUpRight, Clock, ArrowRight } from 'lucide-react';
+import { ShoppingBag, Search, Instagram, MapPin, Phone, ArrowUpRight, Clock, ArrowRight, X } from 'lucide-react';
 import { cn } from './lib/utils';
 
 /** PNG exports in /photo (210 stack + partner / signature mark) */
@@ -746,7 +746,7 @@ const SpotlightCrossfadeSlideshow: React.FC<{
         />
       ))}
       {slides.length > 1 && (
-        <div className="pointer-events-none absolute bottom-16 left-0 right-0 z-[12] flex justify-center gap-1.5 px-2 sm:bottom-[4.25rem]">
+        <div className="pointer-events-none absolute bottom-10 left-0 right-0 z-[12] flex justify-center gap-1.5 px-2 sm:bottom-16 lg:bottom-[4.25rem]">
           {slides.map((_, idx) => (
             <span
               key={idx}
@@ -862,27 +862,27 @@ const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number; className?
         <div className={cn('absolute inset-0 bg-gradient-to-t', overlay)} />
         <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/10" />
       </div>
-      <div className="pointer-events-none relative z-[2] flex h-full min-h-0 flex-col justify-end p-4 text-left">
-        <span className="mb-1.5 inline-flex w-fit rounded-full border border-white/20 bg-white/15 px-2 py-1 text-[9px] font-bold uppercase tracking-[0.2em] text-white/90 backdrop-blur-md">
+      <div className="pointer-events-none relative z-[2] flex h-full min-h-0 flex-col justify-end p-2.5 text-left sm:p-3 lg:p-4">
+        <span className="mb-1 inline-flex w-fit rounded-full border border-white/20 bg-white/15 px-1.5 py-0.5 text-[7px] font-bold uppercase tracking-[0.18em] text-white/90 backdrop-blur-md sm:mb-1.5 sm:px-2 sm:py-1 sm:text-[9px] sm:tracking-[0.2em]">
           {copy.label}
         </span>
-        <h2 className="text-[15px] font-black uppercase leading-tight tracking-tight text-white drop-shadow-sm line-clamp-3 lg:line-clamp-none">
+        <h2 className="text-[10px] font-black uppercase leading-tight tracking-tight text-white drop-shadow-sm line-clamp-2 min-[380px]:line-clamp-3 min-[380px]:text-xs sm:text-[13px] lg:line-clamp-none lg:text-[15px]">
           {copy.title}
         </h2>
-        <p className="mt-1 line-clamp-2 text-xs leading-snug text-white/85 lg:line-clamp-2">
+        <p className="mt-0.5 line-clamp-2 text-[10px] leading-snug text-white/85 sm:mt-1 sm:text-xs lg:line-clamp-2">
           {copy.body}
         </p>
-        <div className="pointer-events-auto mt-2 flex items-center justify-end gap-2 border-t border-white/20 pt-2">
+        <div className="pointer-events-auto mt-1.5 flex items-center justify-end gap-2 border-t border-white/20 pt-1.5 sm:mt-2 sm:pt-2">
           <button
             type="button"
-            className="inline-flex size-9 shrink-0 items-center justify-center rounded-full border border-white/35 bg-white/15 p-2 text-white backdrop-blur-md transition-colors hover:bg-white/25"
+            className="inline-flex size-7 shrink-0 items-center justify-center rounded-full border border-white/35 bg-white/15 p-1.5 text-white backdrop-blur-md transition-colors hover:bg-white/25 sm:size-9 sm:p-2"
             aria-label={ui.addToCart}
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
             }}
           >
-            <ShoppingBag className="h-4 w-4" strokeWidth={1.85} />
+            <ShoppingBag className="h-3.5 w-3.5 sm:h-4 sm:w-4" strokeWidth={1.85} />
           </button>
         </div>
       </div>
@@ -896,84 +896,88 @@ const SpotlightSection = () => {
 
   return (
     <section id="spotlight" className="scroll-mt-20 bg-gradient-to-b from-white to-neutral-50/50 min-h-0 overflow-x-hidden lg:min-h-screen lg:scroll-mt-24">
-      <div className="mx-auto flex min-h-0 w-full max-w-[1600px] flex-col px-2 pb-4 pt-[3.15rem] max-lg:max-w-[100vw] sm:px-4 sm:pb-5 sm:pt-[3.75rem] md:px-6 md:pb-6 md:pt-[4.2rem] lg:min-h-[calc(100dvh-4rem)] lg:px-8 lg:pb-10 lg:pt-[3.65rem]">
-        {/* Below lg: uniform zoom shrinks the whole landing like desktop without changing card proportions; lg+ unchanged */}
-        <div className="w-full max-lg:[zoom:0.86] lg:[zoom:1]">
-          <div className="grid min-h-0 flex-1 grid-cols-1 items-stretch gap-7 min-[360px]:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:grid-cols-[minmax(0,3fr)_minmax(260px,2fr)]">
-            <div className="grid h-full min-h-0 grid-cols-[minmax(0,1fr)_minmax(0,0.82fr)] items-stretch gap-5 max-lg:min-h-[min(50dvh,480px)] lg:-translate-x-6 xl:-translate-x-10 2xl:-translate-x-14">
-              <SpotlightCard cardKey="spring" index={0} className="h-full min-h-0 w-full" />
-              <div className="grid h-full min-h-0 auto-rows-fr grid-rows-3 gap-5">
-                <SpotlightCard cardKey="newDrop" index={1} className="min-h-0" />
-                <SpotlightCard cardKey="featured" index={2} className="min-h-0" />
-                <SpotlightCard cardKey="special" index={3} className="min-h-0" />
-              </div>
+      <div className="mx-auto flex min-h-0 w-full max-w-[1600px] flex-col px-3 pb-3 pt-[3.15rem] sm:px-4 sm:pb-5 sm:pt-[3.75rem] md:px-6 md:pb-6 md:pt-[4.2rem] lg:min-h-[calc(100dvh-4rem)] lg:px-8 lg:pb-10 lg:pt-[3.65rem]">
+        <div className="grid min-h-0 w-full flex-1 grid-cols-1 items-stretch gap-4 sm:gap-5 lg:grid-cols-[minmax(0,3fr)_minmax(260px,2fr)] lg:gap-7">
+          {/* Spotlight: full-width stack below lg (no squeezed side column); desktop keeps editorial split */}
+          <div className="grid min-h-0 grid-cols-1 items-stretch gap-2.5 sm:gap-3 max-lg:min-h-0 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.82fr)] lg:gap-5 lg:-translate-x-6 xl:-translate-x-10 2xl:-translate-x-14">
+            <SpotlightCard
+              cardKey="spring"
+              index={0}
+              className="max-lg:aspect-[5/4] max-lg:min-h-[11.5rem] max-lg:w-full lg:aspect-auto lg:min-h-0 h-full w-full"
+            />
+            <div className="grid min-h-0 auto-rows-fr gap-2 sm:gap-2.5 max-sm:grid-cols-1 max-sm:grid-rows-3 sm:max-lg:grid-cols-3 sm:max-lg:grid-rows-1 lg:grid-cols-1 lg:grid-rows-3 lg:gap-5">
+              <SpotlightCard cardKey="newDrop" index={1} className="min-h-0 max-sm:min-h-[7.25rem] sm:max-lg:min-h-[9.5rem]" />
+              <SpotlightCard cardKey="featured" index={2} className="min-h-0 max-sm:min-h-[7.25rem] sm:max-lg:min-h-[9.5rem]" />
+              <SpotlightCard cardKey="special" index={3} className="min-h-0 max-sm:min-h-[7.25rem] sm:max-lg:min-h-[9.5rem]" />
             </div>
+          </div>
 
-            <div className="flex min-h-0 w-full min-w-0 flex-col items-stretch gap-5 self-stretch lg:h-full">
-              <SectionReveal className="w-full shrink-0 lg:translate-x-5 xl:translate-x-8 2xl:translate-x-10">
-                <div
-                  id="philosophy"
-                  className="scroll-mt-24 relative rounded-3xl border border-black/10 bg-white px-9 py-10 text-center shadow-[0_18px_60px_-40px_rgba(0,0,0,0.35)]"
-                >
-                  <div className="absolute -left-5 -top-5 h-12 w-12 rounded-full bg-black/5 blur-[0.5px]" aria-hidden />
-                  <div className="absolute -bottom-6 -right-6 h-14 w-14 rounded-full bg-black/5 blur-[0.5px]" aria-hidden />
+          <div className="flex min-h-0 w-full min-w-0 flex-col items-stretch gap-3 sm:gap-4 lg:h-full lg:gap-5">
+            <SectionReveal className="w-full shrink-0 lg:translate-x-5 xl:translate-x-8 2xl:translate-x-10">
+              <div
+                id="philosophy"
+                className="scroll-mt-24 relative rounded-2xl border border-black/10 bg-white px-4 py-6 text-center shadow-[0_14px_44px_-32px_rgba(0,0,0,0.35)] sm:rounded-3xl sm:px-6 sm:py-8 md:px-8 md:py-9 lg:px-9 lg:py-10 lg:shadow-[0_18px_60px_-40px_rgba(0,0,0,0.35)]"
+              >
+                <div className="absolute -left-3 -top-3 h-9 w-9 rounded-full bg-black/5 blur-[0.5px] sm:-left-5 sm:-top-5 sm:h-12 sm:w-12" aria-hidden />
+                <div className="absolute -bottom-4 -right-4 h-10 w-10 rounded-full bg-black/5 blur-[0.5px] sm:-bottom-6 sm:-right-6 sm:h-14 sm:w-14" aria-hidden />
 
-                  <div className="mb-4 flex items-center justify-center gap-3">
-                    <span className="h-3 w-3 shrink-0 rounded-full bg-black" aria-hidden />
-                    <p className="text-sm font-bold uppercase tracking-[0.28em] text-black/55">{tPhilosophy.label}</p>
-                  </div>
-
-                  <h2 className="mb-5 text-balance text-[2.35rem] font-black uppercase leading-[1.12] text-black">
-                    {tPhilosophy.title}
-                  </h2>
-                  <div className="mx-auto mb-5 h-px w-24 bg-black/20" aria-hidden />
-                  <p className="whitespace-pre-line text-[1.125rem] leading-relaxed text-black/70">
-                    {tPhilosophy.body}
+                <div className="mb-2 flex items-center justify-center gap-2 sm:mb-4 sm:gap-3">
+                  <span className="h-2 w-2 shrink-0 rounded-full bg-black sm:h-3 sm:w-3" aria-hidden />
+                  <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-black/55 sm:text-sm sm:tracking-[0.28em]">
+                    {tPhilosophy.label}
                   </p>
-
-                  <div className="mt-5 flex flex-wrap justify-center gap-2.5 md:gap-3">
-                    {PHILOSOPHY_BADGES_BY_LANG[lang].map((item) => (
-                      <span
-                        key={`${lang}-${item}`}
-                        className="inline-flex items-center rounded-full border border-black/15 bg-black/[0.03] px-3.5 py-2 text-[11px] font-bold uppercase tracking-[0.12em] text-black/70 md:px-4"
-                      >
-                        {item}
-                      </span>
-                    ))}
-                  </div>
                 </div>
-              </SectionReveal>
 
-              <SectionReveal className="flex min-h-0 flex-1 flex-col basis-0">
-                <div className="flex min-h-0 flex-1 items-center justify-center py-4">
-                  <div
-                    className="flex w-full max-w-none flex-nowrap items-center justify-center gap-12 max-lg:translate-x-0 lg:translate-x-6 xl:gap-16 xl:translate-x-10 2xl:translate-x-12"
-                    aria-label="210 × Anpa Limited"
-                  >
-                    <img
-                      src={LOGO_210_SRC}
-                      alt="210 Sports Wear"
-                      className="h-[clamp(7.5rem,min(32vh,15rem),15rem)] w-auto max-w-[46%] object-contain object-center xl:h-[clamp(8.5rem,min(36vh,17rem),17rem)]"
-                      loading="eager"
-                      decoding="async"
-                      referrerPolicy="no-referrer"
-                    />
+                <h2 className="mb-3 text-balance text-xl font-black uppercase leading-[1.15] text-black sm:mb-4 sm:text-2xl md:mb-5 md:text-3xl lg:text-[2.35rem] lg:leading-[1.12]">
+                  {tPhilosophy.title}
+                </h2>
+                <div className="mx-auto mb-3 h-px w-16 bg-black/20 sm:mb-5 sm:w-24" aria-hidden />
+                <p className="whitespace-pre-line text-sm leading-relaxed text-black/70 sm:text-base lg:text-[1.125rem]">
+                  {tPhilosophy.body}
+                </p>
+
+                <div className="mt-3 flex flex-wrap justify-center gap-1.5 sm:mt-5 sm:gap-2.5 md:gap-3">
+                  {PHILOSOPHY_BADGES_BY_LANG[lang].map((item) => (
                     <span
-                      className="h-[clamp(6.5rem,min(28vh,13rem),13rem)] w-px shrink-0 bg-black/15 xl:h-[clamp(7.5rem,min(32vh,15rem),15rem)]"
-                      aria-hidden
-                    />
-                    <img
-                      src={LOGO_COLLECTIONS_SRC}
-                      alt="Anpa Limited"
-                      className="h-[clamp(7rem,min(28vh,13.5rem),13.5rem)] w-auto max-w-[46%] object-contain object-center xl:h-[clamp(8rem,min(32vh,15.5rem),15.5rem)]"
-                      loading="eager"
-                      decoding="async"
-                      referrerPolicy="no-referrer"
-                    />
-                  </div>
+                      key={`${lang}-${item}`}
+                      className="inline-flex items-center rounded-full border border-black/15 bg-black/[0.03] px-2.5 py-1.5 text-[9px] font-bold uppercase tracking-[0.1em] text-black/70 sm:px-3.5 sm:py-2 sm:text-[11px] sm:tracking-[0.12em] md:px-4"
+                    >
+                      {item}
+                    </span>
+                  ))}
                 </div>
-              </SectionReveal>
-            </div>
+              </div>
+            </SectionReveal>
+
+            <SectionReveal className="flex min-h-0 flex-1 flex-col basis-0">
+              <div className="flex min-h-0 flex-1 items-center justify-center py-2 sm:py-4">
+                <div
+                  className="flex w-full max-w-none flex-nowrap items-center justify-center gap-5 sm:gap-8 lg:translate-x-6 lg:gap-12 xl:gap-16 xl:translate-x-10 2xl:translate-x-12"
+                  aria-label="210 × Anpa Limited"
+                >
+                  <img
+                    src={LOGO_210_SRC}
+                    alt="210 Sports Wear"
+                    className="h-[clamp(3.25rem,min(14vw,5.5rem),5.5rem)] w-auto max-w-[44%] object-contain object-center sm:h-[clamp(4.5rem,min(22vw,8rem),8rem)] lg:h-[clamp(7.5rem,min(32vh,15rem),15rem)] xl:h-[clamp(8.5rem,min(36vh,17rem),17rem)]"
+                    loading="eager"
+                    decoding="async"
+                    referrerPolicy="no-referrer"
+                  />
+                  <span
+                    className="h-[clamp(2.75rem,min(12vw,4.75rem),4.75rem)] w-px shrink-0 bg-black/15 sm:h-[clamp(4rem,min(20vw,7rem),7rem)] lg:h-[clamp(6.5rem,min(28vh,13rem),13rem)] xl:h-[clamp(7.5rem,min(32vh,15rem),15rem)]"
+                    aria-hidden
+                  />
+                  <img
+                    src={LOGO_COLLECTIONS_SRC}
+                    alt="Anpa Limited"
+                    className="h-[clamp(3rem,min(14vw,5.75rem),5.75rem)] w-auto max-w-[44%] object-contain object-center sm:h-[clamp(4.75rem,min(22vw,8.25rem),8.25rem)] lg:h-[clamp(7rem,min(28vh,13.5rem),13.5rem)] xl:h-[clamp(8rem,min(32vh,15.5rem),15.5rem)]"
+                    loading="eager"
+                    decoding="async"
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
+              </div>
+            </SectionReveal>
           </div>
         </div>
       </div>
