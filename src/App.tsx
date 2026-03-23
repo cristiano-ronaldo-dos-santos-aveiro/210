@@ -326,7 +326,7 @@ const Navbar = () => {
   return (
     <motion.nav
       initial={false}
-      className="fixed top-0 left-0 right-0 z-50 border-b border-black/[0.06] bg-white shadow-[0_10px_30px_-25px_rgba(0,0,0,0.35)]"
+      className="fixed top-0 left-0 right-0 z-50 border-b border-black/[0.06] bg-white/80 backdrop-blur-xl shadow-[0_12px_45px_-35px_rgba(0,0,0,0.6)]"
     >
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10">
         <div className="flex items-center justify-between h-[3.75rem] md:h-[4rem] gap-3">
@@ -429,7 +429,7 @@ const Navbar = () => {
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}
-          className="md:hidden border-t border-black/8 bg-white px-4 pt-4 pb-8 overflow-hidden"
+          className="md:hidden border-t border-black/8 bg-white/80 backdrop-blur-xl px-4 pt-4 pb-8 overflow-hidden"
         >
           <div className="rounded-2xl bg-black overflow-hidden shadow-md">
             <a
