@@ -967,13 +967,15 @@ const DailyLooksSection = () => {
   const ui = TRANSLATIONS[lang].ui;
 
   return (
-    <section id="daily-looks" className="bg-white border-t border-black/5 scroll-mt-24 min-h-screen">
-      <div className="max-w-[1600px] ml-0 mr-auto px-4 sm:px-6 lg:px-8 pt-[4.1rem] md:pt-[4.4rem] pb-6 md:pb-8 min-h-[calc(100vh-4rem)] flex flex-col justify-center">
+    <section id="daily-looks" className="scroll-mt-24 border-t border-black/5 bg-white py-10 min-[480px]:py-12 lg:min-h-screen lg:py-0">
+      <div className="mx-auto flex max-w-[1600px] flex-col px-4 pb-8 pt-2 sm:px-6 sm:pb-10 sm:pt-3 lg:min-h-[calc(100dvh-4rem)] lg:justify-center lg:px-8 lg:pb-8 lg:pt-[4.4rem]">
         {/* No SectionReveal here: spring y-overshoot made the card feel like it grew then shrank */}
-        <div>
-          <p className="text-xs font-bold uppercase tracking-[0.3em] text-black/45 mb-2">{t.label}</p>
-          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] gap-4 md:gap-6 items-start flex-1">
-            <article className="relative rounded-2xl overflow-hidden border border-black/[0.08] w-full max-w-[min(100%,calc((100dvh-10rem)*9/16))] aspect-[9/16] shrink-0">
+        <div className="w-full">
+          <p className="mb-2 text-center text-xs font-bold uppercase tracking-[0.28em] text-black/45 sm:text-left sm:tracking-[0.3em]">
+            {t.label}
+          </p>
+          <div className="grid flex-1 grid-cols-1 items-start gap-6 md:gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-8">
+            <article className="relative mx-auto aspect-[9/16] w-full max-w-[min(100%,min(92vw,calc((100dvh-12rem)*9/16)))] shrink-0 overflow-hidden rounded-2xl border border-black/[0.08] sm:mx-0 lg:mx-0">
               <img
                 src={DAILY_LOOK_IMAGE_SRC}
                 alt={t.title}
@@ -987,22 +989,26 @@ const DailyLooksSection = () => {
               </p>
             </article>
 
-            <article className="rounded-2xl border border-black/[0.08] bg-white p-5 sm:p-6 lg:p-7 flex flex-col">
-              <h2 className="text-2xl md:text-3xl font-black uppercase text-black leading-tight">{t.title}</h2>
-              <p className="mt-3 text-sm md:text-base text-black/65 leading-relaxed">{t.body}</p>
-              <div className="mt-5 h-px w-24 bg-black/15" aria-hidden />
+            <article className="flex flex-col rounded-2xl border border-black/[0.08] bg-white p-5 sm:p-6 lg:p-7">
+              <h2 className="text-balance text-center text-2xl font-black uppercase leading-tight text-black sm:text-left md:text-3xl">
+                {t.title}
+              </h2>
+              <p className="mt-3 text-center text-sm leading-relaxed text-black/65 sm:text-left md:text-base">{t.body}</p>
+              <div className="mx-auto mt-5 h-px w-24 bg-black/15 sm:mx-0" aria-hidden />
 
-              <div className="mt-5 space-y-3">
+              <div className="mt-5 space-y-2.5 sm:space-y-3">
                 {t.items.map((item) => (
                   <div
                     key={item.name}
-                    className="flex items-center justify-between gap-3 rounded-xl border border-black/10 bg-neutral-50 px-4 py-3"
+                    className="flex min-h-[3.25rem] items-center justify-between gap-3 rounded-xl border border-black/10 bg-neutral-50 px-3.5 py-2.5 sm:px-4 sm:py-3"
                   >
-                    <span className="min-w-0 flex-1 text-sm md:text-[15px] font-semibold text-black">{item.name}</span>
-                    <span className="shrink-0 text-sm md:text-[15px] font-bold text-black tabular-nums">{item.price}</span>
+                    <span className="min-w-0 flex-1 text-sm font-semibold leading-snug text-black md:text-[15px]">
+                      {item.name}
+                    </span>
+                    <span className="shrink-0 text-sm font-bold tabular-nums text-black md:text-[15px]">{item.price}</span>
                     <button
                       type="button"
-                      className="inline-flex shrink-0 items-center justify-center rounded-full border border-black/15 bg-white p-2 text-black transition-colors hover:bg-black/5"
+                      className="inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-full border border-black/15 bg-white p-2 text-black transition-colors hover:bg-black/5"
                       aria-label={`${ui.addToCart}: ${item.name}`}
                     >
                       <ShoppingBag size={18} strokeWidth={1.75} />
@@ -1026,8 +1032,8 @@ const ClothesSection = () => {
   const ui = TRANSLATIONS[lang].ui;
 
   return (
-    <section id="clothes" className="py-14 md:py-20 bg-white border-t border-black/5 scroll-mt-24 overflow-x-hidden">
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10">
+    <section id="clothes" className="scroll-mt-24 overflow-x-hidden border-t border-black/5 bg-white py-12 md:py-20">
+      <div className="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-10">
         <SectionReveal>
           <p className="text-xs font-bold uppercase tracking-[0.3em] text-black/45 mb-2 text-center">{t.label}</p>
           <h2
@@ -1049,11 +1055,11 @@ const ClothesSection = () => {
         role="region"
         aria-label={t.title}
       >
-        <div className="flex w-max min-w-full justify-evenly gap-4 sm:gap-5 snap-x snap-mandatory px-4 sm:px-6 lg:px-10">
+        <div className="flex w-max min-w-full snap-x snap-mandatory justify-start gap-3 px-4 pb-1 sm:justify-evenly sm:gap-5 sm:px-6 lg:px-10">
           {t.items.map((item) => (
             <article
               key={item.name}
-              className="relative shrink-0 snap-center overflow-hidden rounded-2xl border border-black/[0.08] bg-gradient-to-b from-neutral-100 to-neutral-50 w-[min(78vw,260px)] md:w-[280px] aspect-[13/15]"
+              className="relative aspect-[13/15] w-[min(80vw,268px)] shrink-0 snap-center overflow-hidden rounded-2xl border border-black/[0.08] bg-gradient-to-b from-neutral-100 to-neutral-50 md:w-[280px]"
             >
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_15%,rgba(0,0,0,0.07),transparent_45%)]" aria-hidden />
               <div className="relative flex h-full min-h-0 flex-col p-4">
@@ -1087,7 +1093,7 @@ const SectionReveal: React.FC<{ children: React.ReactNode; className?: string }>
   <motion.div
     initial={{ opacity: 0, y: 48 }}
     whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, margin: '-80px' }}
+    viewport={{ once: true, margin: '-48px 0px -80px 0px' }}
     transition={{ type: 'spring', stiffness: 70, damping: 24 }}
     className={className}
   >
@@ -1219,8 +1225,8 @@ const BranchesSection = () => {
   const t = TRANSLATIONS[lang].branches;
 
   return (
-    <section id="branches" className="py-14 md:py-20 bg-white border-t border-black/5 scroll-mt-24">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="branches" className="scroll-mt-24 border-t border-black/5 bg-white py-12 md:py-20">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <SectionReveal>
           <p className="text-xs font-bold uppercase tracking-[0.3em] text-black/45 mb-2 text-center">{t.label}</p>
           <h2 className="text-2xl md:text-3xl font-black uppercase text-black mb-3 md:mb-4 leading-tight text-center">
@@ -1230,7 +1236,7 @@ const BranchesSection = () => {
             {t.body}
           </p>
         </SectionReveal>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-3 sm:gap-4">
           {STORE_BRANCHES.map((branch, i) => (
             <BranchCard
               key={branch.name}
@@ -1251,7 +1257,7 @@ const CartFloatingButton: React.FC = () => {
   return (
     <motion.button
       type="button"
-      className="fixed bottom-5 right-5 z-[60] inline-flex items-center justify-center rounded-full border border-white/10 bg-black text-white w-12 h-12 shadow-[0_18px_50px_-18px_rgba(0,0,0,0.7)] hover:bg-neutral-900 transition-colors"
+      className="fixed bottom-[max(1.25rem,env(safe-area-inset-bottom,0px))] right-[max(1.25rem,env(safe-area-inset-right,0px))] z-[60] inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-black text-white shadow-[0_18px_50px_-18px_rgba(0,0,0,0.7)] transition-colors hover:bg-neutral-900"
       whileTap={{ scale: 0.95 }}
       aria-label="Cart"
     >
@@ -1392,11 +1398,11 @@ const Footer = () => {
           </motion.a>
         </div>
 
-        <div className="w-full pt-6 mt-2 border-t border-black/10 flex items-center justify-between gap-6">
-          <span className="text-[12px] text-black/50 select-none">
+        <div className="mt-2 flex w-full flex-col items-center gap-4 border-t border-black/10 pt-6 sm:flex-row sm:justify-between sm:gap-6">
+          <span className="order-2 text-center text-[12px] text-black/50 select-none sm:order-1 sm:text-left">
             © {new Date().getFullYear()} 210 Sports Wear. Все права защищены.
           </span>
-          <div className="flex items-center gap-6">
+          <div className="order-1 flex items-center gap-6 sm:order-2">
             <button
               type="button"
               onClick={() => setLegalOpen('privacy')}
