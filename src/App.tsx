@@ -603,10 +603,10 @@ const SpotlightSection = () => {
             ))}
           </div>
 
-          <SectionReveal className="h-full">
+          <SectionReveal>
             <div
               id="philosophy"
-              className="scroll-mt-24 h-full relative rounded-3xl border border-black/10 bg-white px-5 sm:px-6 py-6 shadow-[0_18px_60px_-40px_rgba(0,0,0,0.35)]"
+              className="scroll-mt-24 relative rounded-3xl border border-black/10 bg-white px-5 sm:px-6 py-6 shadow-[0_18px_60px_-40px_rgba(0,0,0,0.35)]"
             >
               <div className="absolute -top-5 -left-5 h-12 w-12 rounded-full bg-black/5 blur-[0.5px]" aria-hidden />
               <div className="absolute -bottom-6 -right-6 h-14 w-14 rounded-full bg-black/5 blur-[0.5px]" aria-hidden />
