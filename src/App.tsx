@@ -589,11 +589,16 @@ const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number }> = ({ car
   const slideSet = SPOTLIGHT_SLIDE_SETS[cardKey];
 
   return (
-    <motion.article
+    <motion.a
+      href={CONTACT_TELEGRAM}
+      target="_blank"
+      rel="noopener noreferrer"
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.08, type: 'spring', stiffness: 76, damping: 22 }}
+      whileTap={{ scale: 0.985 }}
       className="group relative w-full aspect-[3/4] max-h-[320px] sm:max-h-[340px] rounded-xl overflow-hidden border border-black/[0.08] shadow-[0_16px_40px_-20px_rgba(0,0,0,0.35)] bg-neutral-900"
+      aria-label={`${copy.title} — open in Telegram`}
     >
       <div className="absolute inset-0">
         {slideSet ? (
@@ -620,7 +625,7 @@ const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number }> = ({ car
         <h2 className="text-sm sm:text-base font-black uppercase tracking-tight text-white drop-shadow-sm leading-tight">{copy.title}</h2>
         <p className="mt-1.5 text-[11px] sm:text-xs text-white/85 leading-snug line-clamp-3">{copy.body}</p>
       </div>
-    </motion.article>
+    </motion.a>
   );
 };
 
