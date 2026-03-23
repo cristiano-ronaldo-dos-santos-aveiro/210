@@ -552,7 +552,7 @@ const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number }> = ({ car
       transition={{ delay: index * 0.08, type: 'spring', stiffness: 76, damping: 22 }}
       whileTap={{ scale: 0.985 }}
       whileHover={{ y: -4 }}
-      className="group relative w-full aspect-[4/5] max-h-[360px] sm:max-h-[390px] rounded-2xl overflow-hidden border border-black/[0.08] shadow-[0_24px_60px_-30px_rgba(0,0,0,0.45)] bg-neutral-900"
+      className="group relative w-full aspect-[5/6] max-h-[400px] sm:max-h-[440px] rounded-2xl overflow-hidden border border-black/[0.08] shadow-[0_24px_60px_-30px_rgba(0,0,0,0.45)] bg-neutral-900"
       aria-label={`${copy.title} — open in Telegram`}
     >
       <div className="absolute inset-0">
@@ -621,7 +621,7 @@ const SpotlightSection = () => {
           </div>
         </motion.div>
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(320px,0.95fr)] gap-4 md:gap-5 items-start">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             {SPOTLIGHT_ORDER.map((key, i) => (
               <SpotlightCard key={key} cardKey={key} index={i} />
             ))}
