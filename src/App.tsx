@@ -585,6 +585,9 @@ const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number }> = ({ car
 };
 
 const SpotlightSection = () => {
+  const { lang } = React.useContext(LangContext);
+  const tPhilosophy = TRANSLATIONS[lang].philosophy;
+
   return (
     <section id="spotlight" className="bg-gradient-to-b from-white to-neutral-50/50 scroll-mt-24">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-[4.85rem] md:pt-[5.1rem] pb-10 md:pb-14">
@@ -617,10 +620,35 @@ const SpotlightSection = () => {
             />
           </div>
         </motion.div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
-          {SPOTLIGHT_ORDER.map((key, i) => (
-            <SpotlightCard key={key} cardKey={key} index={i} />
-          ))}
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(320px,0.95fr)] gap-4 md:gap-5 items-start">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
+            {SPOTLIGHT_ORDER.map((key, i) => (
+              <SpotlightCard key={key} cardKey={key} index={i} />
+            ))}
+          </div>
+
+          <SectionReveal className="h-full">
+            <div
+              id="philosophy"
+              className="scroll-mt-24 relative rounded-3xl border border-black/10 bg-white px-5 sm:px-6 py-6 shadow-[0_18px_60px_-40px_rgba(0,0,0,0.35)] lg:sticky lg:top-[5.5rem]"
+            >
+              <div className="absolute -top-5 -left-5 h-12 w-12 rounded-full bg-black/5 blur-[0.5px]" aria-hidden />
+              <div className="absolute -bottom-6 -right-6 h-14 w-14 rounded-full bg-black/5 blur-[0.5px]" aria-hidden />
+
+              <div className="flex items-center gap-3 mb-3">
+                <span className="h-2.5 w-2.5 rounded-full bg-black" aria-hidden />
+                <p className="text-xs font-bold uppercase tracking-[0.3em] text-black/55">{tPhilosophy.label}</p>
+              </div>
+
+              <h2 className="text-2xl md:text-3xl font-black uppercase text-black mb-4 leading-tight">
+                {tPhilosophy.title}
+              </h2>
+              <div className="h-px w-20 bg-black/20 mb-5" aria-hidden />
+              <p className="text-sm md:text-base text-black/70 leading-relaxed whitespace-pre-line">
+                {tPhilosophy.body}
+              </p>
+            </div>
+          </SectionReveal>
         </div>
       </div>
     </section>
@@ -1053,8 +1081,6 @@ export default function App() {
         <main>
           <SpotlightSection />
           <BrandMarquee />
-
-          <PhilosophySection />
           <BranchesSection />
         </main>
 
