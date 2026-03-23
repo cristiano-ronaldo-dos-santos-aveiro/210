@@ -154,11 +154,10 @@ interface Translations {
     addToCart: string;
   };
   nav: {
-    collections: string;
+    home: string;
     dailyLooks: string;
     brands: string;
     clothes: string;
-    philosophy: string;
     branches: string;
   };
   cards: {
@@ -202,11 +201,10 @@ const TRANSLATIONS: Record<Language, Translations> = {
       addToCart: "Savatchaga"
     },
     nav: {
-      collections: "Kolleksiyalar",
+      home: "Bosh sahifa",
       dailyLooks: "Kunlik look",
       brands: "Brendlar",
       clothes: "Kiyimlar",
-      philosophy: "Falsafa",
       branches: "Filiallar"
     },
     cards: {
@@ -279,11 +277,10 @@ const TRANSLATIONS: Record<Language, Translations> = {
       addToCart: "В корзину"
     },
     nav: {
-      collections: "Коллекции",
+      home: "Главная",
       dailyLooks: "Образ дня",
       brands: "Бренды",
       clothes: "Одежда",
-      philosophy: "Философия",
       branches: "Филиалы"
     },
     cards: {
@@ -315,7 +312,7 @@ const TRANSLATIONS: Record<Language, Translations> = {
     philosophy: {
       label: "Философия",
       title: "Мы далеки от обыденности!",
-      body: "210 — это история бренда и его ценности. Мы далеки от обыденности: каждая вещь из первых рук, оригинальная и с гарантией качества. Мы предлагаем отобранные образы со всего мира, сочетая спорт и стиль. Магазин для тех, кто не идёт на компромиссы — с 2016 года."
+      body: "Роскошь измеряется не только одеждой. Она начинается с сервиса, а высокий сервис ведёт к совершенству.\n\n210 и Anba предоставляют этот сервис своим клиентам!\n\nМы далеки от обыденности. Обыденность встречается повсюду, но для 210 и Anba путь — это премиальный сервис и премиальные товары для своих клиентов!"
     },
     clothes: {
       label: "Одежда",
@@ -356,11 +353,10 @@ const TRANSLATIONS: Record<Language, Translations> = {
       addToCart: "Add to basket"
     },
     nav: {
-      collections: "Collections",
+      home: "Home",
       dailyLooks: "Daily look",
       brands: "Brands",
       clothes: "Clothes",
-      philosophy: "Philosophy",
       branches: "Branches"
     },
     cards: {
@@ -392,7 +388,7 @@ const TRANSLATIONS: Record<Language, Translations> = {
     philosophy: {
       label: "Philosophy",
       title: "We are far from ordinary!",
-      body: "210 is the history and values of the brand. We are far from ordinary: each item is first-hand, original and with a guarantee of quality. We offer selected looks from around the world, combining sport and style. A store for those who do not compromise — since 2016."
+      body: "Luxury is not measured by clothing alone. It begins with service, and outstanding service leads to excellence.\n\n210 and Anba bring this service to their customers!\n\nWe are far from ordinary. You see ordinariness everywhere — yet 210 and Anba believe their way is to offer premium service and premium products to their clients!"
     },
     clothes: {
       label: "Clothes",
@@ -431,7 +427,7 @@ const TRANSLATIONS: Record<Language, Translations> = {
 };
 
 const PHILOSOPHY_BADGES_BY_LANG: Record<Language, readonly string[]> = {
-  uz: ['Original mahsulotlar', 'Premium service', 'Tezkor aloqa'],
+  uz: ['Original mahsulotlar', 'Premium servis', 'Tezkor aloqa'],
   ru: ['Оригинальные товары', 'Премиум сервис', 'Быстрая связь'],
   en: ['Original products', 'Premium service', 'Fast support']
 };
@@ -443,15 +439,14 @@ const LangContext = React.createContext<{ lang: Language; setLang: (l: Language)
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const sectionIds = ['spotlight', 'daily-looks', 'clothes', 'brand-marquee', 'branches', 'philosophy'] as const;
+  const sectionIds = ['spotlight', 'daily-looks', 'clothes', 'brand-marquee', 'branches'] as const;
   const [activeSection, setActiveSection] = useState<(typeof sectionIds)[number]>('spotlight');
   const visibleRatiosRef = useRef<Record<(typeof sectionIds)[number], number>>({
     spotlight: 0,
     'daily-looks': 0,
     clothes: 0,
     'brand-marquee': 0,
-    branches: 0,
-    philosophy: 0
+    branches: 0
   });
   const { lang, setLang } = React.useContext(LangContext);
   const t = TRANSLATIONS[lang].nav;
@@ -504,10 +499,10 @@ const Navbar = () => {
 
   const navLinkInBar = (id: (typeof sectionIds)[number]) =>
     cn(
-      'inline-flex items-center justify-center px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] rounded-full transition-all duration-300',
+      'inline-flex items-center justify-center rounded-full px-2.5 py-1.5 text-[11px] font-medium uppercase leading-none tracking-[0.08em] antialiased transition-all duration-200 lg:px-3 lg:text-xs lg:tracking-[0.1em]',
       activeSection === id
-        ? 'bg-black/10 text-black'
-        : 'text-black/60 hover:text-black hover:bg-black/5'
+        ? 'bg-black/12 text-black'
+        : 'text-black/75 hover:bg-black/8 hover:text-black'
     );
   const iconInBar = 'p-2.5 rounded-full text-white hover:bg-white/10 transition-colors duration-300 hover:scale-[1.06]';
   const logoSep = 'text-black/30';
@@ -521,7 +516,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-[3.75rem] md:h-[4rem] gap-3">
           <motion.a
             href="#"
-            className="fixed top-2 left-4 sm:left-6 lg:left-10 z-[96] flex-shrink-0 flex items-center gap-2 md:gap-2.5 rounded-full bg-white px-3 py-2 border border-white/65 ring-1 ring-black/5"
+            className="fixed top-2 left-4 sm:left-6 lg:left-10 z-[96] flex-shrink-0 flex items-center gap-2 md:gap-2.5 rounded-full border border-black/12 bg-white/95 px-3 py-2 shadow-[0_6px_24px_-6px_rgba(0,0,0,0.18)] ring-1 ring-black/[0.06] backdrop-blur-md"
             whileHover={{ opacity: 0.98, scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             aria-label="210 × Anpa Limited"
@@ -549,9 +544,9 @@ const Navbar = () => {
 
           {/* One black bar: nav links + languages */}
           <div className="hidden md:flex fixed top-2 left-1/2 -translate-x-1/2 z-[95] pointer-events-none [&>*]:pointer-events-auto">
-            <div className="flex items-center rounded-full bg-white/45 backdrop-blur-2xl supports-[backdrop-filter]:bg-white/35 px-4 lg:px-5 py-2 gap-3 lg:gap-4 border border-white/65 ring-1 ring-black/5">
+            <div className="flex items-center gap-3 rounded-full border border-black/12 bg-white/90 px-4 py-2 shadow-[0_8px_30px_-10px_rgba(0,0,0,0.2)] ring-1 ring-black/[0.06] backdrop-blur-xl supports-[backdrop-filter]:bg-white/82 lg:gap-4 lg:px-5">
               <a href="#spotlight" className={navLinkInBar('spotlight')}>
-                {t.collections}
+                {t.home}
               </a>
               <a href="#daily-looks" className={navLinkInBar('daily-looks')}>
                 {t.dailyLooks}
@@ -559,16 +554,13 @@ const Navbar = () => {
               <a href="#clothes" className={navLinkInBar('clothes')}>
                 {t.clothes}
               </a>
-              <a href="#philosophy" className={navLinkInBar('philosophy')}>
-                {t.philosophy}
-              </a>
               <a href="#branches" className={navLinkInBar('branches')}>
                 {t.branches}
               </a>
               <a href="#brand-marquee" className={navLinkInBar('brand-marquee')}>
                 {t.brands}
               </a>
-              <div className="h-5 w-px shrink-0 bg-black/15" aria-hidden />
+              <div className="h-5 w-px shrink-0 bg-black/20" aria-hidden />
               <div className="flex items-center gap-0.5">
                 {(['uz', 'ru', 'en'] as const).map((l) => (
                   <button
@@ -576,8 +568,8 @@ const Navbar = () => {
                     type="button"
                     onClick={() => setLang(l)}
                     className={cn(
-                      'min-w-[2rem] h-8 rounded-full text-[9px] font-bold uppercase tracking-wide transition-colors text-black/50 hover:text-black',
-                      lang === l && 'bg-black/10 text-black'
+                      'h-8 min-w-[2.25rem] rounded-full text-[11px] font-semibold uppercase leading-none tracking-normal text-black/65 transition-colors hover:text-black',
+                      lang === l && 'bg-black/12 text-black'
                     )}
                   >
                     {l}
@@ -590,15 +582,15 @@ const Navbar = () => {
           {/* phone/search buttons removed */}
 
           <div className="md:hidden fixed top-2 right-4 flex items-center z-[95]">
-            <div className="flex items-center rounded-full bg-white/50 backdrop-blur-2xl supports-[backdrop-filter]:bg-white/38 pl-2 pr-1 py-1 gap-0.5 border border-white/65 ring-1 ring-black/5">
+            <div className="flex items-center gap-0.5 rounded-full border border-black/12 bg-white/90 py-1 pl-2 pr-1 shadow-[0_6px_22px_-8px_rgba(0,0,0,0.18)] ring-1 ring-black/[0.06] backdrop-blur-xl supports-[backdrop-filter]:bg-white/82">
               {(['uz', 'ru', 'en'] as const).map((l) => (
                 <button
                   key={l}
                   type="button"
                   onClick={() => setLang(l)}
                   className={cn(
-                    'px-2.5 py-1.5 rounded-full text-[9px] font-bold uppercase transition-colors text-black/50 hover:text-black',
-                    lang === l && 'bg-black/10 text-black'
+                    'rounded-full px-2.5 py-1.5 text-[11px] font-semibold uppercase leading-none tracking-normal text-black/65 transition-colors hover:text-black',
+                    lang === l && 'bg-black/12 text-black'
                   )}
                 >
                   {l}
@@ -624,25 +616,25 @@ const Navbar = () => {
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}
-          className="md:hidden fixed top-[3.9rem] left-4 right-4 z-[94] border border-white/65 ring-1 ring-black/5 rounded-2xl bg-white/65 backdrop-blur-2xl supports-[backdrop-filter]:bg-white/52 px-4 pt-4 pb-5 overflow-hidden"
+          className="md:hidden fixed top-[3.9rem] left-4 right-4 z-[94] overflow-hidden rounded-2xl border border-black/12 bg-white/92 px-4 pt-4 pb-5 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.2)] ring-1 ring-black/[0.06] backdrop-blur-xl supports-[backdrop-filter]:bg-white/85"
         >
           <div className="rounded-2xl bg-black overflow-hidden">
             <a
               href="#spotlight"
               onClick={() => setIsOpen(false)}
                 className={cn(
-                  'block text-center text-[13px] font-semibold uppercase tracking-[0.12em] py-3.5 border-b border-white/10 transition-colors',
-                  activeSection === 'spotlight' ? 'text-white bg-white/[0.09]' : 'text-white hover:bg-white/[0.06]'
+                  'block border-b border-white/10 py-3.5 text-center text-sm font-medium uppercase leading-snug tracking-[0.08em] text-white transition-colors antialiased',
+                  activeSection === 'spotlight' ? 'bg-white/[0.09]' : 'hover:bg-white/[0.06]'
                 )}
             >
-              {t.collections}
+              {t.home}
             </a>
             <a
               href="#daily-looks"
               onClick={() => setIsOpen(false)}
                 className={cn(
-                  'block text-center text-[13px] font-semibold uppercase tracking-[0.12em] py-3.5 border-b border-white/10 transition-colors',
-                  activeSection === 'daily-looks' ? 'text-white bg-white/[0.09]' : 'text-white hover:bg-white/[0.06]'
+                  'block border-b border-white/10 py-3.5 text-center text-sm font-medium uppercase leading-snug tracking-[0.08em] text-white transition-colors antialiased',
+                  activeSection === 'daily-looks' ? 'bg-white/[0.09]' : 'hover:bg-white/[0.06]'
                 )}
             >
               {t.dailyLooks}
@@ -651,38 +643,18 @@ const Navbar = () => {
               href="#clothes"
               onClick={() => setIsOpen(false)}
                 className={cn(
-                  'block text-center text-[13px] font-semibold uppercase tracking-[0.12em] py-3.5 border-b border-white/10 transition-colors',
-                  activeSection === 'clothes' ? 'text-white bg-white/[0.09]' : 'text-white hover:bg-white/[0.06]'
+                  'block border-b border-white/10 py-3.5 text-center text-sm font-medium uppercase leading-snug tracking-[0.08em] text-white transition-colors antialiased',
+                  activeSection === 'clothes' ? 'bg-white/[0.09]' : 'hover:bg-white/[0.06]'
                 )}
             >
               {t.clothes}
             </a>
             <a
-              href="#philosophy"
-              onClick={() => setIsOpen(false)}
-                className={cn(
-                  'block text-center text-[13px] font-semibold uppercase tracking-[0.12em] py-3.5 border-b border-white/10 transition-colors',
-                  activeSection === 'philosophy' ? 'text-white bg-white/[0.09]' : 'text-white hover:bg-white/[0.06]'
-                )}
-            >
-              {t.philosophy}
-            </a>
-            <a
               href="#branches"
               onClick={() => setIsOpen(false)}
                 className={cn(
-                  'block text-center text-[13px] font-semibold uppercase tracking-[0.12em] py-3.5 border-b border-white/10 transition-colors',
-                  activeSection === 'branches' ? 'text-white bg-white/[0.09]' : 'text-white hover:bg-white/[0.06]'
-                )}
-            >
-              {t.branches}
-            </a>
-            <a
-              href="#branches"
-              onClick={() => setIsOpen(false)}
-                className={cn(
-                  'block text-center text-[13px] font-semibold uppercase tracking-[0.12em] py-3.5 border-b border-white/10 transition-colors',
-                  activeSection === 'branches' ? 'text-white bg-white/[0.09]' : 'text-white hover:bg-white/[0.06]'
+                  'block border-b border-white/10 py-3.5 text-center text-sm font-medium uppercase leading-snug tracking-[0.08em] text-white transition-colors antialiased',
+                  activeSection === 'branches' ? 'bg-white/[0.09]' : 'hover:bg-white/[0.06]'
                 )}
             >
               {t.branches}
@@ -691,8 +663,8 @@ const Navbar = () => {
               href="#brand-marquee"
               onClick={() => setIsOpen(false)}
               className={cn(
-                'block text-center text-[13px] font-semibold uppercase tracking-[0.12em] py-3.5 transition-colors',
-                activeSection === 'brand-marquee' ? 'text-white bg-white/[0.09]' : 'text-white hover:bg-white/[0.06]'
+                'block py-3.5 text-center text-sm font-medium uppercase leading-snug tracking-[0.08em] text-white transition-colors antialiased',
+                activeSection === 'brand-marquee' ? 'bg-white/[0.09]' : 'hover:bg-white/[0.06]'
               )}
             >
               {t.brands}
@@ -854,50 +826,52 @@ const SpotlightSection = () => {
   const tPhilosophy = TRANSLATIONS[lang].philosophy;
 
   return (
-    <section id="spotlight" className="bg-gradient-to-b from-white to-neutral-50/50 scroll-mt-24 min-h-screen">
-      <div className="mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-[1600px] flex-col px-4 sm:px-6 lg:px-8 pt-[3.9rem] md:pt-[4.2rem] pb-5 md:pb-6">
+    <section id="spotlight" className="scroll-mt-24 overflow-x-hidden bg-gradient-to-b from-white to-neutral-50/50 min-h-0 lg:min-h-screen">
+      <div className="mx-auto flex w-full max-w-[1600px] flex-col px-4 pb-10 pt-[3.75rem] min-h-0 sm:px-6 sm:pb-8 sm:pt-[3.9rem] md:pt-[4.2rem] md:pb-6 lg:min-h-[calc(100dvh-4rem)] lg:px-8">
         {/* ~60% spotlight / ~40% philosophy (top) + logos (bottom) on large screens */}
-        <div className="grid flex-1 grid-cols-1 items-stretch gap-5 min-h-0 md:gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(260px,2fr)] lg:gap-7">
+        <div className="grid min-h-0 flex-1 grid-cols-1 items-stretch gap-6 min-[400px]:gap-7 md:gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(260px,2fr)] lg:gap-7">
           <div className="grid h-full min-h-0 grid-cols-1 justify-items-stretch gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,0.82fr)] sm:gap-5 lg:-translate-x-6 xl:-translate-x-10 2xl:-translate-x-14">
             <SpotlightCard
               cardKey="spring"
               index={0}
-              className="h-auto aspect-[9/16] min-h-[300px] sm:min-h-0 lg:h-full lg:aspect-auto"
+              className="h-auto min-h-[min(72vw,320px)] aspect-[9/16] sm:min-h-0 lg:h-full lg:aspect-auto lg:min-h-0"
             />
-            <div className="grid grid-rows-3 auto-rows-fr gap-4 sm:gap-5 h-full">
-              <SpotlightCard cardKey="newDrop" index={1} className="min-h-[120px] sm:min-h-0" />
-              <SpotlightCard cardKey="featured" index={2} className="min-h-[120px] sm:min-h-0" />
-              <SpotlightCard cardKey="special" index={3} className="min-h-[120px] sm:min-h-0" />
+            <div className="grid h-full auto-rows-fr grid-rows-3 gap-3.5 sm:gap-5">
+              <SpotlightCard cardKey="newDrop" index={1} className="min-h-[132px] sm:min-h-0" />
+              <SpotlightCard cardKey="featured" index={2} className="min-h-[132px] sm:min-h-0" />
+              <SpotlightCard cardKey="special" index={3} className="min-h-[132px] sm:min-h-0" />
             </div>
           </div>
 
-          <div className="flex min-h-0 w-full flex-col items-stretch gap-4 md:gap-5 lg:h-full">
+          <div className="flex min-h-0 w-full max-w-lg flex-col items-stretch gap-5 self-center sm:max-w-none md:gap-5 lg:h-full lg:max-w-none">
             <SectionReveal className="w-full shrink-0 lg:translate-x-5 xl:translate-x-8 2xl:translate-x-10">
               <div
                 id="philosophy"
-                className="scroll-mt-24 relative rounded-3xl border border-black/10 bg-white px-6 py-8 text-center shadow-[0_18px_60px_-40px_rgba(0,0,0,0.35)] sm:px-8 sm:py-9 lg:px-9 lg:py-10"
+                className="scroll-mt-24 relative rounded-2xl border border-black/10 bg-white px-5 py-7 text-center shadow-[0_18px_60px_-40px_rgba(0,0,0,0.35)] sm:rounded-3xl sm:px-7 sm:py-8 md:px-8 md:py-9 lg:px-9 lg:py-10"
               >
-                <div className="absolute -top-5 -left-5 h-12 w-12 rounded-full bg-black/5 blur-[0.5px]" aria-hidden />
-                <div className="absolute -bottom-6 -right-6 h-14 w-14 rounded-full bg-black/5 blur-[0.5px]" aria-hidden />
+                <div className="absolute -top-4 -left-4 h-10 w-10 rounded-full bg-black/5 blur-[0.5px] sm:-top-5 sm:-left-5 sm:h-12 sm:w-12" aria-hidden />
+                <div className="absolute -bottom-5 -right-5 h-12 w-12 rounded-full bg-black/5 blur-[0.5px] sm:-bottom-6 sm:-right-6 sm:h-14 sm:w-14" aria-hidden />
 
-                <div className="mb-4 flex items-center justify-center gap-3">
-                  <span className="h-3 w-3 shrink-0 rounded-full bg-black" aria-hidden />
-                  <p className="text-sm font-bold uppercase tracking-[0.28em] text-black/55">{tPhilosophy.label}</p>
+                <div className="mb-3 flex items-center justify-center gap-2.5 sm:mb-4 sm:gap-3">
+                  <span className="h-2.5 w-2.5 shrink-0 rounded-full bg-black sm:h-3 sm:w-3" aria-hidden />
+                  <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-black/55 sm:text-sm sm:tracking-[0.28em]">
+                    {tPhilosophy.label}
+                  </p>
                 </div>
 
-                <h2 className="mb-5 text-3xl font-black uppercase leading-tight text-black sm:text-4xl lg:text-[2.35rem] lg:leading-[1.12]">
+                <h2 className="text-balance mb-4 text-2xl font-black uppercase leading-[1.15] text-black sm:mb-5 sm:text-3xl sm:leading-tight md:text-4xl lg:text-[2.35rem] lg:leading-[1.12]">
                   {tPhilosophy.title}
                 </h2>
-                <div className="mx-auto mb-5 h-px w-28 bg-black/20" aria-hidden />
-                <p className="text-base leading-relaxed text-black/70 whitespace-pre-line sm:text-lg lg:text-[1.125rem] lg:leading-relaxed">
+                <div className="mx-auto mb-4 h-px w-24 bg-black/20 sm:mb-5" aria-hidden />
+                <p className="text-[15px] leading-[1.65] text-black/70 whitespace-pre-line sm:text-base sm:leading-relaxed md:text-lg lg:text-[1.125rem] lg:leading-relaxed">
                   {tPhilosophy.body}
                 </p>
 
-                <div className="mt-5 flex flex-wrap justify-center gap-2.5 sm:gap-3">
+                <div className="mt-5 flex flex-wrap justify-center gap-2 sm:gap-2.5 md:gap-3">
                   {PHILOSOPHY_BADGES_BY_LANG[lang].map((item) => (
                     <span
-                      key={item}
-                      className="inline-flex items-center rounded-full border border-black/15 bg-black/[0.03] px-3.5 py-2 text-[11px] font-bold uppercase tracking-[0.12em] text-black/70 sm:px-4"
+                      key={`${lang}-${item}`}
+                      className="inline-flex items-center rounded-full border border-black/15 bg-black/[0.03] px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.1em] text-black/70 sm:px-3.5 sm:py-2 sm:text-[11px] sm:tracking-[0.12em] md:px-4"
                     >
                       {item}
                     </span>
@@ -906,28 +880,28 @@ const SpotlightSection = () => {
               </div>
             </SectionReveal>
 
-            <SectionReveal className="flex min-h-[11rem] flex-1 flex-col basis-0 lg:min-h-0">
-              <div className="flex min-h-0 flex-1 items-center justify-center py-6 sm:py-8 lg:py-4">
+            <SectionReveal className="flex min-h-[10rem] flex-1 flex-col basis-0 sm:min-h-[11rem] lg:min-h-0">
+              <div className="flex min-h-0 flex-1 items-center justify-center py-7 sm:py-8 lg:py-4">
                 <div
-                  className="flex w-full max-w-lg flex-nowrap items-center justify-center gap-6 sm:max-w-none sm:gap-9 md:gap-11 lg:translate-x-6 lg:gap-12 xl:translate-x-10 xl:gap-16 2xl:translate-x-12"
+                  className="flex w-full max-w-md flex-nowrap items-center justify-center gap-5 sm:max-w-none sm:gap-8 md:gap-11 max-lg:translate-x-0 lg:max-w-none lg:translate-x-6 lg:gap-12 xl:translate-x-10 xl:gap-16 2xl:translate-x-12"
                   aria-label="210 × Anpa Limited"
                 >
                   <img
                     src={LOGO_210_SRC}
                     alt="210 Sports Wear"
-                    className="h-[clamp(5.5rem,44vw,11rem)] w-auto max-w-[47%] object-contain object-center sm:h-[clamp(6.25rem,38vw,12.5rem)] lg:h-[clamp(7.5rem,min(32vh,15rem),15rem)] xl:h-[clamp(8.5rem,min(36vh,17rem),17rem)]"
+                    className="h-[clamp(4.75rem,38vw,9.5rem)] w-auto max-w-[46%] object-contain object-center sm:h-[clamp(6.25rem,34vw,12rem)] lg:h-[clamp(7.5rem,min(32vh,15rem),15rem)] xl:h-[clamp(8.5rem,min(36vh,17rem),17rem)]"
                     loading="eager"
                     decoding="async"
                     referrerPolicy="no-referrer"
                   />
                   <span
-                    className="h-[clamp(5rem,40vw,10rem)] w-px shrink-0 bg-black/15 sm:h-[clamp(5.75rem,34vw,11.5rem)] lg:h-[clamp(6.5rem,min(28vh,13rem),13rem)] xl:h-[clamp(7.5rem,min(32vh,15rem),15rem)]"
+                    className="h-[clamp(4.25rem,32vw,8.5rem)] w-px shrink-0 bg-black/15 sm:h-[clamp(5.75rem,30vw,11.5rem)] lg:h-[clamp(6.5rem,min(28vh,13rem),13rem)] xl:h-[clamp(7.5rem,min(32vh,15rem),15rem)]"
                     aria-hidden
                   />
                   <img
                     src={LOGO_COLLECTIONS_SRC}
                     alt="Anpa Limited"
-                    className="h-[clamp(5.25rem,42vw,10.5rem)] w-auto max-w-[47%] object-contain object-center sm:h-[clamp(6rem,36vw,12rem)] lg:h-[clamp(7rem,min(28vh,13.5rem),13.5rem)] xl:h-[clamp(8rem,min(32vh,15.5rem),15.5rem)]"
+                    className="h-[clamp(4.5rem,36vw,9rem)] w-auto max-w-[46%] object-contain object-center sm:h-[clamp(6rem,32vw,11.5rem)] lg:h-[clamp(7rem,min(28vh,13.5rem),13.5rem)] xl:h-[clamp(8rem,min(32vh,15.5rem),15.5rem)]"
                     loading="eager"
                     decoding="async"
                     referrerPolicy="no-referrer"
@@ -1451,7 +1425,7 @@ export default function App() {
 
   return (
     <LangContext.Provider value={{ lang, setLang }}>
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen overflow-x-hidden bg-white">
         <Navbar />
         <CartFloatingButton />
 
