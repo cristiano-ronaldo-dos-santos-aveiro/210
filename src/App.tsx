@@ -668,10 +668,10 @@ const BrandMarquee = () => {
   return (
     <div
       id="brand-marquee"
-      className="relative py-7 md:py-9 bg-black border-y border-white/10 overflow-hidden scroll-mt-24"
+      className="brand-marquee relative py-7 md:py-9 bg-gradient-to-b from-black via-neutral-950 to-black border-y border-white/10 overflow-hidden scroll-mt-24"
     >
-      <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none" />
-      <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none" />
+      <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-black via-black/80 to-transparent z-10 pointer-events-none" />
+      <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-black via-black/80 to-transparent z-10 pointer-events-none" />
       <div className="flex animate-marquee items-center w-max">
         {loop.map((item, i) => (
           <BrandMarqueeLogo key={`${item.slug}-${i}`} alt={item.alt} slug={item.slug} />
@@ -929,12 +929,21 @@ export default function App() {
 
         <style>{`
           @keyframes marquee {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
+            0% { transform: translate3d(0,0,0); }
+            100% { transform: translate3d(-50%,0,0); }
           }
           .animate-marquee {
             display: inline-flex;
-            animation: marquee 30s linear infinite;
+            animation: marquee 28s linear infinite;
+            will-change: transform;
+          }
+          .brand-marquee:hover .animate-marquee {
+            animation-play-state: paused;
+          }
+          @media (prefers-reduced-motion: reduce) {
+            .animate-marquee {
+              animation: none;
+            }
           }
           @keyframes float {
             0%, 100% { transform: translateY(0); }
