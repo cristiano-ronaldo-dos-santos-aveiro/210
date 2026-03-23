@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'motion/react';
 import { ShoppingBag, Menu, X, Instagram, MapPin, Phone, ArrowUpRight, Clock, ArrowRight } from 'lucide-react';
 import { cn } from './lib/utils';
@@ -71,6 +71,7 @@ const SPRING_SPOTLIGHT_SLIDES = [
   new URL('../photo/Kiyimlar/photo_2026-03-23_17-05-08.jpg', import.meta.url).href,
   new URL('../photo/Kiyimlar/photo_2026-03-23_17-10-38.jpg', import.meta.url).href
 ] as const;
+const DAILY_LOOK_IMAGE_SRC = new URL('../photo/Kiyimlar/photo_2026-03-23_17-05-08.jpg', import.meta.url).href;
 
 /** Spotlight slaydlari (oyoq kiyim + soatlar + atirlar) — bir xil tezlik va fade */
 const SPOTLIGHT_SLIDE_MS = 2800;
@@ -149,22 +150,41 @@ const TelegramIcon = ({ className, size = 22 }: { className?: string; size?: num
 type Language = 'uz' | 'ru' | 'en';
 
 interface Translations {
+  ui: {
+    addToCart: string;
+  };
   nav: {
     collections: string;
+    dailyLooks: string;
     brands: string;
+    clothes: string;
     philosophy: string;
     branches: string;
   };
   cards: {
-    featured: { label: string; title: string; body: string };
-    spring: { label: string; title: string; body: string };
-    newDrop: { label: string; title: string; body: string };
-    special: { label: string; title: string; body: string };
+    featured: { label: string; title: string; body: string; price: string };
+    spring: { label: string; title: string; body: string; price: string };
+    newDrop: { label: string; title: string; body: string; price: string };
+    special: { label: string; title: string; body: string; price: string };
   };
   philosophy: {
     label: string;
     title: string;
     body: string;
+  };
+  clothes: {
+    label: string;
+    title: string;
+    body: string;
+    items: readonly { name: string; price: string }[];
+  };
+  dailyLooks: {
+    label: string;
+    title: string;
+    body: string;
+    priceLabel: string;
+    updatedLabel: string;
+    items: readonly { name: string; price: string }[];
   };
   branches: {
     label: string;
@@ -178,9 +198,14 @@ interface Translations {
 
 const TRANSLATIONS: Record<Language, Translations> = {
   uz: {
+    ui: {
+      addToCart: "Savatchaga"
+    },
     nav: {
       collections: "Kolleksiyalar",
+      dailyLooks: "Kunlik look",
       brands: "Brendlar",
+      clothes: "Kiyimlar",
       philosophy: "Falsafa",
       branches: "Filiallar"
     },
@@ -188,28 +213,57 @@ const TRANSLATIONS: Record<Language, Translations> = {
       featured: {
         label: "Soatlar",
         title: "Erkaklar soati",
-        body: "Shveytsariya va dunyo brendlari: mehanik va zamonaviy kolleksiyalar — premium do'konda."
+        body: "Shveytsariya va dunyo brendlari: mehanik va zamonaviy kolleksiyalar — premium do'konda.",
+        price: "dan 12 500 000 so'm"
       },
       spring: {
         label: "Bahor",
         title: "Bahor kolleksiyasi",
-        body: "Premium paltolar, jakketlar va bahor palitrasi — zamonaviy erkak uchun."
+        body: "Premium paltolar, jakketlar va bahor palitrasi — zamonaviy erkak uchun.",
+        price: "dan 2 800 000 so'm"
       },
       newDrop: {
         label: "Poyabzal",
         title: "Oyoq kiymlar",
-        body: "Teri, sport va klassik siluetlar — cheklangan partiyalar va original modellar."
+        body: "Teri, sport va klassik siluetlar — cheklangan partiyalar va original modellar.",
+        price: "dan 3 200 000 so'm"
       },
       special: {
         label: "Parfyumeriya",
         title: "Atir va odekolon",
-        body: "Niche va lyuks uylar: uzoq saqlanadigan erkaklar aromati — tanlov va maslahat."
+        body: "Niche va lyuks uylar: uzoq saqlanadigan erkaklar aromati — tanlov va maslahat.",
+        price: "dan 890 000 so'm"
       }
     },
     philosophy: {
       label: "Falsafa",
       title: "Biz oddiylikdan yiroqmiz!",
-      body: "Luxury faqat kiyim bilan o'lchanmaydi. U service bilan boshlanadi va yuqori service mukammallikka olib boradi !\n\n210 va Anba shu service-ni o'z mijozlariga taqdim qiladi !"
+      body: "Luxury faqat kiyim bilan o'lchanmaydi. U servis bilan boshlanadi va yuqori servis mukammallikka olib boradi.\n\n210 va Anba shu servisni o'z mijozlariga taqdim qiladi!\n\nBiz oddiylikdan yiroqmiz. Oddiylikni hamma joyda ko'rasiz, lekin 210 va Anba o'z mijozlari uchun yuqori servis va premium mahsulotlarni taqdim qilishni o'z yo'li deb biladi!"
+    },
+    clothes: {
+      label: "Kiyimlar",
+      title: "Yangi kiyimlar bo'limi",
+      body: "",
+      items: [
+        { name: 'Ko\'ylak va polo', price: '1 150 000 so\'m' },
+        { name: 'Kurtka va paltolar', price: '4 200 000 so\'m' },
+        { name: 'Shim va denim', price: '1 890 000 so\'m' },
+        { name: 'Aksessuarlar', price: 'dan 450 000 so\'m' },
+        { name: 'Sport kiyim', price: '2 100 000 so\'m' },
+        { name: 'Teri buyumlar', price: 'dan 3 500 000 so\'m' }
+      ]
+    },
+    dailyLooks: {
+      label: "Kunlik look",
+      title: "Bugungi obraz",
+      body: "Har kuni yangi look joylanadi. Chapdagi 9:16 kartada asosiy outfit, o'ng tomonda esa qismlar va narxlar beriladi.",
+      priceLabel: "Narx",
+      updatedLabel: "Har kuni yangilanadi",
+      items: [
+        { name: "Zip jaket", price: "1 290 000 so'm" },
+        { name: "Shim", price: "890 000 so'm" },
+        { name: "Polo", price: "640 000 so'm" }
+      ]
     },
     branches: {
       label: "Filiallar",
@@ -221,9 +275,14 @@ const TRANSLATIONS: Record<Language, Translations> = {
     },
   },
   ru: {
+    ui: {
+      addToCart: "В корзину"
+    },
     nav: {
       collections: "Коллекции",
+      dailyLooks: "Образ дня",
       brands: "Бренды",
+      clothes: "Одежда",
       philosophy: "Философия",
       branches: "Филиалы"
     },
@@ -231,28 +290,57 @@ const TRANSLATIONS: Record<Language, Translations> = {
       featured: {
         label: "Часы",
         title: "Мужские часы",
-        body: "Швейцария и мировые дома: механика и современные линии — в премиальном бутике."
+        body: "Швейцария и мировые дома: механика и современные линии — в премиальном бутике.",
+        price: "от 12 500 000 сум"
       },
       spring: {
         label: "Весна",
         title: "Весенняя коллекция",
-        body: "Премиальные пальто, куртки и палитра сезона — для мужчины с характером."
+        body: "Премиальные пальто, куртки и палитра сезона — для мужчины с характером.",
+        price: "от 2 800 000 сум"
       },
       newDrop: {
         label: "Обувь",
         title: "Люксовая обувь",
-        body: "Кожа, спорт и классика: лимитированные модели и оригинал — только для мужчин."
+        body: "Кожа, спорт и классика: лимитированные модели и оригинал — только для мужчин.",
+        price: "от 3 200 000 сум"
       },
       special: {
         label: "Парфюм",
         title: "Ароматы",
-        body: "Ниша и люксовые дома: стойкие мужские композиции — подбор и консультация."
+        body: "Ниша и люксовые дома: стойкие мужские композиции — подбор и консультация.",
+        price: "от 890 000 сум"
       }
     },
     philosophy: {
       label: "Философия",
       title: "Мы далеки от обыденности!",
       body: "210 — это история бренда и его ценности. Мы далеки от обыденности: каждая вещь из первых рук, оригинальная и с гарантией качества. Мы предлагаем отобранные образы со всего мира, сочетая спорт и стиль. Магазин для тех, кто не идёт на компромиссы — с 2016 года."
+    },
+    clothes: {
+      label: "Одежда",
+      title: "Раздел одежды",
+      body: "",
+      items: [
+        { name: 'Рубашки и поло', price: '1 150 000 сум' },
+        { name: 'Куртки и пальто', price: '4 200 000 сум' },
+        { name: 'Брюки и деним', price: '1 890 000 сум' },
+        { name: 'Аксессуары', price: 'от 450 000 сум' },
+        { name: 'Спортивная одежда', price: '2 100 000 сум' },
+        { name: 'Кожаные изделия', price: 'от 3 500 000 сум' }
+      ]
+    },
+    dailyLooks: {
+      label: "Образ дня",
+      title: "Сегодняшний образ",
+      body: "Каждый день здесь будет новый look. Слева — главная карточка 9:16, справа — состав и цены.",
+      priceLabel: "Цена",
+      updatedLabel: "Обновляется ежедневно",
+      items: [
+        { name: "Zip-куртка", price: "1 290 000 сум" },
+        { name: "Брюки", price: "890 000 сум" },
+        { name: "Поло", price: "640 000 сум" }
+      ]
     },
     branches: {
       label: "Филиалы",
@@ -264,9 +352,14 @@ const TRANSLATIONS: Record<Language, Translations> = {
     },
   },
   en: {
+    ui: {
+      addToCart: "Add to basket"
+    },
     nav: {
       collections: "Collections",
+      dailyLooks: "Daily look",
       brands: "Brands",
+      clothes: "Clothes",
       philosophy: "Philosophy",
       branches: "Branches"
     },
@@ -274,28 +367,57 @@ const TRANSLATIONS: Record<Language, Translations> = {
       featured: {
         label: "Watches",
         title: "Men’s timepieces",
-        body: "Swiss houses and global maisons — mechanical and contemporary lines, curated for him."
+        body: "Swiss houses and global maisons — mechanical and contemporary lines, curated for him.",
+        price: "from 12,500,000 UZS"
       },
       spring: {
         label: "Spring",
         title: "Spring collection",
-        body: "Premium coats, jackets, and a seasonal palette — modern luxury menswear."
+        body: "Premium coats, jackets, and a seasonal palette — modern luxury menswear.",
+        price: "from 2,800,000 UZS"
       },
       newDrop: {
         label: "Footwear",
         title: "Luxury shoes",
-        body: "Leather, sport, and classic profiles — limited runs and authentic pairs for men."
+        body: "Leather, sport, and classic profiles — limited runs and authentic pairs for men.",
+        price: "from 3,200,000 UZS"
       },
       special: {
         label: "Fragrance",
         title: "Perfumes & cologne",
-        body: "Niche and luxury houses — long-lasting men’s scents, with expert guidance."
+        body: "Niche and luxury houses — long-lasting men’s scents, with expert guidance.",
+        price: "from 890,000 UZS"
       }
     },
     philosophy: {
       label: "Philosophy",
       title: "We are far from ordinary!",
       body: "210 is the history and values of the brand. We are far from ordinary: each item is first-hand, original and with a guarantee of quality. We offer selected looks from around the world, combining sport and style. A store for those who do not compromise — since 2016."
+    },
+    clothes: {
+      label: "Clothes",
+      title: "Clothing section",
+      body: "",
+      items: [
+        { name: 'Shirts & polos', price: '1,150,000 UZS' },
+        { name: 'Jackets & coats', price: '4,200,000 UZS' },
+        { name: 'Trousers & denim', price: '1,890,000 UZS' },
+        { name: 'Accessories', price: 'from 450,000 UZS' },
+        { name: 'Sportswear', price: '2,100,000 UZS' },
+        { name: 'Leather goods', price: 'from 3,500,000 UZS' }
+      ]
+    },
+    dailyLooks: {
+      label: "Daily look",
+      title: "Look of the day",
+      body: "A new look appears here every day. Left side is a large 9:16 card; right side shows pieces and prices.",
+      priceLabel: "Price",
+      updatedLabel: "Updated daily",
+      items: [
+        { name: "Zip jacket", price: "1,290,000 UZS" },
+        { name: "Trousers", price: "890,000 UZS" },
+        { name: "Polo shirt", price: "640,000 UZS" }
+      ]
     },
     branches: {
       label: "Branches",
@@ -308,6 +430,12 @@ const TRANSLATIONS: Record<Language, Translations> = {
   }
 };
 
+const PHILOSOPHY_BADGES_BY_LANG: Record<Language, readonly string[]> = {
+  uz: ['Original mahsulotlar', 'Premium service', 'Tezkor aloqa'],
+  ru: ['Оригинальные товары', 'Премиум сервис', 'Быстрая связь'],
+  en: ['Original products', 'Premium service', 'Fast support']
+};
+
 // --- Context for Language ---
 const LangContext = React.createContext<{ lang: Language; setLang: (l: Language) => void }>({ lang: 'uz', setLang: () => {} });
 
@@ -315,24 +443,85 @@ const LangContext = React.createContext<{ lang: Language; setLang: (l: Language)
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const sectionIds = ['spotlight', 'daily-looks', 'clothes', 'brand-marquee', 'branches', 'philosophy'] as const;
+  const [activeSection, setActiveSection] = useState<(typeof sectionIds)[number]>('spotlight');
+  const visibleRatiosRef = useRef<Record<(typeof sectionIds)[number], number>>({
+    spotlight: 0,
+    'daily-looks': 0,
+    clothes: 0,
+    'brand-marquee': 0,
+    branches: 0,
+    philosophy: 0
+  });
   const { lang, setLang } = React.useContext(LangContext);
   const t = TRANSLATIONS[lang].nav;
 
-  const navLinkInBar =
-    'inline-flex items-center justify-center px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-white/75 hover:text-white hover:bg-white/10 rounded-full transition-all duration-300';
+  useEffect(() => {
+    const sections = sectionIds
+      .map((id) => document.getElementById(id))
+      .filter(Boolean) as HTMLElement[];
+    if (!sections.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          const id = entry.target.id as (typeof sectionIds)[number];
+          visibleRatiosRef.current[id] = entry.isIntersecting ? entry.intersectionRatio : 0;
+        }
+
+        let next: (typeof sectionIds)[number] = activeSection;
+        let maxRatio = -1;
+        for (const id of sectionIds) {
+          const ratio = visibleRatiosRef.current[id] ?? 0;
+          if (ratio > maxRatio) {
+            maxRatio = ratio;
+            next = id;
+          }
+        }
+
+        if (maxRatio <= 0.02) {
+          const firstVisible = sectionIds.find((id) => {
+            const el = document.getElementById(id);
+            if (!el) return false;
+            const rect = el.getBoundingClientRect();
+            return rect.top <= window.innerHeight * 0.35 && rect.bottom >= window.innerHeight * 0.2;
+          });
+          if (firstVisible) next = firstVisible;
+        }
+
+        setActiveSection(next);
+      },
+      {
+        root: null,
+        rootMargin: '-18% 0px -55% 0px',
+        threshold: [0.05, 0.2, 0.4, 0.65, 0.9]
+      }
+    );
+
+    sections.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [activeSection]);
+
+  const navLinkInBar = (id: (typeof sectionIds)[number]) =>
+    cn(
+      'inline-flex items-center justify-center px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] rounded-full transition-all duration-300',
+      activeSection === id
+        ? 'bg-black/10 text-black'
+        : 'text-black/60 hover:text-black hover:bg-black/5'
+    );
   const iconInBar = 'p-2.5 rounded-full text-white hover:bg-white/10 transition-colors duration-300 hover:scale-[1.06]';
   const logoSep = 'text-black/30';
 
   return (
     <motion.nav
       initial={false}
-      className="fixed top-0 left-0 right-0 z-50 border-b border-black/[0.06] bg-white/55 backdrop-blur-2xl ring-1 ring-white/15 shadow-[0_12px_45px_-35px_rgba(0,0,0,0.6)]"
+      className="relative z-40 bg-transparent"
     >
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10">
         <div className="flex items-center justify-between h-[3.75rem] md:h-[4rem] gap-3">
           <motion.a
             href="#"
-            className="flex-shrink-0 flex items-center gap-2 md:gap-2.5 z-10"
+            className="fixed top-2 left-4 sm:left-6 lg:left-10 z-[96] flex-shrink-0 flex items-center gap-2 md:gap-2.5 rounded-full bg-white px-3 py-2 border border-white/65 ring-1 ring-black/5"
             whileHover={{ opacity: 0.98, scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             aria-label="210 × Anpa Limited"
@@ -359,21 +548,27 @@ const Navbar = () => {
           </motion.a>
 
           {/* One black bar: nav links + languages */}
-          <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 pointer-events-none [&>*]:pointer-events-auto">
-            <div className="flex items-center rounded-full bg-black px-4 lg:px-5 py-2 gap-3 lg:gap-4 shadow-md border border-white/10">
-              <a href="#spotlight" className={navLinkInBar}>
+          <div className="hidden md:flex fixed top-2 left-1/2 -translate-x-1/2 z-[95] pointer-events-none [&>*]:pointer-events-auto">
+            <div className="flex items-center rounded-full bg-white/45 backdrop-blur-2xl supports-[backdrop-filter]:bg-white/35 px-4 lg:px-5 py-2 gap-3 lg:gap-4 border border-white/65 ring-1 ring-black/5">
+              <a href="#spotlight" className={navLinkInBar('spotlight')}>
                 {t.collections}
               </a>
-              <a href="#philosophy" className={navLinkInBar}>
+              <a href="#daily-looks" className={navLinkInBar('daily-looks')}>
+                {t.dailyLooks}
+              </a>
+              <a href="#clothes" className={navLinkInBar('clothes')}>
+                {t.clothes}
+              </a>
+              <a href="#philosophy" className={navLinkInBar('philosophy')}>
                 {t.philosophy}
               </a>
-              <a href="#branches" className={navLinkInBar}>
+              <a href="#branches" className={navLinkInBar('branches')}>
                 {t.branches}
               </a>
-              <a href="#brand-marquee" className={navLinkInBar}>
+              <a href="#brand-marquee" className={navLinkInBar('brand-marquee')}>
                 {t.brands}
               </a>
-              <div className="h-5 w-px shrink-0 bg-white/25" aria-hidden />
+              <div className="h-5 w-px shrink-0 bg-black/15" aria-hidden />
               <div className="flex items-center gap-0.5">
                 {(['uz', 'ru', 'en'] as const).map((l) => (
                   <button
@@ -381,8 +576,8 @@ const Navbar = () => {
                     type="button"
                     onClick={() => setLang(l)}
                     className={cn(
-                      'min-w-[2rem] h-8 rounded-full text-[9px] font-bold uppercase tracking-wide transition-colors text-white/55 hover:text-white',
-                      lang === l && 'bg-white/15 text-white'
+                      'min-w-[2rem] h-8 rounded-full text-[9px] font-bold uppercase tracking-wide transition-colors text-black/50 hover:text-black',
+                      lang === l && 'bg-black/10 text-black'
                     )}
                   >
                     {l}
@@ -394,16 +589,16 @@ const Navbar = () => {
 
           {/* phone/search buttons removed */}
 
-          <div className="md:hidden flex items-center z-10">
-            <div className="flex items-center rounded-full bg-black pl-2 pr-1 py-1 gap-0.5 shadow-md">
+          <div className="md:hidden fixed top-2 right-4 flex items-center z-[95]">
+            <div className="flex items-center rounded-full bg-white/50 backdrop-blur-2xl supports-[backdrop-filter]:bg-white/38 pl-2 pr-1 py-1 gap-0.5 border border-white/65 ring-1 ring-black/5">
               {(['uz', 'ru', 'en'] as const).map((l) => (
                 <button
                   key={l}
                   type="button"
                   onClick={() => setLang(l)}
                   className={cn(
-                    'px-2.5 py-1.5 rounded-full text-[9px] font-bold uppercase transition-colors text-white/55 hover:text-white',
-                    lang === l && 'bg-white/15 text-white'
+                    'px-2.5 py-1.5 rounded-full text-[9px] font-bold uppercase transition-colors text-black/50 hover:text-black',
+                    lang === l && 'bg-black/10 text-black'
                   )}
                 >
                   {l}
@@ -412,7 +607,7 @@ const Navbar = () => {
               <motion.button
                 type="button"
                 onClick={() => setIsOpen(!isOpen)}
-                className="p-2 rounded-full text-white hover:bg-white/10 transition-colors"
+                className="p-2 rounded-full text-black hover:bg-black/5 transition-colors"
                 whileTap={{ scale: 0.92 }}
                 aria-expanded={isOpen}
                 aria-label="Menu"
@@ -429,34 +624,76 @@ const Navbar = () => {
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}
-          className="md:hidden border-t border-black/8 bg-white/55 backdrop-blur-2xl ring-1 ring-white/15 px-4 pt-4 pb-8 overflow-hidden"
+          className="md:hidden fixed top-[3.9rem] left-4 right-4 z-[94] border border-white/65 ring-1 ring-black/5 rounded-2xl bg-white/65 backdrop-blur-2xl supports-[backdrop-filter]:bg-white/52 px-4 pt-4 pb-5 overflow-hidden"
         >
-          <div className="rounded-2xl bg-black overflow-hidden shadow-md">
+          <div className="rounded-2xl bg-black overflow-hidden">
             <a
               href="#spotlight"
               onClick={() => setIsOpen(false)}
-              className="block text-center text-[13px] font-semibold uppercase tracking-[0.12em] py-3.5 text-white border-b border-white/10 hover:bg-white/[0.06] transition-colors"
+                className={cn(
+                  'block text-center text-[13px] font-semibold uppercase tracking-[0.12em] py-3.5 border-b border-white/10 transition-colors',
+                  activeSection === 'spotlight' ? 'text-white bg-white/[0.09]' : 'text-white hover:bg-white/[0.06]'
+                )}
             >
               {t.collections}
             </a>
             <a
+              href="#daily-looks"
+              onClick={() => setIsOpen(false)}
+                className={cn(
+                  'block text-center text-[13px] font-semibold uppercase tracking-[0.12em] py-3.5 border-b border-white/10 transition-colors',
+                  activeSection === 'daily-looks' ? 'text-white bg-white/[0.09]' : 'text-white hover:bg-white/[0.06]'
+                )}
+            >
+              {t.dailyLooks}
+            </a>
+            <a
+              href="#clothes"
+              onClick={() => setIsOpen(false)}
+                className={cn(
+                  'block text-center text-[13px] font-semibold uppercase tracking-[0.12em] py-3.5 border-b border-white/10 transition-colors',
+                  activeSection === 'clothes' ? 'text-white bg-white/[0.09]' : 'text-white hover:bg-white/[0.06]'
+                )}
+            >
+              {t.clothes}
+            </a>
+            <a
               href="#philosophy"
               onClick={() => setIsOpen(false)}
-              className="block text-center text-[13px] font-semibold uppercase tracking-[0.12em] py-3.5 text-white border-b border-white/10 hover:bg-white/[0.06] transition-colors"
+                className={cn(
+                  'block text-center text-[13px] font-semibold uppercase tracking-[0.12em] py-3.5 border-b border-white/10 transition-colors',
+                  activeSection === 'philosophy' ? 'text-white bg-white/[0.09]' : 'text-white hover:bg-white/[0.06]'
+                )}
             >
               {t.philosophy}
             </a>
             <a
               href="#branches"
               onClick={() => setIsOpen(false)}
-              className="block text-center text-[13px] font-semibold uppercase tracking-[0.12em] py-3.5 text-white border-b border-white/10 hover:bg-white/[0.06] transition-colors"
+                className={cn(
+                  'block text-center text-[13px] font-semibold uppercase tracking-[0.12em] py-3.5 border-b border-white/10 transition-colors',
+                  activeSection === 'branches' ? 'text-white bg-white/[0.09]' : 'text-white hover:bg-white/[0.06]'
+                )}
+            >
+              {t.branches}
+            </a>
+            <a
+              href="#branches"
+              onClick={() => setIsOpen(false)}
+                className={cn(
+                  'block text-center text-[13px] font-semibold uppercase tracking-[0.12em] py-3.5 border-b border-white/10 transition-colors',
+                  activeSection === 'branches' ? 'text-white bg-white/[0.09]' : 'text-white hover:bg-white/[0.06]'
+                )}
             >
               {t.branches}
             </a>
             <a
               href="#brand-marquee"
               onClick={() => setIsOpen(false)}
-              className="block text-center text-[13px] font-semibold uppercase tracking-[0.12em] py-3.5 text-white hover:bg-white/[0.06] transition-colors"
+              className={cn(
+                'block text-center text-[13px] font-semibold uppercase tracking-[0.12em] py-3.5 transition-colors',
+                activeSection === 'brand-marquee' ? 'text-white bg-white/[0.09]' : 'text-white hover:bg-white/[0.06]'
+              )}
             >
               {t.brands}
             </a>
@@ -487,6 +724,11 @@ const SPOTLIGHT_SLIDE_SETS: Partial<Record<SpotlightKey, readonly string[]>> = {
   special: PERFUME_SPOTLIGHT_SLIDES
 };
 
+const SLIDE_OBJECT_POSITION_BY_FILENAME: Record<string, string> = {
+  // Shift this specific shoe photo up so less bottom area is shown.
+  'photo_2025-01-20_17-45-03.jpg': 'object-[50%_70%]'
+};
+
 const SpotlightCrossfadeSlideshow: React.FC<{ slides: readonly string[]; label: string }> = ({ slides, label }) => {
   const [active, setActive] = useState(0);
 
@@ -508,7 +750,10 @@ const SpotlightCrossfadeSlideshow: React.FC<{ slides: readonly string[]; label: 
           key={src}
           src={src}
           alt=""
-          className="absolute inset-0 h-full w-full object-cover object-center"
+          className={cn(
+            'absolute inset-0 h-full w-full object-cover object-center',
+            Object.entries(SLIDE_OBJECT_POSITION_BY_FILENAME).find(([filename]) => src.includes(filename))?.[1]
+          )}
           loading={idx === 0 ? 'eager' : 'lazy'}
           decoding="async"
           initial={false}
@@ -536,25 +781,32 @@ const SpotlightCrossfadeSlideshow: React.FC<{ slides: readonly string[]; label: 
   );
 };
 
-const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number }> = ({ cardKey, index }) => {
+const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number; className?: string }> = ({ cardKey, index, className }) => {
   const { lang } = React.useContext(LangContext);
   const copy = TRANSLATIONS[lang].cards[cardKey];
+  const ui = TRANSLATIONS[lang].ui;
   const overlay = SPOTLIGHT_ACCENT[cardKey];
   const slideSet = SPOTLIGHT_SLIDE_SETS[cardKey];
 
   return (
-    <motion.a
-      href={CONTACT_TELEGRAM}
-      target="_blank"
-      rel="noopener noreferrer"
+    <motion.div
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.08, type: 'spring', stiffness: 76, damping: 22 }}
       whileTap={{ scale: 0.985 }}
       whileHover={{ y: -4 }}
-      className="group relative w-full h-full min-h-[220px] sm:min-h-0 rounded-2xl overflow-hidden border border-black/[0.08] shadow-[0_20px_48px_-30px_rgba(0,0,0,0.42)] bg-neutral-900"
-      aria-label={`${copy.title} — open in Telegram`}
+      className={cn(
+        "group relative w-full h-full min-h-[220px] sm:min-h-0 rounded-2xl overflow-hidden border border-black/[0.08] shadow-[0_20px_48px_-30px_rgba(0,0,0,0.42)] bg-neutral-900",
+        className
+      )}
     >
+      <a
+        href={CONTACT_TELEGRAM}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="absolute inset-0 z-[1]"
+        aria-label={`${copy.title} — open in Telegram`}
+      />
       <div className="absolute inset-0">
         {slideSet ? (
           <div className="absolute inset-0 overflow-hidden">
@@ -573,69 +825,117 @@ const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number }> = ({ car
         <div className={cn('absolute inset-0 bg-gradient-to-t', overlay)} />
         <div className="absolute inset-0 ring-1 ring-inset ring-white/10 rounded-2xl pointer-events-none" />
       </div>
-      <div className="relative z-10 flex flex-col justify-end h-full p-3.5 sm:p-4 text-left min-h-0">
+      <div className="relative z-[2] flex flex-col justify-end h-full p-3.5 sm:p-4 text-left min-h-0 pointer-events-none">
         <span className="inline-flex w-fit text-[9px] font-bold uppercase tracking-[0.2em] text-white/90 bg-white/15 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/20 mb-1.5">
           {copy.label}
         </span>
         <h2 className="text-sm sm:text-[15px] font-black uppercase tracking-tight text-white drop-shadow-sm leading-tight">{copy.title}</h2>
-        <p className="mt-1 text-[11px] sm:text-xs text-white/85 leading-snug line-clamp-3">{copy.body}</p>
+        <p className="mt-1 text-[11px] sm:text-xs text-white/85 leading-snug line-clamp-2">{copy.body}</p>
+        <div className="pointer-events-auto mt-2 flex items-center justify-end gap-2 border-t border-white/20 pt-2">
+          <button
+            type="button"
+            className="inline-flex shrink-0 items-center justify-center rounded-full border border-white/35 bg-white/15 p-2 text-white backdrop-blur-md transition-colors hover:bg-white/25"
+            aria-label={ui.addToCart}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+          >
+            <ShoppingBag size={16} strokeWidth={1.85} />
+          </button>
+        </div>
       </div>
-    </motion.a>
+    </motion.div>
   );
 };
 
 const SpotlightSection = () => {
   const { lang } = React.useContext(LangContext);
   const tPhilosophy = TRANSLATIONS[lang].philosophy;
-  const philosophyBadgesByLang: Record<Language, readonly string[]> = {
-    uz: ['Original mahsulotlar', 'Premium service', 'Tezkor aloqa'],
-    ru: ['Оригинальные товары', 'Премиум сервис', 'Быстрая связь'],
-    en: ['Original products', 'Premium service', 'Fast support']
-  };
 
   return (
     <section id="spotlight" className="bg-gradient-to-b from-white to-neutral-50/50 scroll-mt-24 min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-[4.2rem] md:pt-[4.5rem] pb-8 md:pb-10 min-h-[calc(100vh-4rem)] flex flex-col">
-        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.18fr)_minmax(360px,0.82fr)] gap-5 md:gap-6 items-stretch flex-1">
-          <div className="grid grid-cols-1 sm:grid-cols-2 sm:grid-rows-2 gap-4 sm:gap-5 auto-rows-fr h-full">
-            {SPOTLIGHT_ORDER.map((key, i) => (
-              <SpotlightCard key={key} cardKey={key} index={i} />
-            ))}
+      <div className="mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-[1600px] flex-col px-4 sm:px-6 lg:px-8 pt-[3.9rem] md:pt-[4.2rem] pb-5 md:pb-6">
+        {/* ~60% spotlight / ~40% philosophy (top) + logos (bottom) on large screens */}
+        <div className="grid flex-1 grid-cols-1 items-stretch gap-5 min-h-0 md:gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(260px,2fr)] lg:gap-7">
+          <div className="grid h-full min-h-0 grid-cols-1 justify-items-stretch gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,0.82fr)] sm:gap-5 lg:-translate-x-6 xl:-translate-x-10 2xl:-translate-x-14">
+            <SpotlightCard
+              cardKey="spring"
+              index={0}
+              className="h-auto aspect-[9/16] min-h-[300px] sm:min-h-0 lg:h-full lg:aspect-auto"
+            />
+            <div className="grid grid-rows-3 auto-rows-fr gap-4 sm:gap-5 h-full">
+              <SpotlightCard cardKey="newDrop" index={1} className="min-h-[120px] sm:min-h-0" />
+              <SpotlightCard cardKey="featured" index={2} className="min-h-[120px] sm:min-h-0" />
+              <SpotlightCard cardKey="special" index={3} className="min-h-[120px] sm:min-h-0" />
+            </div>
           </div>
 
-          <SectionReveal>
-            <div
-              id="philosophy"
-              className="scroll-mt-24 relative rounded-3xl border border-black/10 bg-white px-5 sm:px-6 py-6 shadow-[0_18px_60px_-40px_rgba(0,0,0,0.35)]"
-            >
-              <div className="absolute -top-5 -left-5 h-12 w-12 rounded-full bg-black/5 blur-[0.5px]" aria-hidden />
-              <div className="absolute -bottom-6 -right-6 h-14 w-14 rounded-full bg-black/5 blur-[0.5px]" aria-hidden />
+          <div className="flex min-h-0 w-full flex-col items-stretch gap-4 md:gap-5 lg:h-full">
+            <SectionReveal className="w-full shrink-0 lg:translate-x-5 xl:translate-x-8 2xl:translate-x-10">
+              <div
+                id="philosophy"
+                className="scroll-mt-24 relative rounded-3xl border border-black/10 bg-white px-6 py-8 text-center shadow-[0_18px_60px_-40px_rgba(0,0,0,0.35)] sm:px-8 sm:py-9 lg:px-9 lg:py-10"
+              >
+                <div className="absolute -top-5 -left-5 h-12 w-12 rounded-full bg-black/5 blur-[0.5px]" aria-hidden />
+                <div className="absolute -bottom-6 -right-6 h-14 w-14 rounded-full bg-black/5 blur-[0.5px]" aria-hidden />
 
-              <div className="flex items-center gap-3 mb-3">
-                <span className="h-2.5 w-2.5 rounded-full bg-black" aria-hidden />
-                <p className="text-xs font-bold uppercase tracking-[0.3em] text-black/55">{tPhilosophy.label}</p>
+                <div className="mb-4 flex items-center justify-center gap-3">
+                  <span className="h-3 w-3 shrink-0 rounded-full bg-black" aria-hidden />
+                  <p className="text-sm font-bold uppercase tracking-[0.28em] text-black/55">{tPhilosophy.label}</p>
+                </div>
+
+                <h2 className="mb-5 text-3xl font-black uppercase leading-tight text-black sm:text-4xl lg:text-[2.35rem] lg:leading-[1.12]">
+                  {tPhilosophy.title}
+                </h2>
+                <div className="mx-auto mb-5 h-px w-28 bg-black/20" aria-hidden />
+                <p className="text-base leading-relaxed text-black/70 whitespace-pre-line sm:text-lg lg:text-[1.125rem] lg:leading-relaxed">
+                  {tPhilosophy.body}
+                </p>
+
+                <div className="mt-5 flex flex-wrap justify-center gap-2.5 sm:gap-3">
+                  {PHILOSOPHY_BADGES_BY_LANG[lang].map((item) => (
+                    <span
+                      key={item}
+                      className="inline-flex items-center rounded-full border border-black/15 bg-black/[0.03] px-3.5 py-2 text-[11px] font-bold uppercase tracking-[0.12em] text-black/70 sm:px-4"
+                    >
+                      {item}
+                    </span>
+                  ))}
+                </div>
               </div>
+            </SectionReveal>
 
-              <h2 className="text-2xl md:text-3xl font-black uppercase text-black mb-4 leading-tight">
-                {tPhilosophy.title}
-              </h2>
-              <div className="h-px w-20 bg-black/20 mb-5" aria-hidden />
-              <p className="text-sm md:text-base text-black/70 leading-relaxed whitespace-pre-line">
-                {tPhilosophy.body}
-              </p>
-
-              <div className="mt-5 flex flex-wrap gap-2">
-                {philosophyBadgesByLang[lang].map((item) => (
+            <SectionReveal className="flex min-h-[11rem] flex-1 flex-col basis-0 lg:min-h-0">
+              <div className="flex min-h-0 flex-1 items-center justify-center py-6 sm:py-8 lg:py-4">
+                <div
+                  className="flex w-full max-w-lg flex-nowrap items-center justify-center gap-6 sm:max-w-none sm:gap-9 md:gap-11 lg:translate-x-6 lg:gap-12 xl:translate-x-10 xl:gap-16 2xl:translate-x-12"
+                  aria-label="210 × Anpa Limited"
+                >
+                  <img
+                    src={LOGO_210_SRC}
+                    alt="210 Sports Wear"
+                    className="h-[clamp(5.5rem,44vw,11rem)] w-auto max-w-[47%] object-contain object-center sm:h-[clamp(6.25rem,38vw,12.5rem)] lg:h-[clamp(7.5rem,min(32vh,15rem),15rem)] xl:h-[clamp(8.5rem,min(36vh,17rem),17rem)]"
+                    loading="eager"
+                    decoding="async"
+                    referrerPolicy="no-referrer"
+                  />
                   <span
-                    key={item}
-                    className="inline-flex items-center rounded-full border border-black/15 bg-black/[0.03] px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.12em] text-black/70"
-                  >
-                    {item}
-                  </span>
-                ))}
+                    className="h-[clamp(5rem,40vw,10rem)] w-px shrink-0 bg-black/15 sm:h-[clamp(5.75rem,34vw,11.5rem)] lg:h-[clamp(6.5rem,min(28vh,13rem),13rem)] xl:h-[clamp(7.5rem,min(32vh,15rem),15rem)]"
+                    aria-hidden
+                  />
+                  <img
+                    src={LOGO_COLLECTIONS_SRC}
+                    alt="Anpa Limited"
+                    className="h-[clamp(5.25rem,42vw,10.5rem)] w-auto max-w-[47%] object-contain object-center sm:h-[clamp(6rem,36vw,12rem)] lg:h-[clamp(7rem,min(28vh,13.5rem),13.5rem)] xl:h-[clamp(8rem,min(32vh,15.5rem),15.5rem)]"
+                    loading="eager"
+                    decoding="async"
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
               </div>
-            </div>
-          </SectionReveal>
+            </SectionReveal>
+          </div>
         </div>
       </div>
     </section>
@@ -669,7 +969,7 @@ const BrandMarqueeLogo: React.FC<{ alt: string; slug: string }> = ({ alt, slug }
 };
 
 const BrandMarquee = () => {
-  const loop = [...BRAND_MARQUEE_ITEMS, ...BRAND_MARQUEE_ITEMS];
+  const loop = [...BRAND_MARQUEE_ITEMS, ...BRAND_MARQUEE_ITEMS, ...BRAND_MARQUEE_ITEMS];
 
   return (
     <div
@@ -687,6 +987,128 @@ const BrandMarquee = () => {
   );
 };
 
+const DailyLooksSection = () => {
+  const { lang } = React.useContext(LangContext);
+  const t = TRANSLATIONS[lang].dailyLooks;
+  const ui = TRANSLATIONS[lang].ui;
+
+  return (
+    <section id="daily-looks" className="bg-white border-t border-black/5 scroll-mt-24 min-h-screen">
+      <div className="max-w-[1600px] ml-0 mr-auto px-4 sm:px-6 lg:px-8 pt-[4.1rem] md:pt-[4.4rem] pb-6 md:pb-8 min-h-[calc(100vh-4rem)] flex flex-col justify-center">
+        {/* No SectionReveal here: spring y-overshoot made the card feel like it grew then shrank */}
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[0.3em] text-black/45 mb-2">{t.label}</p>
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] gap-4 md:gap-6 items-start flex-1">
+            <article className="relative rounded-2xl overflow-hidden border border-black/[0.08] w-full max-w-[min(100%,calc((100dvh-10rem)*9/16))] aspect-[9/16] shrink-0">
+              <img
+                src={DAILY_LOOK_IMAGE_SRC}
+                alt={t.title}
+                className="absolute inset-0 h-full w-full object-cover object-[50%_35%]"
+                loading="eager"
+                decoding="async"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/15 to-transparent" />
+              <p className="absolute left-4 bottom-4 text-white text-[11px] font-semibold uppercase tracking-[0.18em]">
+                {t.updatedLabel}
+              </p>
+            </article>
+
+            <article className="rounded-2xl border border-black/[0.08] bg-white p-5 sm:p-6 lg:p-7 flex flex-col">
+              <h2 className="text-2xl md:text-3xl font-black uppercase text-black leading-tight">{t.title}</h2>
+              <p className="mt-3 text-sm md:text-base text-black/65 leading-relaxed">{t.body}</p>
+              <div className="mt-5 h-px w-24 bg-black/15" aria-hidden />
+
+              <div className="mt-5 space-y-3">
+                {t.items.map((item) => (
+                  <div
+                    key={item.name}
+                    className="flex items-center justify-between gap-3 rounded-xl border border-black/10 bg-neutral-50 px-4 py-3"
+                  >
+                    <span className="min-w-0 flex-1 text-sm md:text-[15px] font-semibold text-black">{item.name}</span>
+                    <span className="shrink-0 text-sm md:text-[15px] font-bold text-black tabular-nums">{item.price}</span>
+                    <button
+                      type="button"
+                      className="inline-flex shrink-0 items-center justify-center rounded-full border border-black/15 bg-white p-2 text-black transition-colors hover:bg-black/5"
+                      aria-label={`${ui.addToCart}: ${item.name}`}
+                    >
+                      <ShoppingBag size={18} strokeWidth={1.75} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              <p className="mt-4 text-[11px] font-bold uppercase tracking-[0.14em] text-black/45">{t.priceLabel}</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const ClothesSection = () => {
+  const { lang } = React.useContext(LangContext);
+  const t = TRANSLATIONS[lang].clothes;
+  const ui = TRANSLATIONS[lang].ui;
+
+  return (
+    <section id="clothes" className="py-14 md:py-20 bg-white border-t border-black/5 scroll-mt-24 overflow-x-hidden">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10">
+        <SectionReveal>
+          <p className="text-xs font-bold uppercase tracking-[0.3em] text-black/45 mb-2 text-center">{t.label}</p>
+          <h2
+            className={`text-2xl md:text-3xl font-black uppercase text-black leading-tight text-center ${t.body.trim() ? 'mb-3 md:mb-4' : 'mb-8 md:mb-10'}`}
+          >
+            {t.title}
+          </h2>
+          {t.body.trim() ? (
+            <p className="text-sm md:text-base text-black/60 leading-relaxed text-center max-w-2xl mx-auto mb-8 md:mb-10">
+              {t.body}
+            </p>
+          ) : null}
+        </SectionReveal>
+      </div>
+
+      {/* Horizontal row: equal space at start/end when row is shorter than viewport; scroll when needed */}
+      <div
+        className="overflow-x-auto overflow-y-hidden scroll-smooth pb-2 [scrollbar-width:thin] [-webkit-overflow-scrolling:touch] [scroll-padding-inline:1rem] sm:[scroll-padding-inline:1.5rem] lg:[scroll-padding-inline:2.5rem]"
+        role="region"
+        aria-label={t.title}
+      >
+        <div className="flex w-max min-w-full justify-evenly gap-4 sm:gap-5 snap-x snap-mandatory px-4 sm:px-6 lg:px-10">
+          {t.items.map((item) => (
+            <article
+              key={item.name}
+              className="relative shrink-0 snap-center overflow-hidden rounded-2xl border border-black/[0.08] bg-gradient-to-b from-neutral-100 to-neutral-50 w-[min(78vw,260px)] md:w-[280px] aspect-[13/15]"
+            >
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_15%,rgba(0,0,0,0.07),transparent_45%)]" aria-hidden />
+              <div className="relative flex h-full min-h-0 flex-col p-4">
+                <div className="flex flex-1 flex-col items-center justify-center text-center">
+                  <span className="inline-flex items-center justify-center h-10 w-10 rounded-full border border-black/15 text-black/40 text-xl mb-3">
+                    +
+                  </span>
+                  <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-black/55">{item.name}</p>
+                  <p className="mt-2 text-[12px] text-black/45">Photo placeholder</p>
+                </div>
+                <div className="mt-auto flex shrink-0 items-center justify-between gap-2 border-t border-black/10 pt-3">
+                  <span className="text-[12px] sm:text-[13px] font-bold text-black tabular-nums">{item.price}</span>
+                  <button
+                    type="button"
+                    className="inline-flex shrink-0 items-center justify-center rounded-full border border-black/15 bg-white p-2 text-black transition-colors hover:bg-black/5"
+                    aria-label={`${ui.addToCart}: ${item.name}`}
+                  >
+                    <ShoppingBag size={18} strokeWidth={1.75} />
+                  </button>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
 const SectionReveal: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className = '' }) => (
   <motion.div
     initial={{ opacity: 0, y: 48 }}
@@ -698,38 +1120,6 @@ const SectionReveal: React.FC<{ children: React.ReactNode; className?: string }>
     {children}
   </motion.div>
 );
-
-const PhilosophySection = () => {
-  const { lang } = React.useContext(LangContext);
-  const t = TRANSLATIONS[lang].philosophy;
-
-  return (
-    <section id="philosophy" className="py-16 md:py-20 bg-white border-t border-black/5 scroll-mt-24">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <SectionReveal>
-          <div className="relative rounded-3xl border border-black/10 bg-white px-5 sm:px-7 py-7 shadow-[0_18px_60px_-40px_rgba(0,0,0,0.35)]">
-            <div className="absolute -top-5 -left-5 h-12 w-12 rounded-full bg-black/5 blur-[0.5px]" aria-hidden />
-            <div className="absolute -bottom-6 -right-6 h-14 w-14 rounded-full bg-black/5 blur-[0.5px]" aria-hidden />
-
-            <div className="flex items-center gap-3 mb-3">
-              <span className="h-2.5 w-2.5 rounded-full bg-black" aria-hidden />
-              <p className="text-xs font-bold uppercase tracking-[0.3em] text-black/55">{t.label}</p>
-            </div>
-
-            <h2 className="text-3xl md:text-4xl font-black uppercase text-black mb-5 leading-tight">
-              {t.title}
-            </h2>
-            <div className="h-px w-24 bg-black/20 mb-6" aria-hidden />
-
-            <p className="text-base md:text-lg text-black/70 leading-relaxed whitespace-pre-line">
-              {t.body}
-            </p>
-          </div>
-        </SectionReveal>
-      </div>
-    </section>
-  );
-};
 
 const BranchCard: React.FC<{
   branch: StoreBranch;
@@ -945,7 +1335,7 @@ const Footer = () => {
       whileInView={{ opacity: 1 }}
       viewport={{ once: true, margin: '-80px' }}
       transition={{ duration: 0.5 }}
-      className="bg-black text-white py-16 md:py-20"
+      className="bg-white text-black py-16 md:py-20 border-t border-black/5"
     >
       {active ? (
         <div className="fixed inset-0 z-[110] bg-black/60 flex items-center justify-center p-4">
@@ -978,16 +1368,16 @@ const Footer = () => {
           <img
             src={LOGO_210_SRC}
             alt="210 Sports Wear"
-            className="h-12 md:h-16 w-auto max-h-16 object-contain object-center brightness-0 invert"
+            className="h-12 md:h-16 w-auto max-h-16 object-contain object-center"
             loading="lazy"
             decoding="async"
             referrerPolicy="no-referrer"
           />
-          <span className="shrink-0 w-px h-11 md:h-14 bg-white/35 rounded-full" aria-hidden />
+          <span className="shrink-0 w-px h-11 md:h-14 bg-black/15 rounded-full" aria-hidden />
           <img
             src={LOGO_COLLECTIONS_SRC}
             alt="Anpa Limited"
-            className="h-10 md:h-12 w-auto max-h-12 object-contain object-center invert"
+            className="h-10 md:h-12 w-auto max-h-12 object-contain object-center"
             loading="lazy"
             decoding="async"
             referrerPolicy="no-referrer"
@@ -1000,7 +1390,7 @@ const Footer = () => {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Instagram"
-            className="text-white/75 hover:text-white transition-colors p-2"
+            className="text-black/65 hover:text-black transition-colors p-2"
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.96 }}
           >
@@ -1011,7 +1401,7 @@ const Footer = () => {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Telegram"
-            className="text-white/75 hover:text-white transition-colors p-2"
+            className="text-black/65 hover:text-black transition-colors p-2"
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.96 }}
           >
@@ -1020,7 +1410,7 @@ const Footer = () => {
           <motion.a
             href={CONTACT_PHONE_TEL}
             aria-label={`Phone ${CONTACT_PHONE_LABEL}`}
-            className="text-white/75 hover:text-white transition-colors p-2"
+            className="text-black/65 hover:text-black transition-colors p-2"
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.96 }}
           >
@@ -1028,22 +1418,22 @@ const Footer = () => {
           </motion.a>
         </div>
 
-        <div className="w-full pt-6 mt-2 border-t border-white/10 flex items-center justify-between gap-6">
-          <span className="text-[12px] text-white/50 select-none">
+        <div className="w-full pt-6 mt-2 border-t border-black/10 flex items-center justify-between gap-6">
+          <span className="text-[12px] text-black/50 select-none">
             © {new Date().getFullYear()} 210 Sports Wear. Все права защищены.
           </span>
           <div className="flex items-center gap-6">
             <button
               type="button"
               onClick={() => setLegalOpen('privacy')}
-              className="text-[12px] text-white/50 hover:text-white transition-colors"
+              className="text-[12px] text-black/50 hover:text-black transition-colors"
             >
               {legalText[lang].privacy.title}
             </button>
             <button
               type="button"
               onClick={() => setLegalOpen('terms')}
-              className="text-[12px] text-white/50 hover:text-white transition-colors"
+              className="text-[12px] text-black/50 hover:text-black transition-colors"
             >
               {legalText[lang].terms.title}
             </button>
@@ -1067,6 +1457,8 @@ export default function App() {
 
         <main>
           <SpotlightSection />
+          <DailyLooksSection />
+          <ClothesSection />
           <BrandMarquee />
           <BranchesSection />
         </main>
@@ -1076,16 +1468,16 @@ export default function App() {
         <style>{`
           @keyframes marquee {
             0% { transform: translate3d(0,0,0); }
-            100% { transform: translate3d(-50%,0,0); }
+            100% { transform: translate3d(-33.333%,0,0); }
           }
           .animate-marquee {
             display: inline-flex;
-            animation: marquee 28s linear infinite;
+            animation: marquee 8s linear infinite;
             will-change: transform;
           }
           @media (prefers-reduced-motion: reduce) {
             .animate-marquee {
-              animation-duration: 60s;
+              animation-duration: 10s;
             }
           }
           @keyframes float {
