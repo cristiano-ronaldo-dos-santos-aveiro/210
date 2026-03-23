@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
-import { ShoppingBag, Search, Menu, X, Instagram, MapPin, Phone, ArrowUpRight } from 'lucide-react';
+import { ShoppingBag, Search, Menu, X, Instagram, MapPin, Phone, ArrowUpRight, Clock, ArrowRight } from 'lucide-react';
 import { cn } from './lib/utils';
 
 /** PNG exports in /photo (210 stack + partner / signature mark) */
@@ -80,6 +80,7 @@ type StoreBranch = {
   phoneLabel: string;
   mapsUrl: string;
   photoSrc?: string;
+  openHours?: string;
 };
 
 const STORE_BRANCHES: readonly StoreBranch[] = [
@@ -90,6 +91,8 @@ const STORE_BRANCHES: readonly StoreBranch[] = [
     phoneLabel: CONTACT_PHONE_LABEL,
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=210+Nurafshon%2C+Uzbekistan',
     photoSrc: NURAFSHON_BRANCH_PHOTO_SRC
+    ,
+    openHours: '24/7'
   },
   {
     name: 'Gulzor',
@@ -732,8 +735,19 @@ const BranchCard: React.FC<{
   actionMaps: string;
   index: number;
 }> = ({ branch, actionInstagram, actionPhone, actionMaps, index }) => {
-  const iconBtn =
-    'inline-flex items-center justify-center rounded-full border border-black/10 bg-black text-white p-2.5 hover:bg-neutral-800 transition-colors shadow-sm';
+  const getAddressFromMaps = (mapsUrl: string) => {
+    try {
+      const u = new URL(mapsUrl);
+      const q = u.searchParams.get('query');
+      if (!q) return '';
+      // Example: "210 Nurafshon, Uzbekistan" -> "Nurafshon, Uzbekistan"
+      return q.replace(/^210\s*/i, '').trim();
+    } catch {
+      return '';
+    }
+  };
+
+  const address = getAddressFromMaps(branch.mapsUrl);
 
   return (
     <motion.article
@@ -741,7 +755,8 @@ const BranchCard: React.FC<{
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-40px' }}
       transition={{ delay: index * 0.06, type: 'spring', stiffness: 80, damping: 22 }}
-      className="relative group rounded-xl border border-black/[0.08] bg-white px-4 py-4 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.12)]"
+      className="group relative overflow-hidden rounded-2xl border border-black/[0.08] bg-white shadow-[0_10px_40px_-25px_rgba(0,0,0,0.35)]"
+      whileHover={{ scale: 1.02 }}
     >
       <motion.a
         href={branch.mapsUrl}
@@ -749,24 +764,18 @@ const BranchCard: React.FC<{
         rel="noopener noreferrer"
         aria-label={`${branch.name} — ${actionMaps}`}
         whileTap={{ scale: 0.96 }}
-        whileHover={{ scale: 1.07 }}
-        transition={{ duration: 0.35, ease: [0.22, 0.61, 0.36, 1] }}
         className="absolute top-3 right-3 z-20 inline-flex items-center justify-center rounded-full border border-black/10 bg-white/90 text-black p-2.5 hover:bg-white transition-colors shadow-sm"
       >
         <ArrowUpRight size={18} strokeWidth={1.75} />
       </motion.a>
 
-      <div
-        className="flex flex-col items-center text-center gap-3 transition-transform duration-700 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:scale-[1.035] will-change-transform"
-      >
-        <div
-          className="relative w-full aspect-[4/5] max-h-[220px] sm:max-h-[240px] rounded-lg overflow-hidden bg-gradient-to-br from-neutral-100 via-neutral-50 to-neutral-200 ring-1 ring-black/[0.06]"
-        >
+      <div className="w-full">
+        <div className="relative w-full h-[170px] sm:h-[190px] bg-neutral-50 overflow-hidden">
           {branch.photoSrc ? (
             <img
               src={branch.photoSrc}
               alt={branch.name}
-              className="absolute inset-0 h-full w-full object-cover object-center"
+              className="h-full w-full object-cover object-center"
               loading="eager"
               decoding="async"
             />
@@ -776,44 +785,57 @@ const BranchCard: React.FC<{
             </div>
           )}
         </div>
-        <div className="flex items-center justify-center gap-2 text-black pt-0.5">
-          <MapPin size={18} className="text-black/45 shrink-0" strokeWidth={2} aria-hidden />
-          <h3 className="text-base sm:text-lg font-black uppercase tracking-tight">{branch.name}</h3>
-        </div>
-        <div className="flex items-center justify-center gap-2 w-full pt-1">
-          <motion.a
-            href={branch.instagram}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={iconBtn}
-            aria-label={`${branch.name} — ${actionInstagram}`}
-            whileTap={{ scale: 0.96 }}
-            whileHover={{ scale: 1.07 }}
-            transition={{ duration: 0.35, ease: [0.22, 0.61, 0.36, 1] }}
-          >
-            <Instagram size={18} strokeWidth={1.75} />
-          </motion.a>
-          <motion.a
-            href={branch.phoneTel}
-            className={iconBtn}
-            aria-label={`${branch.name} — ${actionPhone}: ${branch.phoneLabel}`}
-            whileTap={{ scale: 0.96 }}
-            whileHover={{ scale: 1.07 }}
-            transition={{ duration: 0.35, ease: [0.22, 0.61, 0.36, 1] }}
-          >
-            <Phone size={18} strokeWidth={1.75} />
-          </motion.a>
+
+        <div className="px-5 py-4 sm:px-6 sm:py-5">
+          <h3 className="text-[18px] sm:text-[20px] font-black text-black leading-tight">{branch.name}</h3>
+
+          <div className="mt-4 flex flex-col gap-3">
+            <motion.a
+              href={branch.mapsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${branch.name} — ${actionMaps}`}
+              whileTap={{ scale: 0.98 }}
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.25, ease: [0.22, 0.61, 0.36, 1] }}
+              className="flex items-center gap-3 text-[13px] sm:text-[14px] text-black/60 hover:text-black transition-colors"
+            >
+              <MapPin size={18} strokeWidth={1.8} className="shrink-0" />
+              <span className="leading-snug">{address || branch.name}</span>
+            </motion.a>
+
+            <motion.a
+              href={branch.phoneTel}
+              aria-label={`${branch.name} — ${actionPhone}: ${branch.phoneLabel}`}
+              whileTap={{ scale: 0.98 }}
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.25, ease: [0.22, 0.61, 0.36, 1] }}
+              className="flex items-center gap-3 text-[13px] sm:text-[14px] text-black/60 hover:text-black transition-colors"
+            >
+              <Phone size={18} strokeWidth={1.8} className="shrink-0" />
+              <span className="leading-snug">{branch.phoneLabel}</span>
+            </motion.a>
+
+            {branch.openHours ? (
+              <div className="flex items-center gap-3 text-[13px] sm:text-[14px] text-black/60">
+                <Clock size={18} strokeWidth={1.8} className="shrink-0" />
+                <span className="leading-snug">{branch.openHours}</span>
+              </div>
+            ) : null}
+          </div>
+
           <motion.a
             href={branch.mapsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className={iconBtn}
-            aria-label={`${branch.name} — ${actionMaps}`}
-            whileTap={{ scale: 0.96 }}
-            whileHover={{ scale: 1.07 }}
-            transition={{ duration: 0.35, ease: [0.22, 0.61, 0.36, 1] }}
+            whileTap={{ scale: 0.99 }}
+            whileHover={{ scale: 1.02 }}
+            transition={{ duration: 0.25, ease: [0.22, 0.61, 0.36, 1] }}
+            className="mt-5 w-full inline-flex items-center justify-center gap-2 rounded-xl border border-sky-500/40 bg-white px-4 py-2.5 text-[11px] font-bold uppercase tracking-[0.12em] text-sky-600 hover:bg-sky-500/5 transition-colors"
+            aria-label={`${branch.name} — YO'NALISH`}
           >
-            <MapPin size={18} strokeWidth={1.75} />
+            <span>YO&apos;NALISH</span>
+            <ArrowRight size={18} strokeWidth={2} />
           </motion.a>
         </div>
       </div>
