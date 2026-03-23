@@ -104,7 +104,8 @@ const STORE_BRANCHES: readonly StoreBranch[] = [
     phoneLabel: CONTACT_PHONE_LABEL,
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=210+Gulzor%2C+Uzbekistan',
     photoSrc: GULZOR_BRANCH_PHOTO_SRC,
-    openHours: '10:00-22:00'
+    openHours: '10:00-22:00',
+    addressLine: 'Малая кольцевая дорога, 135'
   },
   {
     name: 'Nukus',
@@ -113,7 +114,8 @@ const STORE_BRANCHES: readonly StoreBranch[] = [
     phoneLabel: CONTACT_PHONE_LABEL,
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=210+Nukus%2C+Uzbekistan',
     photoSrc: NUKUS_BRANCH_PHOTO_SRC,
-    openHours: '10:00-22:00'
+    openHours: '10:00-22:00',
+    addressLine: 'улица Шифонур, 3А'
   }
 ];
 
@@ -837,9 +839,9 @@ const BranchCard: React.FC<{
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.25, ease: [0.22, 0.61, 0.36, 1] }}
             className="mt-5 w-full inline-flex items-center justify-center gap-2 rounded-xl border border-black/20 bg-white px-4 py-2.5 text-[11px] font-bold uppercase tracking-[0.12em] text-black hover:bg-black hover:text-white transition-colors"
-            aria-label={`${branch.name} — YO'NALISH`}
+            aria-label={`${branch.name} — ${actionMaps}`}
           >
-            <span>YO&apos;NALISH</span>
+            <span>{actionMaps}</span>
             <ArrowRight size={18} strokeWidth={2} />
           </motion.a>
         </div>
