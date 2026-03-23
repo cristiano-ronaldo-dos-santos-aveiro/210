@@ -92,7 +92,7 @@ const STORE_BRANCHES: readonly StoreBranch[] = [
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=210+Nurafshon%2C+Uzbekistan',
     photoSrc: NURAFSHON_BRANCH_PHOTO_SRC
     ,
-    openHours: '24/7'
+    openHours: '10:00-22:00'
   },
   {
     name: 'Gulzor',
@@ -100,7 +100,8 @@ const STORE_BRANCHES: readonly StoreBranch[] = [
     phoneTel: CONTACT_PHONE_TEL,
     phoneLabel: CONTACT_PHONE_LABEL,
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=210+Gulzor%2C+Uzbekistan',
-    photoSrc: GULZOR_BRANCH_PHOTO_SRC
+    photoSrc: GULZOR_BRANCH_PHOTO_SRC,
+    openHours: '10:00-22:00'
   },
   {
     name: 'Nukus',
@@ -108,7 +109,8 @@ const STORE_BRANCHES: readonly StoreBranch[] = [
     phoneTel: CONTACT_PHONE_TEL,
     phoneLabel: CONTACT_PHONE_LABEL,
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=210+Nukus%2C+Uzbekistan',
-    photoSrc: NUKUS_BRANCH_PHOTO_SRC
+    photoSrc: NUKUS_BRANCH_PHOTO_SRC,
+    openHours: '10:00-22:00'
   }
 ];
 
@@ -831,7 +833,7 @@ const BranchCard: React.FC<{
             whileTap={{ scale: 0.99 }}
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.25, ease: [0.22, 0.61, 0.36, 1] }}
-            className="mt-5 w-full inline-flex items-center justify-center gap-2 rounded-xl border border-sky-500/40 bg-white px-4 py-2.5 text-[11px] font-bold uppercase tracking-[0.12em] text-sky-600 hover:bg-sky-500/5 transition-colors"
+            className="mt-5 w-full inline-flex items-center justify-center gap-2 rounded-xl border border-black/20 bg-white px-4 py-2.5 text-[11px] font-bold uppercase tracking-[0.12em] text-black hover:bg-black hover:text-white transition-colors"
             aria-label={`${branch.name} — YO'NALISH`}
           >
             <span>YO&apos;NALISH</span>
