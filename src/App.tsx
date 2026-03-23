@@ -96,8 +96,8 @@ const STORE_BRANCHES: readonly StoreBranch[] = [
   {
     name: 'Nurafshon',
     instagram: CONTACT_INSTAGRAM,
-    phoneTel: CONTACT_PHONE_TEL,
-    phoneLabel: CONTACT_PHONE_LABEL,
+    phoneTel: 'tel:+998952100000',
+    phoneLabel: '+998 95 210-00-00',
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=210+Nurafshon%2C+Uzbekistan',
     photoSrc: NURAFSHON_BRANCH_PHOTO_SRC
     ,
@@ -112,8 +112,8 @@ const STORE_BRANCHES: readonly StoreBranch[] = [
   {
     name: 'Gulzor',
     instagram: CONTACT_INSTAGRAM,
-    phoneTel: CONTACT_PHONE_TEL,
-    phoneLabel: CONTACT_PHONE_LABEL,
+    phoneTel: 'tel:+998332101111',
+    phoneLabel: '+998 33 210-11-11',
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=210+Gulzor%2C+Uzbekistan',
     photoSrc: GULZOR_BRANCH_PHOTO_SRC,
     openHours: '10:00-22:00',
@@ -126,8 +126,8 @@ const STORE_BRANCHES: readonly StoreBranch[] = [
   {
     name: 'Nukus',
     instagram: CONTACT_INSTAGRAM,
-    phoneTel: CONTACT_PHONE_TEL,
-    phoneLabel: CONTACT_PHONE_LABEL,
+    phoneTel: 'tel:+998957177777',
+    phoneLabel: '+998 95 717-77-77',
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=210+Nukus%2C+Uzbekistan',
     photoSrc: NUKUS_BRANCH_PHOTO_SRC,
     openHours: '10:00-22:00',
