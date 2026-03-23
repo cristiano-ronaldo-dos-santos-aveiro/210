@@ -68,9 +68,10 @@ const SHOE_SPOTLIGHT_SLIDES = [
 const SPOTLIGHT_SLIDE_MS = 2800;
 const SPOTLIGHT_FADE_S = 0.75;
 
-const NURAFSHON_BRANCH_PHOTO_SRC = new URL('../photo/filiallar/nurafshon-branch.png', import.meta.url).href;
-const GULZOR_BRANCH_PHOTO_SRC = new URL('../photo/filiallar/gulzor-branch.png', import.meta.url).href;
-const NUKUS_BRANCH_PHOTO_SRC = new URL('../photo/filiallar/nukus-branch.png', import.meta.url).href;
+// Use public/ paths so the images load reliably in dev + prod.
+const NURAFSHON_BRANCH_PHOTO_SRC = '/filiallar/nurafshon-branch.png';
+const GULZOR_BRANCH_PHOTO_SRC = '/filiallar/gulzor-branch.png';
+const NUKUS_BRANCH_PHOTO_SRC = '/filiallar/nukus-branch.png';
 
 type StoreBranch = {
   name: string;
@@ -733,7 +734,7 @@ const BranchCard: React.FC<{
         rel="noopener noreferrer"
         aria-label={`${branch.name} — ${actionMaps}`}
         whileTap={{ scale: 0.96 }}
-        className="absolute top-3 right-3 inline-flex items-center justify-center rounded-full border border-black/10 bg-white/90 text-black p-2.5 hover:bg-white transition-colors shadow-sm"
+        className="absolute top-3 right-3 z-20 inline-flex items-center justify-center rounded-full border border-black/10 bg-white/90 text-black p-2.5 hover:bg-white transition-colors shadow-sm"
       >
         <ExternalLink size={18} strokeWidth={1.75} />
       </motion.a>
