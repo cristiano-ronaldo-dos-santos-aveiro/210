@@ -1246,22 +1246,22 @@ const ClothesSection = () => {
           {t.items.map((item) => (
             <article
               key={item.name}
-              className="relative aspect-[13/15] w-[min(80vw,268px)] shrink-0 snap-center overflow-hidden rounded-2xl border border-white/80 bg-[linear-gradient(160deg,rgba(255,255,255,0.62),rgba(219,234,254,0.34))] shadow-[0_20px_48px_-32px_rgba(0,0,0,0.32)] backdrop-blur-2xl md:w-[280px]"
+              className="relative aspect-[13/15] w-[min(80vw,268px)] shrink-0 snap-center overflow-hidden rounded-2xl border border-white/30 bg-[linear-gradient(160deg,rgba(75,85,99,0.42),rgba(17,24,39,0.34))] shadow-[0_24px_56px_-30px_rgba(0,0,0,0.45)] backdrop-blur-2xl md:w-[280px]"
             >
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_15%,rgba(255,255,255,0.45),transparent_45%)]" aria-hidden />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_15%,rgba(255,255,255,0.2),transparent_45%)]" aria-hidden />
               <div className="relative flex h-full min-h-0 flex-col p-4">
                 <div className="flex flex-1 flex-col items-center justify-center text-center">
-                  <span className="inline-flex items-center justify-center h-10 w-10 rounded-full border border-black/15 text-black/40 text-xl mb-3">
+                  <span className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/35 text-xl text-white/80">
                     +
                   </span>
-                  <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-black/55">{item.name}</p>
-                  <p className="mt-2 text-[12px] text-black/45">Photo placeholder</p>
+                  <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-white/90">{item.name}</p>
+                  <p className="mt-2 text-[12px] text-white/70">Photo placeholder</p>
                 </div>
-                <div className="mt-auto flex shrink-0 items-center justify-between gap-2 border-t border-white/60 pt-3">
-                  <span className="text-[12px] sm:text-[13px] font-bold text-black tabular-nums">{item.price}</span>
+                <div className="mt-auto flex shrink-0 items-center justify-between gap-2 border-t border-white/25 pt-3">
+                  <span className="text-[12px] font-bold tabular-nums text-white sm:text-[13px]">{item.price}</span>
                   <button
                     type="button"
-                    className="inline-flex shrink-0 items-center justify-center rounded-full border border-white/80 bg-white/70 p-2 text-black transition-colors backdrop-blur-md hover:bg-white/90"
+                    className="inline-flex shrink-0 items-center justify-center rounded-full border border-white/40 bg-white/20 p-2 text-white transition-colors backdrop-blur-md hover:bg-white/30"
                     aria-label={`${ui.addToCart}: ${item.name}`}
                   >
                     <ShoppingBag size={18} strokeWidth={1.75} />
