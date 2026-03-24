@@ -566,10 +566,10 @@ const Navbar = () => {
     );
   const navLinkMobilePill = (id: (typeof sectionIds)[number]) =>
     cn(
-      'inline-flex shrink-0 items-center justify-center rounded-full px-2 py-1.5 text-[8px] font-medium uppercase leading-none tracking-[0.06em] antialiased transition-all duration-200 [-webkit-tap-highlight-color:transparent] min-[400px]:px-2.5 min-[400px]:text-[9px] sm:text-[10px]',
+      'inline-flex shrink-0 items-center justify-center rounded-full px-2 py-1.5 text-[8px] font-medium uppercase leading-none tracking-[0.06em] antialiased transition-all duration-200 min-[400px]:px-2.5 min-[400px]:text-[9px] sm:text-[10px]',
       activeSection === id
         ? 'bg-black/12 text-black'
-        : 'text-black/75 hover:bg-black/8 hover:text-black'
+        : 'text-black/75 active:bg-black/8'
     );
   const logoSep = 'text-black/30';
 
@@ -609,7 +609,7 @@ const Navbar = () => {
 
         <nav
           aria-label="Main"
-          className="pointer-events-auto min-h-[2.5rem] min-w-0 flex-1 overflow-x-auto overflow-y-hidden overscroll-x-contain scroll-smooth touch-pan-x [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [-webkit-tap-highlight-color:transparent] [&::-webkit-scrollbar]:hidden"
+          className="pointer-events-auto min-h-[2.5rem] min-w-0 flex-1 overflow-x-auto overflow-y-hidden overscroll-x-contain scroll-smooth touch-pan-x [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
           <div className="inline-flex min-h-[2.5rem] w-max max-w-none items-center gap-0.5 rounded-full border border-black/12 bg-white/92 py-1 pl-1.5 pr-1.5 shadow-[0_8px_30px_-10px_rgba(0,0,0,0.2)] ring-1 ring-black/[0.06] backdrop-blur-xl supports-[backdrop-filter]:bg-white/85 min-[400px]:gap-1 min-[400px]:px-2">
             <a href="#spotlight" className={navLinkMobilePill('spotlight')}>
@@ -943,19 +943,19 @@ const SpotlightSection = () => {
 
   return (
     <section id="spotlight" className="scroll-mt-20 bg-gradient-to-b from-white to-neutral-50/50 min-h-0 overflow-x-hidden lg:min-h-screen lg:scroll-mt-24">
-      <div className="mx-auto flex min-h-0 w-full max-w-[1600px] flex-col px-3 pb-2 pt-[2.8rem] sm:px-4 sm:pb-5 sm:pt-[3.75rem] md:px-6 md:pb-6 md:pt-[4.2rem] lg:min-h-[calc(100dvh-4rem)] lg:px-8 lg:pb-10 lg:pt-[3.65rem]">
-        <div className="grid min-h-0 w-full flex-1 grid-cols-1 items-stretch gap-3 sm:gap-5 lg:grid-cols-[minmax(0,3fr)_minmax(260px,2fr)] lg:gap-7">
+      <div className="mx-auto flex min-h-0 w-full max-w-[1600px] flex-col px-3 pb-3 pt-[3.15rem] sm:px-4 sm:pb-5 sm:pt-[3.75rem] md:px-6 md:pb-6 md:pt-[4.2rem] lg:min-h-[calc(100dvh-4rem)] lg:px-8 lg:pb-10 lg:pt-[3.65rem]">
+        <div className="grid min-h-0 w-full flex-1 grid-cols-1 items-stretch gap-4 sm:gap-5 lg:grid-cols-[minmax(0,3fr)_minmax(260px,2fr)] lg:gap-7">
           {/* Spotlight: full-width stack below lg (no squeezed side column); desktop keeps editorial split */}
-          <div className="grid min-h-0 grid-cols-1 items-stretch gap-2 sm:gap-3 max-lg:min-h-0 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.82fr)] lg:gap-5 lg:-translate-x-6 xl:-translate-x-10 2xl:-translate-x-14">
+          <div className="grid min-h-0 grid-cols-1 items-stretch gap-2.5 sm:gap-3 max-lg:min-h-0 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.82fr)] lg:gap-5 lg:-translate-x-6 xl:-translate-x-10 2xl:-translate-x-14">
             <SpotlightCard
               cardKey="spring"
               index={0}
-              className="max-lg:aspect-[5/4] max-lg:min-h-[9.5rem] max-lg:w-full lg:aspect-auto lg:min-h-0 h-full w-full"
+              className="max-lg:aspect-[5/4] max-lg:min-h-[11.5rem] max-lg:w-full lg:aspect-auto lg:min-h-0 h-full w-full"
             />
             <div className="grid min-h-0 auto-rows-fr gap-2 sm:gap-2.5 max-sm:grid-cols-1 max-sm:grid-rows-3 sm:max-lg:grid-cols-3 sm:max-lg:grid-rows-1 lg:grid-cols-1 lg:grid-rows-3 lg:gap-5">
-              <SpotlightCard cardKey="newDrop" index={1} className="min-h-0 max-sm:min-h-[6.1rem] sm:max-lg:min-h-[9.5rem]" />
-              <SpotlightCard cardKey="featured" index={2} className="min-h-0 max-sm:min-h-[6.1rem] sm:max-lg:min-h-[9.5rem]" />
-              <SpotlightCard cardKey="special" index={3} className="min-h-0 max-sm:min-h-[6.1rem] sm:max-lg:min-h-[9.5rem]" />
+              <SpotlightCard cardKey="newDrop" index={1} className="min-h-0 max-sm:min-h-[7.25rem] sm:max-lg:min-h-[9.5rem]" />
+              <SpotlightCard cardKey="featured" index={2} className="min-h-0 max-sm:min-h-[7.25rem] sm:max-lg:min-h-[9.5rem]" />
+              <SpotlightCard cardKey="special" index={3} className="min-h-0 max-sm:min-h-[7.25rem] sm:max-lg:min-h-[9.5rem]" />
             </div>
           </div>
 
@@ -963,30 +963,29 @@ const SpotlightSection = () => {
             <SectionReveal className="w-full shrink-0 lg:translate-x-5 xl:translate-x-8 2xl:translate-x-10">
               <div
                 id="philosophy"
-                className="scroll-mt-24 relative overflow-hidden rounded-3xl border border-white/20 bg-[linear-gradient(155deg,rgba(18,18,20,0.92),rgba(36,36,44,0.86))] px-4 py-4 text-center shadow-[0_28px_80px_-42px_rgba(0,0,0,0.72)] ring-1 ring-white/10 backdrop-blur-2xl sm:px-7 sm:py-8 md:px-9 md:py-10 lg:px-10 lg:py-11"
+                className="scroll-mt-24 relative overflow-hidden rounded-3xl border border-white/80 bg-[linear-gradient(160deg,rgba(255,255,255,0.62),rgba(219,234,254,0.38))] px-5 py-6 text-center shadow-[0_24px_72px_-40px_rgba(0,0,0,0.32)] backdrop-blur-2xl sm:px-7 sm:py-8 md:px-9 md:py-10 lg:px-10 lg:py-11"
               >
-                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(90%_75%_at_50%_0%,rgba(255,255,255,0.18),transparent_62%)]" aria-hidden />
-                <div className="pointer-events-none absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-amber-300/80 via-orange-300/55 to-transparent" aria-hidden />
+                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(90%_80%_at_50%_0%,rgba(255,255,255,0.38),transparent_60%)]" aria-hidden />
 
                 <div className="mb-3 flex items-center justify-center sm:mb-5">
-                  <p className="inline-flex rounded-full border border-white/35 bg-white/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/85 shadow-[0_10px_26px_-18px_rgba(0,0,0,0.5)] backdrop-blur-xl sm:px-4 sm:text-[11px] sm:tracking-[0.24em]">
+                  <p className="inline-flex rounded-full border border-white/80 bg-white/50 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-black/65 shadow-[0_8px_24px_-16px_rgba(0,0,0,0.28)] backdrop-blur-xl sm:px-4 sm:text-[11px] sm:tracking-[0.24em]">
                     {tPhilosophy.label}
                   </p>
                 </div>
 
-                <h2 className="mx-auto mb-3 max-w-[15ch] text-balance text-[1.35rem] font-black uppercase leading-[1.08] tracking-tight text-white sm:mb-5 sm:text-[2rem] md:text-[2.2rem] lg:text-[2.45rem]">
+                <h2 className="mx-auto mb-4 max-w-[15ch] text-balance text-[1.55rem] font-black uppercase leading-[1.08] tracking-tight text-black sm:mb-5 sm:text-[2rem] md:text-[2.2rem] lg:text-[2.45rem]">
                   {tPhilosophy.title}
                 </h2>
-                <div className="mx-auto mb-3 h-px w-14 bg-white/30 sm:mb-6 sm:w-20" aria-hidden />
-                <p className="mx-auto max-w-[62ch] whitespace-pre-line text-[13px] leading-relaxed text-white/82 sm:text-[15px] lg:text-[1.02rem]">
+                <div className="mx-auto mb-4 h-px w-14 bg-black/15 sm:mb-6 sm:w-20" aria-hidden />
+                <p className="mx-auto max-w-[62ch] whitespace-pre-line text-sm leading-relaxed text-black/68 sm:text-[15px] lg:text-[1.02rem]">
                   {tPhilosophy.body}
                 </p>
 
-                <div className="mt-4 hidden flex-wrap justify-center gap-1.5 sm:mt-6 sm:flex sm:gap-2.5 md:gap-3">
+                <div className="mt-4 flex flex-wrap justify-center gap-1.5 sm:mt-6 sm:gap-2.5 md:gap-3">
                   {PHILOSOPHY_BADGES_BY_LANG[lang].map((item) => (
                     <span
                       key={`${lang}-${item}`}
-                      className="inline-flex items-center rounded-full border border-white/30 bg-white/12 px-2.5 py-1.5 text-[9px] font-semibold uppercase tracking-[0.1em] text-white/90 backdrop-blur-md sm:px-3.5 sm:py-2 sm:text-[11px] sm:tracking-[0.12em] md:px-4"
+                      className="inline-flex items-center rounded-full border border-white/65 bg-white/55 px-2.5 py-1.5 text-[9px] font-semibold uppercase tracking-[0.1em] text-black/65 backdrop-blur-md sm:px-3.5 sm:py-2 sm:text-[11px] sm:tracking-[0.12em] md:px-4"
                     >
                       {item}
                     </span>
@@ -995,7 +994,7 @@ const SpotlightSection = () => {
               </div>
             </SectionReveal>
 
-            <SectionReveal className="hidden min-h-0 flex-1 flex-col basis-0 md:flex">
+            <SectionReveal className="flex min-h-0 flex-1 flex-col basis-0">
               <div className="flex min-h-0 flex-1 items-center justify-center py-2 sm:py-4">
                 <div
                   className="flex w-full max-w-none flex-nowrap items-center justify-center gap-5 sm:gap-8 lg:translate-x-6 lg:gap-12 xl:gap-16 xl:translate-x-10 2xl:translate-x-12"
@@ -1239,7 +1238,7 @@ const ClothesSection = () => {
 
       {/* Horizontal row: equal space at start/end when row is shorter than viewport; scroll when needed */}
       <div
-        className="touch-auto overscroll-x-contain overflow-x-auto overflow-y-hidden scroll-smooth pb-2 [scrollbar-width:thin] [-webkit-overflow-scrolling:touch] [scroll-padding-inline:1rem] sm:[scroll-padding-inline:1.5rem] lg:[scroll-padding-inline:2.5rem]"
+        className="touch-pan-x overscroll-x-contain overflow-x-auto overflow-y-hidden scroll-smooth pb-2 [scrollbar-width:thin] [-webkit-overflow-scrolling:touch] [scroll-padding-inline:1rem] sm:[scroll-padding-inline:1.5rem] lg:[scroll-padding-inline:2.5rem]"
         role="region"
         aria-label={t.title}
       >
