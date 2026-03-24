@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'motion/react';
-import { ShoppingBag, Search, Instagram, MapPin, Phone, ArrowUpRight, Clock, ArrowRight, X } from 'lucide-react';
+import { ShoppingBag, Instagram, MapPin, Phone, ArrowUpRight, Clock, ArrowRight } from 'lucide-react';
 import { cn } from './lib/utils';
 
 /** PNG exports in /photo (210 stack + partner / signature mark) */
@@ -13,6 +13,10 @@ const BRAND_MARQUEE_ITEMS = [
   { alt: 'Gucci', slug: 'gucci' as const },
   { alt: 'Adidas', slug: 'adidas' as const },
   { alt: 'Nike', slug: 'nike' as const },
+  { alt: 'On', slug: 'on' as const },
+  { alt: 'Puma', slug: 'puma' as const },
+  { alt: 'Wilson', slug: 'wilson' as const },
+  { alt: 'Under Armour', slug: 'under-armour' as const },
   { alt: 'FILA', slug: 'fila' as const },
   { alt: 'Hermès', slug: 'hermes' as const }
 ] as const;
@@ -24,13 +28,13 @@ const CARD_BG = {
     'https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&q=85&w=1200',
   /** Spring / seasonal menswear */
   spring:
-    'https://images.unsplash.com/photo-1617137968427-85924c2a2efd?auto=format&fit=crop&q=85&w=1200',
+    new URL('../photo/Kiyimlar/photo_2026-03-23_17-04-01.jpg', import.meta.url).href,
   /** Shoes */
   newDrop:
     'https://images.unsplash.com/photo-1600185365921-3fcc2f66655b?auto=format&fit=crop&q=85&w=1200',
   /** Fragrances */
   special:
-    'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&q=85&w=1200'
+    new URL('../photo/Atirlar/photo_2026-03-24_14-06-50.jpg', import.meta.url).href
 } as const;
 
 /** Replace with your real contacts */
@@ -41,11 +45,10 @@ const CONTACT_PHONE_LABEL = '+998 952 100 000';
 
 /** Parfyumeriya spotlight kartasi — slayd tartibi: Crivelli → Tom Ford → Bleu de Chanel → ROJA → Bvlgari */
 const PERFUME_SPOTLIGHT_SLIDES = [
-  new URL('../photo/Atirlar/photo_2026-03-22_12-58-53.jpg', import.meta.url).href,
+  new URL('../photo/Atirlar/photo_2026-03-24_14-06-50.jpg', import.meta.url).href,
   new URL('../photo/Atirlar/photo_2026-03-22_13-00-18.jpg', import.meta.url).href,
   new URL('../photo/Atirlar/photo_2026-03-22_13-00-08.jpg', import.meta.url).href,
-  new URL('../photo/Atirlar/photo_2026-03-22_12-59-59.jpg', import.meta.url).href,
-  new URL('../photo/Atirlar/photo_2026-03-22_13-00-14.jpg', import.meta.url).href
+  new URL('../photo/Atirlar/photo_2026-03-22_12-59-59.jpg', import.meta.url).href
 ] as const;
 
 /** Soatlar spotlight kartasi — premium soat suratlari (tartib: Santos-style → Daytona ice-blue → two-tone Daytona → AP Royal Oak) */
@@ -67,11 +70,15 @@ const SHOE_SPOTLIGHT_SLIDES = [
 /** Bahor kolleksiyasi — yangi “kiyimlar” spotlight slides */
 const SPRING_SPOTLIGHT_SLIDES = [
   new URL('../photo/Kiyimlar/photo_2026-03-23_17-04-01.jpg', import.meta.url).href,
-  new URL('../photo/Kiyimlar/photo_2026-03-23_17-04-17.jpg', import.meta.url).href,
-  new URL('../photo/Kiyimlar/photo_2026-03-23_17-05-08.jpg', import.meta.url).href,
-  new URL('../photo/Kiyimlar/photo_2026-03-23_17-10-38.jpg', import.meta.url).href
+  new URL('../photo/Kiyimlar/photo_2026-03-23_17-10-38.jpg', import.meta.url).href,
+  new URL('../photo/Kiyimlar/photo_2026-03-24_13-43-11.jpg', import.meta.url).href,
+  new URL('../photo/Kiyimlar/photo_2026-03-24_13-43-16.jpg', import.meta.url).href
 ] as const;
-const DAILY_LOOK_IMAGE_SRC = new URL('../photo/Kiyimlar/photo_2026-03-23_17-05-08.jpg', import.meta.url).href;
+const DAILY_LOOK_IMAGE_SRC = '/daily/main.png';
+const DAILY_LOOK_SIDE_CARD_1_SRC = '/daily/side-1.png';
+const DAILY_LOOK_SIDE_CARD_2_SRC = '/daily/side-2.png';
+const DAILY_LOOK_FALLBACK_SRC = '/daily/main.png';
+const PARTNER_BRANDS_IMAGE_SRC = '/brands/partner-brands-glass.png';
 
 /** Spotlight slaydlari (oyoq kiyim + soatlar + atirlar) — bir xil tezlik va fade */
 const SPOTLIGHT_SLIDE_MS = 2800;
@@ -148,12 +155,13 @@ const TelegramIcon = ({ className, size = 22 }: { className?: string; size?: num
 
 // --- Types ---
 type Language = 'uz' | 'ru' | 'en';
+type DailyLookItemKind = 'vest' | 'sweater' | 'pants' | 'sneakers';
 
 interface Translations {
   ui: {
     addToCart: string;
-    /** Search icon — scrolls to clothes / catalog */
-    searchNavigate: string;
+    /** Contact button — starts phone call */
+    contactCall: string;
   };
   nav: {
     home: string;
@@ -177,6 +185,9 @@ interface Translations {
     label: string;
     title: string;
     body: string;
+    brandsTitle: string;
+    brandsBody: string;
+    brandsNote: string;
     items: readonly { name: string; price: string }[];
   };
   dailyLooks: {
@@ -185,7 +196,7 @@ interface Translations {
     body: string;
     priceLabel: string;
     updatedLabel: string;
-    items: readonly { name: string; price: string }[];
+    items: readonly { name: string; price: string; kind: DailyLookItemKind }[];
   };
   branches: {
     label: string;
@@ -201,7 +212,7 @@ const TRANSLATIONS: Record<Language, Translations> = {
   uz: {
     ui: {
       addToCart: "Savatchaga",
-      searchNavigate: "Kiyimlarga o‘tish"
+      contactCall: "Aloqa"
     },
     nav: {
       home: "Bosh sahifa",
@@ -245,6 +256,9 @@ const TRANSLATIONS: Record<Language, Translations> = {
       label: "Kiyimlar",
       title: "Yangi kiyimlar bo'limi",
       body: "",
+      brandsTitle: "Hamkor brendlar",
+      brandsBody: "Dunyo brendlari bilan rasmiy hamkorlikda ishlaymiz. Bizda faqat so‘nggi va premiumdir. Har bir model sifat, qulaylik va zamonaviy uslub bo‘yicha tanlanadi.",
+      brandsNote: "Mahsulotlarimiz originalligiga kafolat 100%.",
       items: [
         { name: 'Ko\'ylak va polo', price: '1 150 000 so\'m' },
         { name: 'Kurtka va paltolar', price: '4 200 000 so\'m' },
@@ -256,14 +270,15 @@ const TRANSLATIONS: Record<Language, Translations> = {
     },
     dailyLooks: {
       label: "Kunlik look",
-      title: "Bugungi obraz",
-      body: "",
-      priceLabel: "Narx",
+      title: "Bugungi look",
+      body: "Bugungi to'plamimiz Wilson brendidan bahor uchun to'liq kolleksiya.\nYashil va oq ranglar kombinatsiya qilingan premium va yumshoq materiallar ishlatilgan.",
+      priceLabel: "Jami: 1,546,000 so'm",
       updatedLabel: "Har kuni yangilanadi",
       items: [
-        { name: "Zip jaket", price: "1 290 000 so'm" },
-        { name: "Shim", price: "890 000 so'm" },
-        { name: "Polo", price: "640 000 so'm" }
+        { name: "Nimcha", price: "299,000 so'm", kind: 'vest' },
+        { name: "Sviter", price: "399,000 so'm", kind: 'sweater' },
+        { name: "Shim", price: "349,000 so'm", kind: 'pants' },
+        { name: "Krossovka", price: "499,000 so'm", kind: 'sneakers' }
       ]
     },
     branches: {
@@ -278,7 +293,7 @@ const TRANSLATIONS: Record<Language, Translations> = {
   ru: {
     ui: {
       addToCart: "В корзину",
-      searchNavigate: "Перейти к одежде"
+      contactCall: "Связь"
     },
     nav: {
       home: "Главная",
@@ -322,6 +337,9 @@ const TRANSLATIONS: Record<Language, Translations> = {
       label: "Одежда",
       title: "Раздел одежды",
       body: "",
+      brandsTitle: "Бренды-партнеры",
+      brandsBody: "В разделе одежды мы работаем с оригинальными коллекциями мировых брендов. Каждая модель отбирается по качеству, комфорту и актуальному стилю.",
+      brandsNote: "Оригинальные бренды и регулярно обновляемая коллекция",
       items: [
         { name: 'Рубашки и поло', price: '1 150 000 сум' },
         { name: 'Куртки и пальто', price: '4 200 000 сум' },
@@ -334,13 +352,14 @@ const TRANSLATIONS: Record<Language, Translations> = {
     dailyLooks: {
       label: "Образ дня",
       title: "Сегодняшний образ",
-      body: "",
-      priceLabel: "Цена",
+      body: "Сегодняшний look: zip-куртка, поло и брюки в спортивно-casual сочетании.",
+      priceLabel: "Цены от",
       updatedLabel: "Обновляется ежедневно",
       items: [
-        { name: "Zip-куртка", price: "1 290 000 сум" },
-        { name: "Брюки", price: "890 000 сум" },
-        { name: "Поло", price: "640 000 сум" }
+        { name: "Жилет", price: "299,000 сум", kind: 'vest' },
+        { name: "Свитер", price: "399,000 сум", kind: 'sweater' },
+        { name: "Брюки", price: "349,000 сум", kind: 'pants' },
+        { name: "Кроссовки", price: "499,000 сум", kind: 'sneakers' }
       ]
     },
     branches: {
@@ -355,7 +374,7 @@ const TRANSLATIONS: Record<Language, Translations> = {
   en: {
     ui: {
       addToCart: "Add to basket",
-      searchNavigate: "Go to clothes"
+      contactCall: "Contact"
     },
     nav: {
       home: "Home",
@@ -399,6 +418,9 @@ const TRANSLATIONS: Record<Language, Translations> = {
       label: "Clothes",
       title: "Clothing section",
       body: "",
+      brandsTitle: "Partner Brands",
+      brandsBody: "In our clothing section, we work with original collections from global brands. Each model is selected for quality, comfort, and a modern style direction.",
+      brandsNote: "Original brands with a regularly refreshed assortment",
       items: [
         { name: 'Shirts & polos', price: '1,150,000 UZS' },
         { name: 'Jackets & coats', price: '4,200,000 UZS' },
@@ -411,13 +433,14 @@ const TRANSLATIONS: Record<Language, Translations> = {
     dailyLooks: {
       label: "Daily look",
       title: "Look of the day",
-      body: "",
-      priceLabel: "Price",
+      body: "Today’s look: a zip jacket, polo shirt, and trousers in a sport-casual mix.",
+      priceLabel: "Prices from",
       updatedLabel: "Updated daily",
       items: [
-        { name: "Zip jacket", price: "1,290,000 UZS" },
-        { name: "Trousers", price: "890,000 UZS" },
-        { name: "Polo shirt", price: "640,000 UZS" }
+        { name: "Vest", price: "299,000 UZS", kind: 'vest' },
+        { name: "Sweater", price: "399,000 UZS", kind: 'sweater' },
+        { name: "Pants", price: "349,000 UZS", kind: 'pants' },
+        { name: "Sneakers", price: "499,000 UZS", kind: 'sneakers' }
       ]
     },
     branches: {
@@ -437,19 +460,51 @@ const PHILOSOPHY_BADGES_BY_LANG: Record<Language, readonly string[]> = {
   en: ['Original products', 'Premium service', 'Fast support']
 };
 
+const DailyLookItemIcon: React.FC<{ kind: DailyLookItemKind; className?: string }> = ({ kind, className }) => {
+  if (kind === 'pants') {
+    return (
+      <svg viewBox="0 0 24 24" className={className} fill="#000" aria-hidden>
+        <path d="M8 3h8l1 6-2 12h-3l-1-7-1 7H7L5 9l3-6z" />
+      </svg>
+    );
+  }
+
+  if (kind === 'sneakers') {
+    return (
+      <svg viewBox="0 0 24 24" className={className} fill="#000" aria-hidden>
+        <path d="M3 15h5l3-3 4 2 2 2h4v3H3v-4z" />
+      </svg>
+    );
+  }
+
+  if (kind === 'sweater' || kind === 'vest') {
+    return (
+      <svg viewBox="0 0 24 24" className={className} fill="#000" aria-hidden>
+        <path d="M9 4l3-2 3 2 3 3-2 3v10H8V10L6 7l3-3z" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="#000" aria-hidden>
+      <circle cx="12" cy="12" r="3" />
+    </svg>
+  );
+};
+
 // --- Context for Language ---
 const LangContext = React.createContext<{ lang: Language; setLang: (l: Language) => void }>({ lang: 'uz', setLang: () => {} });
 
 // --- Components ---
 
 const Navbar = () => {
-  const sectionIds = ['spotlight', 'daily-looks', 'clothes', 'brand-marquee', 'branches'] as const;
+  const sectionIds = ['spotlight', 'partner-brands', 'daily-looks', 'clothes', 'branches'] as const;
   const [activeSection, setActiveSection] = useState<(typeof sectionIds)[number]>('spotlight');
   const visibleRatiosRef = useRef<Record<(typeof sectionIds)[number], number>>({
     spotlight: 0,
+    'partner-brands': 0,
     'daily-looks': 0,
     clothes: 0,
-    'brand-marquee': 0,
     branches: 0
   });
   const { lang, setLang } = React.useContext(LangContext);
@@ -511,10 +566,10 @@ const Navbar = () => {
     );
   const navLinkMobilePill = (id: (typeof sectionIds)[number]) =>
     cn(
-      'inline-flex shrink-0 items-center justify-center rounded-full px-2 py-1.5 text-[8px] font-medium uppercase leading-none tracking-[0.06em] antialiased transition-all duration-200 min-[400px]:px-2.5 min-[400px]:text-[9px] sm:text-[10px]',
+      'inline-flex shrink-0 items-center justify-center rounded-full px-2 py-1.5 text-[8px] font-medium uppercase leading-none tracking-[0.06em] antialiased transition-all duration-200 [-webkit-tap-highlight-color:transparent] min-[400px]:px-2.5 min-[400px]:text-[9px] sm:text-[10px]',
       activeSection === id
         ? 'bg-black/12 text-black'
-        : 'text-black/75 active:bg-black/8'
+        : 'text-black/75 hover:bg-black/8 hover:text-black'
     );
   const logoSep = 'text-black/30';
 
@@ -523,7 +578,7 @@ const Navbar = () => {
       initial={false}
       className="relative z-40 bg-transparent"
     >
-      {/* Mobile / small tablet: same structure as desktop — logo | scrollable nav+lang pill | search */}
+      {/* Mobile / small tablet: same structure as desktop — logo | scrollable nav+lang pill | contact */}
       <div className="pointer-events-none fixed inset-x-0 top-0 z-[95] flex items-center gap-1.5 px-2 pt-2 sm:gap-2 sm:px-3 md:hidden">
         <motion.a
           href="#"
@@ -554,7 +609,7 @@ const Navbar = () => {
 
         <nav
           aria-label="Main"
-          className="pointer-events-auto min-h-[2.5rem] min-w-0 flex-1 overflow-x-auto overflow-y-hidden overscroll-x-contain scroll-smooth touch-pan-x [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="pointer-events-auto min-h-[2.5rem] min-w-0 flex-1 overflow-x-auto overflow-y-hidden overscroll-x-contain scroll-smooth touch-pan-x [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [-webkit-tap-highlight-color:transparent] [&::-webkit-scrollbar]:hidden"
         >
           <div className="inline-flex min-h-[2.5rem] w-max max-w-none items-center gap-0.5 rounded-full border border-black/12 bg-white/92 py-1 pl-1.5 pr-1.5 shadow-[0_8px_30px_-10px_rgba(0,0,0,0.2)] ring-1 ring-black/[0.06] backdrop-blur-xl supports-[backdrop-filter]:bg-white/85 min-[400px]:gap-1 min-[400px]:px-2">
             <a href="#spotlight" className={navLinkMobilePill('spotlight')}>
@@ -569,7 +624,7 @@ const Navbar = () => {
             <a href="#branches" className={navLinkMobilePill('branches')}>
               {t.branches}
             </a>
-            <a href="#brand-marquee" className={navLinkMobilePill('brand-marquee')}>
+            <a href="#partner-brands" className={navLinkMobilePill('partner-brands')}>
               {t.brands}
             </a>
             <div className="mx-0.5 h-4 w-px shrink-0 bg-black/20" aria-hidden />
@@ -592,12 +647,13 @@ const Navbar = () => {
         </nav>
 
         <motion.a
-          href="#clothes"
-          className="pointer-events-auto flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-black/12 bg-white/95 text-black shadow-[0_6px_22px_-8px_rgba(0,0,0,0.18)] ring-1 ring-black/[0.06] backdrop-blur-md transition-colors active:bg-black/[0.04]"
+          href={CONTACT_PHONE_TEL}
+          className="pointer-events-auto inline-flex h-9 shrink-0 items-center justify-center rounded-full border border-black/12 bg-white/95 px-3 text-[11px] font-bold uppercase tracking-[0.08em] text-black shadow-[0_6px_22px_-8px_rgba(0,0,0,0.18)] ring-1 ring-black/[0.06] backdrop-blur-md transition-colors active:bg-black/[0.04]"
           whileTap={{ scale: 0.96 }}
-          aria-label={ui.searchNavigate}
+          aria-label={`${ui.contactCall}: ${CONTACT_PHONE_LABEL}`}
         >
-          <Search size={18} strokeWidth={1.75} />
+          <span>{ui.contactCall}</span>
+          <ArrowUpRight size={14} strokeWidth={2} className="ml-1.5 shrink-0" />
         </motion.a>
       </div>
 
@@ -605,7 +661,7 @@ const Navbar = () => {
 
       <div className="mx-auto hidden h-[3.75rem] max-w-[1600px] px-4 md:block md:h-[4rem] lg:px-10" aria-hidden />
 
-      {/* md+: fixed logo + centered bar + search (matches desktop mock) */}
+      {/* md+: fixed logo + centered bar + contact (matches desktop mock) */}
       <motion.a
         href="#"
         className="fixed top-2 left-3 z-[96] hidden items-center gap-2 rounded-full border border-black/12 bg-white/95 px-3 py-2 shadow-[0_6px_24px_-6px_rgba(0,0,0,0.18)] ring-1 ring-black/[0.06] backdrop-blur-md sm:left-6 md:flex md:gap-2.5 lg:left-10"
@@ -648,7 +704,7 @@ const Navbar = () => {
           <a href="#branches" className={navLinkInBar('branches')}>
             {t.branches}
           </a>
-          <a href="#brand-marquee" className={navLinkInBar('brand-marquee')}>
+          <a href="#partner-brands" className={navLinkInBar('partner-brands')}>
             {t.brands}
           </a>
           <div className="h-5 w-px shrink-0 bg-black/20" aria-hidden />
@@ -671,13 +727,14 @@ const Navbar = () => {
       </div>
 
       <motion.a
-        href="#clothes"
-        className="fixed top-2 right-3 z-[96] hidden h-10 w-10 items-center justify-center rounded-full border border-black/12 bg-white/95 text-black shadow-[0_6px_24px_-6px_rgba(0,0,0,0.18)] ring-1 ring-black/[0.06] backdrop-blur-md transition-colors hover:bg-black/[0.03] sm:right-6 md:flex lg:right-10"
+        href={CONTACT_PHONE_TEL}
+        className="fixed top-2 right-3 z-[96] hidden h-10 items-center justify-center rounded-full border border-black/12 bg-white/95 px-4 text-[11px] font-bold uppercase tracking-[0.08em] text-black shadow-[0_6px_24px_-6px_rgba(0,0,0,0.18)] ring-1 ring-black/[0.06] backdrop-blur-md transition-colors hover:bg-black/[0.03] sm:right-6 md:inline-flex lg:right-10"
         whileHover={{ scale: 1.03 }}
         whileTap={{ scale: 0.96 }}
-        aria-label={ui.searchNavigate}
+        aria-label={`${ui.contactCall}: ${CONTACT_PHONE_LABEL}`}
       >
-        <Search size={20} strokeWidth={1.75} />
+        <span>{ui.contactCall}</span>
+        <ArrowUpRight size={15} strokeWidth={2} className="ml-1.5 shrink-0" />
       </motion.a>
     </motion.nav>
   );
@@ -768,9 +825,9 @@ const SPOTLIGHT_SWIPE_DOMINANCE = 1.15;
 const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number; className?: string }> = ({ cardKey, index, className }) => {
   const { lang } = React.useContext(LangContext);
   const copy = TRANSLATIONS[lang].cards[cardKey];
-  const ui = TRANSLATIONS[lang].ui;
   const overlay = SPOTLIGHT_ACCENT[cardKey];
   const slideSet = SPOTLIGHT_SLIDE_SETS[cardKey];
+  const isCompactCard = index > 0;
   const [slideIndex, setSlideIndex] = useState(0);
   const swipeTouchRef = useRef<{ x: number; y: number } | null>(null);
   const blockTelegramClickRef = useRef(false);
@@ -786,10 +843,10 @@ const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number; className?
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.08, type: 'spring', stiffness: 76, damping: 22 }}
-      whileTap={{ scale: 0.985 }}
-      whileHover={{ y: -4 }}
+      whileTap={{ scale: 0.992 }}
+      whileHover={{ y: -6 }}
       className={cn(
-        'group relative h-full w-full min-h-0 overflow-hidden rounded-2xl border border-black/[0.08] bg-neutral-900 shadow-[0_20px_48px_-30px_rgba(0,0,0,0.42)] touch-pan-y',
+        'group relative h-full w-full min-h-0 overflow-hidden rounded-3xl border border-white/70 bg-white/22 shadow-[0_22px_60px_-34px_rgba(0,0,0,0.45)] backdrop-blur-xl touch-pan-y',
         className
       )}
     >
@@ -840,7 +897,7 @@ const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number; className?
         }
       />
       <div className="absolute inset-0">
-        {slideSet ? (
+        {slideSet && slideSet.length > 0 ? (
           <div className="absolute inset-0 overflow-hidden touch-pan-y">
             <SpotlightCrossfadeSlideshow
               slides={slideSet}
@@ -853,38 +910,28 @@ const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number; className?
           <img
             src={CARD_BG[cardKey]}
             alt=""
-            className="h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+            className="h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.07]"
             loading={index < 2 ? 'eager' : 'lazy'}
             decoding="async"
             referrerPolicy="no-referrer"
           />
         )}
-        <div className={cn('absolute inset-0 bg-gradient-to-t', overlay)} />
-        <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/10" />
+        <div className="pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-inset ring-white/35" />
       </div>
-      <div className="pointer-events-none relative z-[2] flex h-full min-h-0 flex-col justify-end p-2.5 text-left sm:p-3 lg:p-4">
-        <span className="mb-1 inline-flex w-fit rounded-full border border-white/20 bg-white/15 px-1.5 py-0.5 text-[7px] font-bold uppercase tracking-[0.18em] text-white/90 backdrop-blur-md sm:mb-1.5 sm:px-2 sm:py-1 sm:text-[9px] sm:tracking-[0.2em]">
-          {copy.label}
-        </span>
-        <h2 className="text-[10px] font-black uppercase leading-tight tracking-tight text-white drop-shadow-sm line-clamp-2 min-[380px]:line-clamp-3 min-[380px]:text-xs sm:text-[13px] lg:line-clamp-none lg:text-[15px]">
-          {copy.title}
-        </h2>
-        <p className="mt-0.5 line-clamp-2 text-[10px] leading-snug text-white/85 sm:mt-1 sm:text-xs lg:line-clamp-2">
-          {copy.body}
-        </p>
-        <div className="pointer-events-auto mt-1.5 flex items-center justify-end gap-2 border-t border-white/20 pt-1.5 sm:mt-2 sm:pt-2">
-          <button
-            type="button"
-            className="inline-flex size-7 shrink-0 items-center justify-center rounded-full border border-white/35 bg-white/15 p-1.5 text-white backdrop-blur-md transition-colors hover:bg-white/25 sm:size-9 sm:p-2"
-            aria-label={ui.addToCart}
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-            }}
-          >
-            <ShoppingBag className="h-3.5 w-3.5 sm:h-4 sm:w-4" strokeWidth={1.85} />
-          </button>
-        </div>
+      <div className={cn('pointer-events-none absolute inset-x-0 bottom-0 z-[2]', isCompactCard ? 'p-2 sm:p-2.5' : 'p-2.5 sm:p-3 lg:p-4')}>
+        {isCompactCard ? (
+          <div className="flex">
+            <span className="inline-flex max-w-[92%] items-center rounded-full border border-white/45 bg-white/20 px-2.5 py-1 text-[10px] font-black uppercase leading-tight tracking-[0.08em] text-white backdrop-blur-[7px] sm:px-3 sm:py-1.5 sm:text-[11px]">
+              <span className="line-clamp-1">{copy.title}</span>
+            </span>
+          </div>
+        ) : (
+          <div className="inline-flex max-w-[95%] items-center rounded-full border border-white/70 bg-white/35 px-3 py-1.5 text-white shadow-[0_10px_30px_-18px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:px-3.5 sm:py-2 lg:px-4">
+            <span className="line-clamp-1 text-[11px] font-black uppercase leading-tight tracking-[0.09em] sm:text-[13px] lg:text-[14px]">
+              {copy.title}
+            </span>
+          </div>
+        )}
       </div>
     </motion.div>
   );
@@ -896,19 +943,19 @@ const SpotlightSection = () => {
 
   return (
     <section id="spotlight" className="scroll-mt-20 bg-gradient-to-b from-white to-neutral-50/50 min-h-0 overflow-x-hidden lg:min-h-screen lg:scroll-mt-24">
-      <div className="mx-auto flex min-h-0 w-full max-w-[1600px] flex-col px-3 pb-3 pt-[3.15rem] sm:px-4 sm:pb-5 sm:pt-[3.75rem] md:px-6 md:pb-6 md:pt-[4.2rem] lg:min-h-[calc(100dvh-4rem)] lg:px-8 lg:pb-10 lg:pt-[3.65rem]">
-        <div className="grid min-h-0 w-full flex-1 grid-cols-1 items-stretch gap-4 sm:gap-5 lg:grid-cols-[minmax(0,3fr)_minmax(260px,2fr)] lg:gap-7">
+      <div className="mx-auto flex min-h-0 w-full max-w-[1600px] flex-col px-3 pb-2 pt-[2.8rem] sm:px-4 sm:pb-5 sm:pt-[3.75rem] md:px-6 md:pb-6 md:pt-[4.2rem] lg:min-h-[calc(100dvh-4rem)] lg:px-8 lg:pb-10 lg:pt-[3.65rem]">
+        <div className="grid min-h-0 w-full flex-1 grid-cols-1 items-stretch gap-3 sm:gap-5 lg:grid-cols-[minmax(0,3fr)_minmax(260px,2fr)] lg:gap-7">
           {/* Spotlight: full-width stack below lg (no squeezed side column); desktop keeps editorial split */}
-          <div className="grid min-h-0 grid-cols-1 items-stretch gap-2.5 sm:gap-3 max-lg:min-h-0 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.82fr)] lg:gap-5 lg:-translate-x-6 xl:-translate-x-10 2xl:-translate-x-14">
+          <div className="grid min-h-0 grid-cols-1 items-stretch gap-2 sm:gap-3 max-lg:min-h-0 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.82fr)] lg:gap-5 lg:-translate-x-6 xl:-translate-x-10 2xl:-translate-x-14">
             <SpotlightCard
               cardKey="spring"
               index={0}
-              className="max-lg:aspect-[5/4] max-lg:min-h-[11.5rem] max-lg:w-full lg:aspect-auto lg:min-h-0 h-full w-full"
+              className="max-lg:aspect-[5/4] max-lg:min-h-[9.5rem] max-lg:w-full lg:aspect-auto lg:min-h-0 h-full w-full"
             />
             <div className="grid min-h-0 auto-rows-fr gap-2 sm:gap-2.5 max-sm:grid-cols-1 max-sm:grid-rows-3 sm:max-lg:grid-cols-3 sm:max-lg:grid-rows-1 lg:grid-cols-1 lg:grid-rows-3 lg:gap-5">
-              <SpotlightCard cardKey="newDrop" index={1} className="min-h-0 max-sm:min-h-[7.25rem] sm:max-lg:min-h-[9.5rem]" />
-              <SpotlightCard cardKey="featured" index={2} className="min-h-0 max-sm:min-h-[7.25rem] sm:max-lg:min-h-[9.5rem]" />
-              <SpotlightCard cardKey="special" index={3} className="min-h-0 max-sm:min-h-[7.25rem] sm:max-lg:min-h-[9.5rem]" />
+              <SpotlightCard cardKey="newDrop" index={1} className="min-h-0 max-sm:min-h-[6.1rem] sm:max-lg:min-h-[9.5rem]" />
+              <SpotlightCard cardKey="featured" index={2} className="min-h-0 max-sm:min-h-[6.1rem] sm:max-lg:min-h-[9.5rem]" />
+              <SpotlightCard cardKey="special" index={3} className="min-h-0 max-sm:min-h-[6.1rem] sm:max-lg:min-h-[9.5rem]" />
             </div>
           </div>
 
@@ -916,31 +963,30 @@ const SpotlightSection = () => {
             <SectionReveal className="w-full shrink-0 lg:translate-x-5 xl:translate-x-8 2xl:translate-x-10">
               <div
                 id="philosophy"
-                className="scroll-mt-24 relative rounded-2xl border border-black/10 bg-white px-4 py-6 text-center shadow-[0_14px_44px_-32px_rgba(0,0,0,0.35)] sm:rounded-3xl sm:px-6 sm:py-8 md:px-8 md:py-9 lg:px-9 lg:py-10 lg:shadow-[0_18px_60px_-40px_rgba(0,0,0,0.35)]"
+                className="scroll-mt-24 relative overflow-hidden rounded-3xl border border-white/20 bg-[linear-gradient(155deg,rgba(18,18,20,0.92),rgba(36,36,44,0.86))] px-4 py-4 text-center shadow-[0_28px_80px_-42px_rgba(0,0,0,0.72)] ring-1 ring-white/10 backdrop-blur-2xl sm:px-7 sm:py-8 md:px-9 md:py-10 lg:px-10 lg:py-11"
               >
-                <div className="absolute -left-3 -top-3 h-9 w-9 rounded-full bg-black/5 blur-[0.5px] sm:-left-5 sm:-top-5 sm:h-12 sm:w-12" aria-hidden />
-                <div className="absolute -bottom-4 -right-4 h-10 w-10 rounded-full bg-black/5 blur-[0.5px] sm:-bottom-6 sm:-right-6 sm:h-14 sm:w-14" aria-hidden />
+                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(90%_75%_at_50%_0%,rgba(255,255,255,0.18),transparent_62%)]" aria-hidden />
+                <div className="pointer-events-none absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-amber-300/80 via-orange-300/55 to-transparent" aria-hidden />
 
-                <div className="mb-2 flex items-center justify-center gap-2 sm:mb-4 sm:gap-3">
-                  <span className="h-2 w-2 shrink-0 rounded-full bg-black sm:h-3 sm:w-3" aria-hidden />
-                  <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-black/55 sm:text-sm sm:tracking-[0.28em]">
+                <div className="mb-3 flex items-center justify-center sm:mb-5">
+                  <p className="inline-flex rounded-full border border-white/35 bg-white/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/85 shadow-[0_10px_26px_-18px_rgba(0,0,0,0.5)] backdrop-blur-xl sm:px-4 sm:text-[11px] sm:tracking-[0.24em]">
                     {tPhilosophy.label}
                   </p>
                 </div>
 
-                <h2 className="mb-3 text-balance text-xl font-black uppercase leading-[1.15] text-black sm:mb-4 sm:text-2xl md:mb-5 md:text-3xl lg:text-[2.35rem] lg:leading-[1.12]">
+                <h2 className="mx-auto mb-3 max-w-[15ch] text-balance text-[1.35rem] font-black uppercase leading-[1.08] tracking-tight text-white sm:mb-5 sm:text-[2rem] md:text-[2.2rem] lg:text-[2.45rem]">
                   {tPhilosophy.title}
                 </h2>
-                <div className="mx-auto mb-3 h-px w-16 bg-black/20 sm:mb-5 sm:w-24" aria-hidden />
-                <p className="whitespace-pre-line text-sm leading-relaxed text-black/70 sm:text-base lg:text-[1.125rem]">
+                <div className="mx-auto mb-3 h-px w-14 bg-white/30 sm:mb-6 sm:w-20" aria-hidden />
+                <p className="mx-auto max-w-[62ch] whitespace-pre-line text-[13px] leading-relaxed text-white/82 sm:text-[15px] lg:text-[1.02rem]">
                   {tPhilosophy.body}
                 </p>
 
-                <div className="mt-3 flex flex-wrap justify-center gap-1.5 sm:mt-5 sm:gap-2.5 md:gap-3">
+                <div className="mt-4 hidden flex-wrap justify-center gap-1.5 sm:mt-6 sm:flex sm:gap-2.5 md:gap-3">
                   {PHILOSOPHY_BADGES_BY_LANG[lang].map((item) => (
                     <span
                       key={`${lang}-${item}`}
-                      className="inline-flex items-center rounded-full border border-black/15 bg-black/[0.03] px-2.5 py-1.5 text-[9px] font-bold uppercase tracking-[0.1em] text-black/70 sm:px-3.5 sm:py-2 sm:text-[11px] sm:tracking-[0.12em] md:px-4"
+                      className="inline-flex items-center rounded-full border border-white/30 bg-white/12 px-2.5 py-1.5 text-[9px] font-semibold uppercase tracking-[0.1em] text-white/90 backdrop-blur-md sm:px-3.5 sm:py-2 sm:text-[11px] sm:tracking-[0.12em] md:px-4"
                     >
                       {item}
                     </span>
@@ -949,7 +995,7 @@ const SpotlightSection = () => {
               </div>
             </SectionReveal>
 
-            <SectionReveal className="flex min-h-0 flex-1 flex-col basis-0">
+            <SectionReveal className="hidden min-h-0 flex-1 flex-col basis-0 md:flex">
               <div className="flex min-h-0 flex-1 items-center justify-center py-2 sm:py-4">
                 <div
                   className="flex w-full max-w-none flex-nowrap items-center justify-center gap-5 sm:gap-8 lg:translate-x-6 lg:gap-12 xl:gap-16 xl:translate-x-10 2xl:translate-x-12"
@@ -1043,58 +1089,123 @@ const DailyLooksSection = () => {
           <p className="mb-2 text-center text-xs font-bold uppercase tracking-[0.28em] text-black/45 sm:text-left sm:tracking-[0.3em]">
             {t.label}
           </p>
-          <div className="grid flex-1 grid-cols-1 items-start gap-6 md:gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-8">
-            <article className="relative mx-auto aspect-[9/16] w-full max-w-[min(100%,min(92vw,calc((100dvh-12rem)*9/16)))] shrink-0 overflow-hidden rounded-2xl border border-black/[0.08] sm:mx-0 lg:mx-0">
-              <img
-                src={DAILY_LOOK_IMAGE_SRC}
-                alt={t.title}
-                className="absolute inset-0 h-full w-full object-cover object-[50%_35%]"
-                loading="eager"
-                decoding="async"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/15 to-transparent" />
-              <p className="absolute left-4 bottom-4 text-white text-[11px] font-semibold uppercase tracking-[0.18em]">
-                {t.updatedLabel}
-              </p>
-            </article>
+          <div className="grid flex-1 grid-cols-1 items-start gap-6 md:gap-6 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:gap-8">
+            <motion.div
+              className="mx-auto flex w-full max-w-[min(100%,min(96vw,calc((100dvh-12rem)*1.04)))] items-center justify-center gap-3 sm:mx-0 sm:justify-start sm:gap-4 lg:-ml-8"
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-60px 0px -80px 0px' }}
+              transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <motion.article
+                className="relative z-20 aspect-[9/16] w-[min(76vw,342px)] shrink-0 overflow-hidden rounded-2xl border border-white/40 shadow-[0_14px_45px_-28px_rgba(0,0,0,0.32)] sm:w-[min(47vw,368px)] lg:w-[min(31vw,410px)]"
+                initial={{ opacity: 0, x: -16, scale: 0.98 }}
+                whileInView={{ opacity: 1, x: 0, scale: 1 }}
+                viewport={{ once: true, margin: '-60px 0px -80px 0px' }}
+                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.06 }}
+                animate={{ y: [0, -4, 0] }}
+                whileHover={{ y: -6, scale: 1.01 }}
+                whileTap={{ scale: 0.995 }}
+              >
+                <img
+                  src={DAILY_LOOK_IMAGE_SRC}
+                  alt={t.title}
+                  className="absolute inset-0 h-full w-full object-cover object-[50%_24%]"
+                  loading="eager"
+                  decoding="async"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = DAILY_LOOK_FALLBACK_SRC;
+                  }}
+                />
+                <p className="absolute left-4 bottom-4 text-white text-[11px] font-semibold uppercase tracking-[0.18em]">
+                  {t.updatedLabel}
+                </p>
+              </motion.article>
 
-            <article className="flex flex-col rounded-2xl border border-black/[0.08] bg-white p-5 sm:p-6 lg:p-7">
-              <h2 className="text-balance text-center text-2xl font-black uppercase leading-tight text-black sm:text-left md:text-3xl">
+              <motion.div
+                className="relative flex flex-col justify-center gap-3 sm:gap-4"
+                initial={{ opacity: 0, x: 16 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: '-60px 0px -80px 0px' }}
+                transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: 0.14 }}
+              >
+                <motion.article
+                  className="relative aspect-[3/4] w-[min(36vw,190px)] overflow-hidden rounded-2xl border border-white/45 shadow-[0_12px_36px_-25px_rgba(0,0,0,0.3)] sm:w-[min(28vw,220px)] lg:w-[min(20vw,255px)]"
+                  animate={{ y: [0, -3, 0] }}
+                  transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut' }}
+                  whileHover={{ x: -3, scale: 1.02 }}
+                  whileTap={{ scale: 0.995 }}
+                >
+                  <img
+                    src={DAILY_LOOK_SIDE_CARD_1_SRC}
+                    alt={`${t.title} side card 1`}
+                    className="absolute inset-0 h-full w-full object-cover"
+                    loading="lazy"
+                    decoding="async"
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = DAILY_LOOK_FALLBACK_SRC;
+                    }}
+                  />
+                </motion.article>
+                <motion.article
+                  className="relative aspect-[3/4] w-[min(36vw,190px)] overflow-hidden rounded-2xl border border-white/45 shadow-[0_12px_36px_-25px_rgba(0,0,0,0.3)] sm:w-[min(28vw,220px)] lg:w-[min(20vw,255px)]"
+                  animate={{ y: [0, 3, 0] }}
+                  transition={{ duration: 4.6, repeat: Infinity, ease: 'easeInOut', delay: 0.2 }}
+                  whileHover={{ x: -3, scale: 1.02 }}
+                  whileTap={{ scale: 0.995 }}
+                >
+                  <img
+                    src={DAILY_LOOK_SIDE_CARD_2_SRC}
+                    alt={`${t.title} side card 2`}
+                    className="absolute inset-0 h-full w-full object-cover"
+                    loading="lazy"
+                    decoding="async"
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = DAILY_LOOK_FALLBACK_SRC;
+                    }}
+                  />
+                </motion.article>
+              </motion.div>
+            </motion.div>
+
+            <article className="w-full max-w-[680px] rounded-2xl border border-white/80 bg-[linear-gradient(160deg,rgba(255,255,255,0.58),rgba(226,232,240,0.36))] p-4 shadow-[0_22px_56px_-34px_rgba(0,0,0,0.28)] backdrop-blur-2xl sm:p-5 lg:max-w-[620px] lg:p-5">
+              <h2 className="text-balance text-center text-[1.55rem] font-black uppercase leading-tight text-black sm:text-left md:text-[1.75rem]">
                 {t.title}
               </h2>
               {t.body.trim() ? (
-                <p className="mt-3 text-center text-sm leading-relaxed text-black/65 sm:text-left md:text-base">{t.body}</p>
+                <p className="mt-2.5 text-center text-sm leading-relaxed text-black/65 sm:text-left">{t.body}</p>
               ) : null}
               <div
                 className={cn(
                   'mx-auto h-px w-24 bg-black/15 sm:mx-0',
-                  t.body.trim() ? 'mt-5' : 'mt-4'
+                  t.body.trim() ? 'mt-4' : 'mt-3'
                 )}
                 aria-hidden
               />
 
-              <div className="mt-5 space-y-2.5 sm:space-y-3">
+              <div className="mt-3.5 space-y-2 sm:space-y-2.5">
                 {t.items.map((item) => (
-                  <div
-                    key={item.name}
-                    className="flex min-h-[3.25rem] items-center justify-between gap-3 rounded-xl border border-black/10 bg-neutral-50 px-3.5 py-2.5 sm:px-4 sm:py-3"
-                  >
-                    <span className="min-w-0 flex-1 text-sm font-semibold leading-snug text-black md:text-[15px]">
-                      {item.name}
+                  <div key={item.name} className="grid min-h-[2.9rem] grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2 rounded-xl border border-white/80 bg-white/45 px-3 py-2 backdrop-blur-xl sm:min-h-[3.1rem] sm:gap-2.5 sm:px-3.5 sm:py-2.5">
+                    <span className="min-w-0 flex items-center gap-2 text-sm font-semibold leading-snug text-black md:text-[15px]">
+                      <DailyLookItemIcon kind={item.kind} className="h-4 w-4 shrink-0 text-black" />
+                      <span className="truncate">{item.name}</span>
                     </span>
-                    <span className="shrink-0 text-sm font-bold tabular-nums text-black md:text-[15px]">{item.price}</span>
+                    <span className="shrink-0 text-right text-sm font-bold tabular-nums text-black md:text-[15px]">{item.price}</span>
                     <button
                       type="button"
-                      className="inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-full border border-black/15 bg-white p-2 text-black transition-colors hover:bg-black/5"
+                      className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/80 bg-white/70 p-1.5 text-black transition-colors backdrop-blur-md hover:bg-white/90 sm:h-10 sm:w-10"
                       aria-label={`${ui.addToCart}: ${item.name}`}
                     >
-                      <ShoppingBag size={18} strokeWidth={1.75} />
+                      <ShoppingBag size={16} strokeWidth={1.75} />
                     </button>
                   </div>
                 ))}
               </div>
 
-              <p className="mt-4 text-[11px] font-bold uppercase tracking-[0.14em] text-black/45">{t.priceLabel}</p>
+              <p className="mt-3 text-[11px] font-bold uppercase tracking-[0.14em] text-black/45">{t.priceLabel}</p>
             </article>
           </div>
         </div>
@@ -1128,7 +1239,7 @@ const ClothesSection = () => {
 
       {/* Horizontal row: equal space at start/end when row is shorter than viewport; scroll when needed */}
       <div
-        className="touch-pan-x overscroll-x-contain overflow-x-auto overflow-y-hidden scroll-smooth pb-2 [scrollbar-width:thin] [-webkit-overflow-scrolling:touch] [scroll-padding-inline:1rem] sm:[scroll-padding-inline:1.5rem] lg:[scroll-padding-inline:2.5rem]"
+        className="touch-auto overscroll-x-contain overflow-x-auto overflow-y-hidden scroll-smooth pb-2 [scrollbar-width:thin] [-webkit-overflow-scrolling:touch] [scroll-padding-inline:1rem] sm:[scroll-padding-inline:1.5rem] lg:[scroll-padding-inline:2.5rem]"
         role="region"
         aria-label={t.title}
       >
@@ -1136,9 +1247,9 @@ const ClothesSection = () => {
           {t.items.map((item) => (
             <article
               key={item.name}
-              className="relative aspect-[13/15] w-[min(80vw,268px)] shrink-0 snap-center overflow-hidden rounded-2xl border border-black/[0.08] bg-gradient-to-b from-neutral-100 to-neutral-50 md:w-[280px]"
+              className="relative aspect-[13/15] w-[min(80vw,268px)] shrink-0 snap-center overflow-hidden rounded-2xl border border-white/80 bg-[linear-gradient(160deg,rgba(255,255,255,0.62),rgba(219,234,254,0.34))] shadow-[0_20px_48px_-32px_rgba(0,0,0,0.32)] backdrop-blur-2xl md:w-[280px]"
             >
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_15%,rgba(0,0,0,0.07),transparent_45%)]" aria-hidden />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_15%,rgba(255,255,255,0.45),transparent_45%)]" aria-hidden />
               <div className="relative flex h-full min-h-0 flex-col p-4">
                 <div className="flex flex-1 flex-col items-center justify-center text-center">
                   <span className="inline-flex items-center justify-center h-10 w-10 rounded-full border border-black/15 text-black/40 text-xl mb-3">
@@ -1147,11 +1258,11 @@ const ClothesSection = () => {
                   <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-black/55">{item.name}</p>
                   <p className="mt-2 text-[12px] text-black/45">Photo placeholder</p>
                 </div>
-                <div className="mt-auto flex shrink-0 items-center justify-between gap-2 border-t border-black/10 pt-3">
+                <div className="mt-auto flex shrink-0 items-center justify-between gap-2 border-t border-white/60 pt-3">
                   <span className="text-[12px] sm:text-[13px] font-bold text-black tabular-nums">{item.price}</span>
                   <button
                     type="button"
-                    className="inline-flex shrink-0 items-center justify-center rounded-full border border-black/15 bg-white p-2 text-black transition-colors hover:bg-black/5"
+                    className="inline-flex shrink-0 items-center justify-center rounded-full border border-white/80 bg-white/70 p-2 text-black transition-colors backdrop-blur-md hover:bg-white/90"
                     aria-label={`${ui.addToCart}: ${item.name}`}
                   >
                     <ShoppingBag size={18} strokeWidth={1.75} />
@@ -1161,6 +1272,32 @@ const ClothesSection = () => {
             </article>
           ))}
         </div>
+      </div>
+
+      <div id="partner-brands" className="mx-auto mt-10 max-w-[1600px] scroll-mt-24 px-4 sm:mt-12 sm:px-6 lg:mt-14 lg:px-10">
+        <SectionReveal>
+          <div className="grid grid-cols-1 items-center gap-5 rounded-[2rem] border border-black/12 bg-white/90 p-4 shadow-[0_10px_34px_-12px_rgba(0,0,0,0.2)] ring-1 ring-black/[0.06] backdrop-blur-xl supports-[backdrop-filter]:bg-white/84 sm:p-5 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:gap-7 lg:p-6">
+            <div className="relative overflow-hidden rounded-[1.35rem] border border-black/10 bg-white/80 p-2 shadow-[0_16px_34px_-20px_rgba(0,0,0,0.28)] ring-1 ring-black/[0.05] backdrop-blur-lg sm:p-2.5">
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_25%_20%,rgba(255,255,255,0.45),transparent_45%)]" aria-hidden />
+              <img
+                src={PARTNER_BRANDS_IMAGE_SRC}
+                alt={t.brandsTitle}
+                className="relative z-[1] h-[190px] w-full rounded-[1rem] border border-black/10 object-cover sm:h-[230px] lg:h-[255px]"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+
+            <article className="text-center lg:text-left">
+              <p className="text-[12px] font-extrabold uppercase tracking-[0.16em] text-black/60">{t.label}</p>
+              <h3 className="mt-1 text-[1.45rem] font-black uppercase leading-tight text-black sm:text-[1.7rem]">
+                {t.brandsTitle}
+              </h3>
+              <p className="mt-2 text-[15px] leading-relaxed text-black/80 sm:text-[17px]">{t.brandsBody}</p>
+              <p className="mt-3 text-[12px] font-extrabold uppercase tracking-[0.14em] text-black/65">{t.brandsNote}</p>
+            </article>
+          </div>
+        </SectionReveal>
       </div>
     </section>
   );
@@ -1207,7 +1344,7 @@ const BranchCard: React.FC<{
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-40px' }}
       transition={{ delay: index * 0.06, type: 'spring', stiffness: 80, damping: 22 }}
-      className="group relative overflow-hidden rounded-2xl border border-black/[0.08] bg-white shadow-[0_14px_45px_-26px_rgba(0,0,0,0.36)]"
+      className="group relative overflow-hidden rounded-2xl border border-white/80 bg-[linear-gradient(160deg,rgba(255,255,255,0.6),rgba(226,232,240,0.35))] shadow-[0_20px_52px_-32px_rgba(0,0,0,0.3)] backdrop-blur-2xl"
       whileHover={{ scale: 1.02 }}
     >
       <motion.a
@@ -1216,7 +1353,7 @@ const BranchCard: React.FC<{
         rel="noopener noreferrer"
         aria-label={`${branch.name} — ${actionMaps}`}
         whileTap={{ scale: 0.96 }}
-        className="absolute top-3 right-3 z-20 inline-flex items-center justify-center rounded-full border border-black/10 bg-white/90 text-black p-2.5 hover:bg-white transition-colors shadow-sm"
+        className="absolute top-3 right-3 z-20 inline-flex items-center justify-center rounded-full border border-white/70 bg-white/70 text-black p-2.5 backdrop-blur-md transition-colors hover:bg-white/90"
       >
         <span className="text-[10px] font-bold uppercase tracking-[0.12em] leading-none">
           OPEN
@@ -1348,43 +1485,33 @@ const CartFloatingButton: React.FC = () => {
 
 const Footer = () => {
   const { lang } = React.useContext(LangContext);
-  type LegalKey = 'privacy' | 'terms';
-  const [legalOpen, setLegalOpen] = React.useState<LegalKey | null>(null);
 
-  const legalText: Record<Language, Record<LegalKey, { title: string; body: string }>> = {
+  const legalText: Record<Language, { privacy: { title: string }; terms: { title: string } }> = {
     uz: {
       privacy: {
-        title: 'Maxfiylik siyosati',
-        body: 'Ushbu sahifa xizmat ko‘rsatish uchun kiritilgan ma’lumotlarni qayta ishlash bo‘yicha umumiy axborotni taqdim etadi. Tafsilotlar siz foydalanadigan xizmat turiga bog‘liq bo‘lishi mumkin.'
+        title: 'Maxfiylik siyosati'
       },
       terms: {
-        title: 'Foydalanish shartlari',
-        body: 'Saytdan foydalanish orqali siz ushbu qoidalarni qabul qilasiz. Kontent va funksiyalar o‘zgarishi mumkin. Mahalliy qonunchilikka muvofiq mas’uliyat qo‘llaniladi.'
+        title: 'Foydalanish shartlari'
       }
     },
     ru: {
       privacy: {
-        title: 'Политика конфиденциальности',
-        body: 'Этот сайт предоставляет общую информацию о том, как обрабатываются данные, которые вы отправляете для обслуживания. Детали могут зависеть от типа используемых услуг.'
+        title: 'Политика конфиденциальности'
       },
       terms: {
-        title: 'Пользовательские условия',
-        body: 'Используя сайт, вы соглашаетесь с условиями. Контент и функции могут изменяться. Ответственность применяется в соответствии с действующим законодательством.'
+        title: 'Пользовательские условия'
       }
     },
     en: {
       privacy: {
-        title: 'Privacy Policy',
-        body: 'This site provides general information about how the data you submit for service may be processed. Specific details may depend on the services you use.'
+        title: 'Privacy Policy'
       },
       terms: {
-        title: 'Terms of Use',
-        body: 'By using the site you agree to these terms. Content and features may change. Liability applies in accordance with applicable law.'
+        title: 'Terms of Use'
       }
     }
   };
-
-  const active = legalOpen ? legalText[lang][legalOpen] : null;
 
   return (
     <motion.footer
@@ -1392,34 +1519,8 @@ const Footer = () => {
       whileInView={{ opacity: 1 }}
       viewport={{ once: true, margin: '-80px' }}
       transition={{ duration: 0.5 }}
-      className="bg-white text-black py-16 md:py-20 border-t border-black/5"
+      className="bg-neutral-100 text-black py-16 md:py-20 border-t border-black/12 shadow-[0_-18px_42px_-34px_rgba(0,0,0,0.32)]"
     >
-      {active ? (
-        <div className="fixed inset-0 z-[110] bg-black/60 flex items-center justify-center p-4">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.98 }}
-            role="dialog"
-            aria-modal="true"
-            className="w-full max-w-xl bg-white text-black rounded-2xl shadow-[0_20px_80px_-30px_rgba(0,0,0,0.55)] border border-black/10 overflow-hidden"
-          >
-            <div className="flex items-center justify-between gap-4 px-5 py-4 border-b border-black/10">
-              <h3 className="text-base font-black">{active.title}</h3>
-              <button
-                type="button"
-                onClick={() => setLegalOpen(null)}
-                aria-label="Close"
-                className="inline-flex items-center justify-center rounded-full border border-black/10 bg-white/90 p-2 hover:bg-white transition-colors"
-              >
-                <X size={18} strokeWidth={2} />
-              </button>
-            </div>
-            <div className="px-5 py-4 text-sm leading-relaxed whitespace-pre-line">{active.body}</div>
-          </motion.div>
-        </div>
-      ) : null}
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center gap-10">
         <div className="flex items-center gap-5 md:gap-8" aria-label="210 × Anpa Limited">
           <img
@@ -1480,20 +1581,18 @@ const Footer = () => {
             © {new Date().getFullYear()} 210 Sports Wear. Все права защищены.
           </span>
           <div className="order-1 flex items-center gap-6 sm:order-2">
-            <button
-              type="button"
-              onClick={() => setLegalOpen('privacy')}
+            <a
+              href="/privacy"
               className="text-[12px] text-black/50 hover:text-black transition-colors"
             >
               {legalText[lang].privacy.title}
-            </button>
-            <button
-              type="button"
-              onClick={() => setLegalOpen('terms')}
+            </a>
+            <a
+              href="/terms"
               className="text-[12px] text-black/50 hover:text-black transition-colors"
             >
               {legalText[lang].terms.title}
-            </button>
+            </a>
           </div>
         </div>
       </div>
@@ -1514,9 +1613,9 @@ export default function App() {
 
         <main>
           <SpotlightSection />
+          <BrandMarquee />
           <DailyLooksSection />
           <ClothesSection />
-          <BrandMarquee />
           <BranchesSection />
         </main>
 
@@ -1529,12 +1628,12 @@ export default function App() {
           }
           .animate-marquee {
             display: inline-flex;
-            animation: marquee 8s linear infinite;
+            animation: marquee 12s linear infinite;
             will-change: transform;
           }
           @media (prefers-reduced-motion: reduce) {
             .animate-marquee {
-              animation-duration: 10s;
+              animation-duration: 14s;
             }
           }
           @keyframes float {
