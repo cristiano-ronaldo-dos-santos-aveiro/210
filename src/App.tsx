@@ -734,7 +734,7 @@ const Navbar = () => {
       ) : null}
 
       <div className="pointer-events-none fixed inset-x-0 top-0 z-[95] flex flex-col px-2 pt-2 sm:px-3 md:hidden">
-        <div className="pointer-events-none relative flex w-full items-center justify-end gap-1.5 sm:gap-2">
+        <div className="pointer-events-none relative flex w-full items-center justify-start gap-1.5 sm:gap-2">
           <motion.a
             href="#spotlight"
             className="pointer-events-auto absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 shrink-0 items-center gap-1 rounded-full border border-black/12 bg-white px-2 py-1.5 shadow-[0_6px_24px_-6px_rgba(0,0,0,0.18)] ring-1 ring-black/[0.06] backdrop-blur-md min-[400px]:gap-1.5 min-[400px]:px-2.5"
@@ -763,7 +763,7 @@ const Navbar = () => {
           </motion.a>
 
             {/* Mobile: put the menu (⋯) on the far right */}
-            <div className="pointer-events-auto flex min-w-0 justify-end">
+            <div className="pointer-events-auto flex min-w-0 justify-start">
             <motion.button
               type="button"
               onClick={() => setMobileNavOpen((o) => !o)}
@@ -1136,21 +1136,21 @@ const SpotlightSection = () => {
 
           <div className="flex min-h-0 w-full min-w-0 flex-col items-stretch gap-2.5 sm:gap-3 lg:h-full lg:gap-4">
             {/* Mobile: logos first, philosophy below */}
-            <div className="order-1 md:hidden flex w-full items-center justify-center pb-1">
-              <div className="flex items-center gap-2">
+            <div className="order-1 md:hidden flex w-full items-center justify-center pb-2">
+              <div className="flex items-center gap-3">
                 <img
                   src={LOGO_210_SRC}
                   alt="210 Sports Wear"
-                  className="h-11 w-auto max-h-11 object-contain object-center sm:h-12 sm:max-h-12"
+                  className="h-[clamp(4.6rem,26vw,6.8rem)] w-auto max-h-[6.8rem] object-contain object-center"
                   loading="eager"
                   decoding="async"
                   referrerPolicy="no-referrer"
                 />
-                <span className="h-10 w-px shrink-0 bg-black/15 sm:h-11" aria-hidden />
+                <span className="h-[clamp(4.1rem,23vw,6.2rem)] w-px shrink-0 bg-black/15" aria-hidden />
                 <img
                   src={FOOTER_LOGO_COLLECTIONS_SRC}
                   alt="Anba Limited"
-                  className="h-10 w-auto max-h-10 object-contain object-center sm:h-11 sm:max-h-11"
+                  className="h-[clamp(4.6rem,26vw,6.8rem)] w-auto max-h-[6.8rem] object-contain object-center"
                   loading="eager"
                   decoding="async"
                   referrerPolicy="no-referrer"
@@ -1158,10 +1158,10 @@ const SpotlightSection = () => {
               </div>
             </div>
 
-            <SectionReveal className="order-2 md:order-1 w-full shrink-0 mt-6 sm:mt-0 lg:translate-x-5 xl:translate-x-8 2xl:translate-x-10">
+            <SectionReveal className="order-2 md:order-1 w-full shrink-0 lg:translate-x-5 xl:translate-x-8 2xl:translate-x-10">
               <div
                 id="philosophy"
-                className="scroll-mt-24 relative overflow-hidden rounded-2xl border border-white/80 bg-[linear-gradient(160deg,rgba(255,255,255,0.62),rgba(219,234,254,0.38))] px-3 py-4 text-center shadow-[0_20px_56px_-32px_rgba(0,0,0,0.3)] backdrop-blur-2xl sm:px-6 sm:py-6 md:px-7 md:py-8 lg:px-8 lg:py-9"
+                className="scroll-mt-24 relative overflow-hidden rounded-2xl border border-white/80 bg-[linear-gradient(160deg,rgba(255,255,255,0.62),rgba(219,234,254,0.38))] px-4 py-5 text-center shadow-[0_20px_56px_-32px_rgba(0,0,0,0.3)] backdrop-blur-2xl sm:px-6 sm:py-6 md:px-7 md:py-8 lg:px-8 lg:py-9"
               >
                 <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(90%_80%_at_50%_0%,rgba(255,255,255,0.38),transparent_60%)]" aria-hidden />
 
@@ -1171,11 +1171,11 @@ const SpotlightSection = () => {
                   </p>
                 </div>
 
-                <h2 className="mx-auto mb-2 max-w-[15ch] text-balance text-[1.2rem] font-black uppercase leading-[1.08] tracking-tight text-black sm:mb-4 sm:text-[1.7rem] md:text-[1.9rem] lg:text-[2.1rem]">
+                <h2 className="mx-auto mb-2 max-w-[15ch] text-balance text-[1.55rem] font-black uppercase leading-[1.08] tracking-tight text-black sm:mb-4 sm:text-[1.7rem] md:text-[1.9rem] lg:text-[2.1rem]">
                   {tPhilosophy.title}
                 </h2>
                 <div className="mx-auto mb-3 h-px w-12 bg-black/15 sm:mb-5 sm:w-16" aria-hidden />
-                <p className="mx-auto max-w-[62ch] whitespace-pre-line text-[12px] leading-relaxed text-black/68 sm:text-sm lg:text-[0.95rem]">
+                <p className="mx-auto max-w-[62ch] whitespace-pre-line text-[13px] leading-relaxed text-black/68 sm:text-sm lg:text-[0.95rem]">
                   {tPhilosophy.body}
                 </p>
 
@@ -1183,7 +1183,7 @@ const SpotlightSection = () => {
                   {PHILOSOPHY_BADGES_BY_LANG[lang].map((item) => (
                     <span
                       key={`${lang}-${item}`}
-                      className="inline-flex items-center rounded-full border border-white/65 bg-white/55 px-2 py-1 text-[8px] font-semibold uppercase tracking-[0.1em] text-black/65 backdrop-blur-md sm:px-3 sm:py-1.5 sm:text-[10px] sm:tracking-[0.11em] md:px-3.5"
+                      className="inline-flex items-center rounded-full border border-white/65 bg-white/55 px-2 py-1 text-[9px] font-semibold uppercase tracking-[0.1em] text-black/65 backdrop-blur-md sm:px-3 sm:py-1.5 sm:text-[10px] sm:tracking-[0.11em] md:px-3.5"
                     >
                       {item}
                     </span>
@@ -1776,7 +1776,7 @@ const CartFloatingButton: React.FC = () => {
   return (
     <motion.button
       type="button"
-      className="fixed bottom-[max(1.25rem,env(safe-area-inset-bottom,0px))] right-[max(1.25rem,env(safe-area-inset-right,0px))] z-[60] inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-black text-white shadow-[0_18px_50px_-18px_rgba(0,0,0,0.7)] transition-colors hover:bg-neutral-900"
+      className="fixed bottom-[max(1.25rem,env(safe-area-inset-bottom,0px))] right-[max(1.25rem,env(safe-area-inset-right,0px))] z-[60] inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-white/15 text-white shadow-[0_18px_50px_-18px_rgba(0,0,0,0.7)] backdrop-blur-xl transition-colors hover:bg-white/22"
       whileTap={{ scale: 0.95 }}
       aria-label={ui.cart}
       aria-expanded={open}
@@ -2116,6 +2116,7 @@ export default function App() {
   );
 
   const landingUi = TRANSLATIONS[lang].ui;
+  const tPhilosophy = TRANSLATIONS[lang].philosophy;
 
   return (
     <CartContext.Provider value={cartContextValue}>
@@ -2132,10 +2133,12 @@ export default function App() {
 
         <main id="main-content" tabIndex={-1}>
           <SpotlightSection />
-          <BrandMarquee />
-          <DailyLooksSection />
-          <ClothesSection />
-          <BranchesSection />
+          <div className="hidden md:block">
+            <BrandMarquee />
+            <DailyLooksSection />
+            <ClothesSection />
+            <BranchesSection />
+          </div>
         </main>
 
         <Footer />
