@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
+import { motion } from 'motion/react';
 import { ShoppingBag, Instagram, MapPin, Phone, ArrowUpRight, Clock, ArrowRight } from 'lucide-react';
 import { cn } from './lib/utils';
 
@@ -1606,14 +1606,33 @@ const SPLASH_EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 export default function App() {
   const [lang, setLang] = React.useState<Language>('uz');
-  const [showSplash, setShowSplash] = React.useState(true);
-  const reduceMotion = useReducedMotion();
+  const [splashVisible, setSplashVisible] = React.useState(true);
+  const [splashClosing, setSplashClosing] = React.useState(false);
+  const splashClosingRef = React.useRef(false);
 
   useEffect(() => {
-    const hold = reduceMotion ? 0 : SPLASH_HOLD_MS;
-    const id = window.setTimeout(() => setShowSplash(false), hold);
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const hold = reduce ? 0 : SPLASH_HOLD_MS;
+    const id = window.setTimeout(() => {
+      if (reduce) {
+        setSplashVisible(false);
+      } else {
+        splashClosingRef.current = true;
+        setSplashClosing(true);
+      }
+    }, hold);
     return () => window.clearTimeout(id);
-  }, [reduceMotion]);
+  }, []);
+
+  useEffect(() => {
+    if (!splashClosing) return;
+    const safety = window.setTimeout(() => setSplashVisible(false), 2500);
+    return () => window.clearTimeout(safety);
+  }, [splashClosing]);
+
+  const splashReduceMotion =
+    typeof window !== 'undefined' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   return (
     <LangContext.Provider value={{ lang, setLang }}>
@@ -1631,64 +1650,65 @@ export default function App() {
 
         <Footer />
 
-        <AnimatePresence>
-          {showSplash && (
-            <motion.div
-              key="intro-splash"
-              role="presentation"
-              aria-hidden
-              className="fixed inset-0 z-[200] flex items-center justify-center bg-black"
-              initial={{ opacity: 1 }}
-              exit={{
-                opacity: 0,
-                transition: {
-                  duration: reduceMotion ? 0.12 : 0.55,
-                  ease: SPLASH_EASE_OUT
-                }
+        {splashVisible && (
+          <motion.div
+            role="presentation"
+            aria-hidden
+            className="fixed inset-0 z-[200] flex items-center justify-center bg-black"
+            initial={false}
+            animate={
+              splashClosing
+                ? { opacity: 0 }
+                : { opacity: 1 }
+            }
+            transition={{
+              duration: splashReduceMotion ? 0.1 : splashClosing ? 0.55 : 0,
+              ease: SPLASH_EASE_OUT
+            }}
+            onAnimationComplete={() => {
+              if (splashClosingRef.current) {
+                setSplashVisible(false);
+              }
+            }}
+          >
+            <div
+              className="pointer-events-none absolute inset-0 opacity-40"
+              style={{
+                background:
+                  'radial-gradient(ellipse 80% 60% at 50% 45%, rgba(255,255,255,0.08) 0%, transparent 55%)'
               }}
-            >
-              <div
-                className="pointer-events-none absolute inset-0 opacity-40"
-                style={{
-                  background:
-                    'radial-gradient(ellipse 80% 60% at 50% 45%, rgba(255,255,255,0.08) 0%, transparent 55%)'
-                }}
-              />
-              <motion.img
-                src={LOGO_210_SRC}
-                alt=""
-                className="relative z-[1] h-auto w-[min(52vw,220px)] max-w-[90vw] object-contain select-none"
-                initial={
-                  reduceMotion
-                    ? { opacity: 1, scale: 1 }
-                    : { opacity: 0, scale: 0.88, filter: 'blur(10px)' }
-                }
-                animate={{
-                  opacity: 1,
-                  scale: 1,
-                  filter: 'blur(0px)',
-                  transition: reduceMotion
-                    ? { duration: 0 }
-                    : {
-                        duration: 0.75,
-                        ease: SPLASH_EASE_OUT,
-                        opacity: { duration: 0.65 }
-                      }
-                }}
-                exit={
-                  reduceMotion
-                    ? { opacity: 0, transition: { duration: 0.1 } }
-                    : {
-                        opacity: 0,
-                        scale: 1.06,
-                        filter: 'blur(12px)',
-                        transition: { duration: 0.5, ease: SPLASH_EASE_OUT }
-                      }
-                }
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
+            />
+            <motion.img
+              src={LOGO_210_SRC}
+              alt="210"
+              fetchPriority="high"
+              decoding="async"
+              className="relative z-[1] h-auto w-[min(52vw,220px)] max-w-[90vw] object-contain select-none shadow-[0_0_36px_rgba(255,255,255,0.14)]"
+              initial={
+                splashReduceMotion ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.88 }
+              }
+              animate={
+                splashClosing
+                  ? {
+                      opacity: 0,
+                      scale: 1.06,
+                      transition: { duration: splashReduceMotion ? 0.1 : 0.5, ease: SPLASH_EASE_OUT }
+                    }
+                  : {
+                      opacity: 1,
+                      scale: 1,
+                      transition: splashReduceMotion
+                        ? { duration: 0 }
+                        : {
+                            duration: 0.75,
+                            ease: SPLASH_EASE_OUT,
+                            opacity: { duration: 0.65 }
+                          }
+                    }
+              }
+            />
+          </motion.div>
+        )}
 
         <style>{`
           @keyframes marquee {
