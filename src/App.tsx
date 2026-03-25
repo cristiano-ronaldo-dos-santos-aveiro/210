@@ -734,10 +734,10 @@ const Navbar = () => {
       ) : null}
 
       <div className="pointer-events-none fixed inset-x-0 top-0 z-[95] flex flex-col px-2 pt-2 sm:px-3 md:hidden">
-        <div className="pointer-events-none flex items-center gap-1.5 sm:gap-2">
+        <div className="pointer-events-none relative flex w-full items-center justify-end gap-1.5 sm:gap-2">
           <motion.a
             href="#spotlight"
-            className="pointer-events-auto flex shrink-0 items-center gap-1 rounded-full border border-black/12 bg-white px-2 py-1.5 shadow-[0_6px_24px_-6px_rgba(0,0,0,0.18)] ring-1 ring-black/[0.06] backdrop-blur-md min-[400px]:gap-1.5 min-[400px]:px-2.5"
+            className="pointer-events-auto absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 shrink-0 items-center gap-1 rounded-full border border-black/12 bg-white px-2 py-1.5 shadow-[0_6px_24px_-6px_rgba(0,0,0,0.18)] ring-1 ring-black/[0.06] backdrop-blur-md min-[400px]:gap-1.5 min-[400px]:px-2.5"
             whileTap={{ scale: 0.98 }}
             aria-label="210 × Anba Limited"
           >
@@ -763,7 +763,7 @@ const Navbar = () => {
           </motion.a>
 
             {/* Mobile: put the menu (⋯) on the far right */}
-            <div className="pointer-events-auto flex min-w-0 flex-1 justify-end">
+            <div className="pointer-events-auto flex min-w-0 justify-end">
             <motion.button
               type="button"
               onClick={() => setMobileNavOpen((o) => !o)}
@@ -1141,16 +1141,16 @@ const SpotlightSection = () => {
                 <img
                   src={LOGO_210_SRC}
                   alt="210 Sports Wear"
-                  className="h-9 w-auto max-h-9 object-contain object-center sm:h-10 sm:max-h-10"
+                  className="h-11 w-auto max-h-11 object-contain object-center sm:h-12 sm:max-h-12"
                   loading="eager"
                   decoding="async"
                   referrerPolicy="no-referrer"
                 />
-                <span className="h-8 w-px shrink-0 bg-black/15 sm:h-9" aria-hidden />
+                <span className="h-10 w-px shrink-0 bg-black/15 sm:h-11" aria-hidden />
                 <img
                   src={FOOTER_LOGO_COLLECTIONS_SRC}
                   alt="Anba Limited"
-                  className="h-8 w-auto max-h-8 object-contain object-center sm:h-9 sm:max-h-9"
+                  className="h-10 w-auto max-h-10 object-contain object-center sm:h-11 sm:max-h-11"
                   loading="eager"
                   decoding="async"
                   referrerPolicy="no-referrer"
@@ -1158,7 +1158,7 @@ const SpotlightSection = () => {
               </div>
             </div>
 
-            <SectionReveal className="order-2 md:order-1 w-full shrink-0 mt-3 sm:mt-0 lg:translate-x-5 xl:translate-x-8 2xl:translate-x-10">
+            <SectionReveal className="order-2 md:order-1 w-full shrink-0 mt-6 sm:mt-0 lg:translate-x-5 xl:translate-x-8 2xl:translate-x-10">
               <div
                 id="philosophy"
                 className="scroll-mt-24 relative overflow-hidden rounded-2xl border border-white/80 bg-[linear-gradient(160deg,rgba(255,255,255,0.62),rgba(219,234,254,0.38))] px-3 py-4 text-center shadow-[0_20px_56px_-32px_rgba(0,0,0,0.3)] backdrop-blur-2xl sm:px-6 sm:py-6 md:px-7 md:py-8 lg:px-8 lg:py-9"
