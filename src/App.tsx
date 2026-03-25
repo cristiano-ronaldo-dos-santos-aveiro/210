@@ -1551,21 +1551,19 @@ const ClothesSection = () => {
             {t.items.map((item, idx) => (
               <article
                 key={item.name}
-                className="relative aspect-[13/15] w-[min(66vw,232px)] shrink-0 snap-center snap-always overflow-hidden rounded-2xl border border-white/30 bg-[linear-gradient(160deg,rgba(75,85,99,0.42),rgba(17,24,39,0.34))] shadow-[0_24px_56px_-30px_rgba(0,0,0,0.45)] backdrop-blur-2xl sm:w-[min(70vw,268px)] md:w-[276px]"
+                className="relative aspect-[13/15] w-[min(66vw,232px)] shrink-0 snap-center snap-always overflow-hidden rounded-2xl sm:w-[min(70vw,268px)] md:w-[276px]"
               >
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_15%,rgba(255,255,255,0.2),transparent_45%)]" aria-hidden />
-                <div className="relative flex h-full min-h-0 flex-col p-3.5 sm:p-4">
-                  <div className="flex flex-1 flex-col items-center justify-center text-center">
+                <div className="relative flex h-full min-h-0 flex-col">
+                  <div className="relative flex-1 w-full">
                     <img
                       src={CLOTHES_CARD_IMAGE_SRCS[idx % CLOTHES_CARD_IMAGE_SRCS.length]}
                       alt={item.name}
-                      className="mb-2.5 max-h-[60%] w-auto max-w-[92%] object-contain sm:mb-3"
+                      className="h-full w-full object-cover"
                       loading="lazy"
                       decoding="async"
                     />
-                    <p className="text-[10px] font-bold uppercase leading-snug tracking-[0.14em] text-white/90 sm:text-[11px]">{item.name}</p>
                   </div>
-                  <div className="mt-auto shrink-0 border-t border-white/20 pt-3 sm:pt-3.5">
+                  <div className="shrink-0 px-2.5 py-2 sm:px-3 sm:py-2">
                     <motion.button
                       type="button"
                       whileTap={{ scale: 0.985 }}
@@ -1577,10 +1575,10 @@ const ClothesSection = () => {
                           source: 'clothes'
                         })
                       }
-                      className="group w-full rounded-xl border border-black/80 bg-black px-2.5 py-2 text-center transition-colors duration-200 hover:border-white/25 hover:bg-neutral-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-0 sm:rounded-[0.9rem] sm:px-3 sm:py-2"
+                      className="group w-full rounded-xl bg-black/60 px-2.5 py-2 text-center text-white transition-colors duration-200 hover:bg-black/75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-0 sm:rounded-[0.9rem] sm:px-3"
                       aria-label={`${ui.addToCart}: ${item.name}, ${item.price}`}
                     >
-                      <span className="block text-[11px] font-semibold tabular-nums leading-snug tracking-normal text-white sm:text-xs">
+                      <span className="block text-[11px] font-semibold tabular-nums leading-snug tracking-normal sm:text-xs">
                         {item.price}
                       </span>
                     </motion.button>
