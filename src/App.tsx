@@ -2133,12 +2133,10 @@ export default function App() {
 
         <main id="main-content" tabIndex={-1}>
           <SpotlightSection />
-          <div className="hidden md:block">
-            <BrandMarquee />
-            <DailyLooksSection />
-            <ClothesSection />
-            <BranchesSection />
-          </div>
+          <BrandMarquee />
+          <DailyLooksSection />
+          <ClothesSection />
+          <BranchesSection />
         </main>
 
         <Footer />
