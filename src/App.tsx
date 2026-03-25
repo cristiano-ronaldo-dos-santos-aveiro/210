@@ -1,7 +1,23 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'motion/react';
-import { ShoppingBag, Instagram, MapPin, Phone, ArrowUpRight, Clock, ArrowRight } from 'lucide-react';
+import {
+  ShoppingBag,
+  Instagram,
+  MapPin,
+  Phone,
+  ArrowUpRight,
+  Clock,
+  ArrowRight,
+  MoreHorizontal,
+  X,
+  Plus,
+  Minus
+} from 'lucide-react';
 import { cn } from './lib/utils';
+import { LEGAL_LINKS } from './route';
+import type { Language } from './lang';
+import { LangContext } from './lang';
+import Aurora from './Aurora';
 
 /** PNG exports in /photo (210 stack + partner / signature mark) */
 const LOGO_210_SRC = new URL('../photo/logolar/IMG_2657.PNG', import.meta.url).href;
@@ -74,6 +90,9 @@ const SPRING_SPOTLIGHT_SLIDES = [
   new URL('../photo/Kiyimlar/photo_2026-03-24_13-43-11.jpg', import.meta.url).href,
   new URL('../photo/Kiyimlar/photo_2026-03-24_13-43-16.jpg', import.meta.url).href
 ] as const;
+/** Aurora palette + motion (hero) */
+const SPOTLIGHT_AURORA_STOPS: string[] = ['#1b1b1d', '#f1f4f0', '#3e3d3d'];
+
 const DAILY_LOOK_IMAGE_SRC = '/daily/main.png';
 const DAILY_LOOK_SIDE_CARD_1_SRC = '/daily/side-1.png';
 const DAILY_LOOK_SIDE_CARD_2_SRC = '/daily/side-2.png';
@@ -107,10 +126,8 @@ const STORE_BRANCHES: readonly StoreBranch[] = [
     phoneTel: 'tel:+998952100000',
     phoneLabel: '+998 95 210-00-00',
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=210+Nurafshon%2C+Uzbekistan',
-    photoSrc: NURAFSHON_BRANCH_PHOTO_SRC
-    ,
-    openHours: '10:00-22:00'
-    ,
+    photoSrc: NURAFSHON_BRANCH_PHOTO_SRC,
+    openHours: '10:00-22:00',
     addressLineByLang: {
       uz: 'Нурафшан обвод кўчаси, 41',
       ru: 'Обводная улица Нурафшан, 41',
@@ -154,14 +171,41 @@ const TelegramIcon = ({ className, size = 22 }: { className?: string; size?: num
 );
 
 // --- Types ---
-type Language = 'uz' | 'ru' | 'en';
 type DailyLookItemKind = 'vest' | 'sweater' | 'pants' | 'sneakers';
+
+type CartSource = 'daily-look' | 'clothes';
+
+interface CartLine {
+  id: string;
+  name: string;
+  price: string;
+  /** Amount in UZS for totals (same numeric value for all languages) */
+  priceUzs: number;
+  source: CartSource;
+  quantity: number;
+}
 
 interface Translations {
   ui: {
     addToCart: string;
     /** Contact button — starts phone call */
     contactCall: string;
+    /** Floating cart + drawer */
+    cart: string;
+    yourCart: string;
+    cartEmpty: string;
+    removeItem: string;
+    close: string;
+    /** "{n}" replaced with total quantity */
+    cartLineCount: string;
+    /** Grand total label in cart drawer */
+    cartTotal: string;
+    /** Aria: decrease / increase quantity */
+    qtyDecrease: string;
+    qtyIncrease: string;
+    skipToContent: string;
+    openMenu: string;
+    closeMenu: string;
   };
   nav: {
     home: string;
@@ -188,7 +232,7 @@ interface Translations {
     brandsTitle: string;
     brandsBody: string;
     brandsNote: string;
-    items: readonly { name: string; price: string }[];
+    items: readonly { name: string; price: string; priceUzs: number }[];
   };
   dailyLooks: {
     label: string;
@@ -196,7 +240,7 @@ interface Translations {
     body: string;
     priceLabel: string;
     updatedLabel: string;
-    items: readonly { name: string; price: string; kind: DailyLookItemKind }[];
+    items: readonly { name: string; price: string; kind: DailyLookItemKind; priceUzs: number }[];
   };
   branches: {
     label: string;
@@ -212,7 +256,19 @@ const TRANSLATIONS: Record<Language, Translations> = {
   uz: {
     ui: {
       addToCart: "Savatchaga",
-      contactCall: "Aloqa"
+      contactCall: "Aloqa",
+      cart: "Savatcha",
+      yourCart: "Savatchangiz",
+      cartEmpty: "Hozircha bo'sh. Kartochkalardan mahsulot qo'shing.",
+      removeItem: "Olib tashlash",
+      close: "Yopish",
+      cartLineCount: '{n} ta mahsulot',
+      cartTotal: 'Jami',
+      qtyDecrease: 'Kamaytirish',
+      qtyIncrease: "Ko'paytirish",
+      skipToContent: "Asosiy tarkibga o'tish",
+      openMenu: 'Menyuni ochish',
+      closeMenu: 'Menyuni yopish'
     },
     nav: {
       home: "Bosh sahifa",
@@ -225,7 +281,7 @@ const TRANSLATIONS: Record<Language, Translations> = {
       featured: {
         label: "Soatlar",
         title: "Erkaklar soati",
-        body: "Shveytsariya va dunyo brendlari: mehanik va zamonaviy kolleksiyalar — premium do'konda.",
+        body: "Shveytsariya va dunyo brendlari: mexanik va zamonaviy kolleksiyalar — premium do'konda.",
         price: "dan 12 500 000 so'm"
       },
       spring: {
@@ -236,7 +292,7 @@ const TRANSLATIONS: Record<Language, Translations> = {
       },
       newDrop: {
         label: "Poyabzal",
-        title: "Oyoq kiymlar",
+        title: "Oyoq kiyimlar",
         body: "Teri, sport va klassik siluetlar — cheklangan partiyalar va original modellar.",
         price: "dan 3 200 000 so'm"
       },
@@ -260,12 +316,17 @@ const TRANSLATIONS: Record<Language, Translations> = {
       brandsBody: "Dunyo brendlari bilan rasmiy hamkorlikda ishlaymiz. Bizda faqat so‘nggi va premiumdir. Har bir model sifat, qulaylik va zamonaviy uslub bo‘yicha tanlanadi.",
       brandsNote: "Mahsulotlarimiz originalligiga kafolat 100%.",
       items: [
-        { name: 'Ko\'ylak va polo', price: '1 150 000 so\'m' },
-        { name: 'Kurtka va paltolar', price: '4 200 000 so\'m' },
-        { name: 'Shim va denim', price: '1 890 000 so\'m' },
-        { name: 'Aksessuarlar', price: 'dan 450 000 so\'m' },
-        { name: 'Sport kiyim', price: '2 100 000 so\'m' },
-        { name: 'Teri buyumlar', price: 'dan 3 500 000 so\'m' }
+        { name: 'Ko\'ylak va polo', price: '1 150 000 so\'m', priceUzs: 1_150_000 },
+        { name: 'Kurtka va paltolar', price: '4 200 000 so\'m', priceUzs: 4_200_000 },
+        { name: 'Shim va denim', price: '1 890 000 so\'m', priceUzs: 1_890_000 },
+        { name: 'Aksessuarlar', price: '450 000 so\'m', priceUzs: 450_000 },
+        { name: 'Sport kiyim', price: '2 100 000 so\'m', priceUzs: 2_100_000 },
+        { name: 'Teri buyumlar', price: '3 500 000 so\'m', priceUzs: 3_500_000 },
+        { name: 'Sviter va hudilar', price: '2 450 000 so\'m', priceUzs: 2_450_000 },
+        { name: 'Kostyum va pidjaklar', price: '8 900 000 so\'m', priceUzs: 8_900_000 },
+        { name: 'Futbolka va basic', price: '890 000 so\'m', priceUzs: 890_000 },
+        { name: 'Shortlar va yozgi', price: '1 650 000 so\'m', priceUzs: 1_650_000 },
+        { name: 'Pashmina va trikotaj', price: '5 200 000 so\'m', priceUzs: 5_200_000 }
       ]
     },
     dailyLooks: {
@@ -275,10 +336,10 @@ const TRANSLATIONS: Record<Language, Translations> = {
       priceLabel: "Jami: 1,546,000 so'm",
       updatedLabel: "Har kuni yangilanadi",
       items: [
-        { name: "Nimcha", price: "299,000 so'm", kind: 'vest' },
-        { name: "Sviter", price: "399,000 so'm", kind: 'sweater' },
-        { name: "Shim", price: "349,000 so'm", kind: 'pants' },
-        { name: "Krossovka", price: "499,000 so'm", kind: 'sneakers' }
+        { name: "Nimcha", price: "299,000 so'm", kind: 'vest', priceUzs: 299_000 },
+        { name: "Sviter", price: "399,000 so'm", kind: 'sweater', priceUzs: 399_000 },
+        { name: "Shim", price: "349,000 so'm", kind: 'pants', priceUzs: 349_000 },
+        { name: "Krossovka", price: "499,000 so'm", kind: 'sneakers', priceUzs: 499_000 }
       ]
     },
     branches: {
@@ -293,7 +354,19 @@ const TRANSLATIONS: Record<Language, Translations> = {
   ru: {
     ui: {
       addToCart: "В корзину",
-      contactCall: "Связь"
+      contactCall: "Связь",
+      cart: "Корзина",
+      yourCart: "Ваша корзина",
+      cartEmpty: "Пока пусто. Добавьте товары с карточек.",
+      removeItem: "Удалить",
+      close: "Закрыть",
+      cartLineCount: '{n} поз.',
+      cartTotal: 'Итого',
+      qtyDecrease: 'Уменьшить количество',
+      qtyIncrease: 'Увеличить количество',
+      skipToContent: 'Перейти к основному содержимому',
+      openMenu: 'Открыть меню',
+      closeMenu: 'Закрыть меню'
     },
     nav: {
       home: "Главная",
@@ -341,25 +414,30 @@ const TRANSLATIONS: Record<Language, Translations> = {
       brandsBody: "В разделе одежды мы работаем с оригинальными коллекциями мировых брендов. Каждая модель отбирается по качеству, комфорту и актуальному стилю.",
       brandsNote: "Оригинальные бренды и регулярно обновляемая коллекция",
       items: [
-        { name: 'Рубашки и поло', price: '1 150 000 сум' },
-        { name: 'Куртки и пальто', price: '4 200 000 сум' },
-        { name: 'Брюки и деним', price: '1 890 000 сум' },
-        { name: 'Аксессуары', price: 'от 450 000 сум' },
-        { name: 'Спортивная одежда', price: '2 100 000 сум' },
-        { name: 'Кожаные изделия', price: 'от 3 500 000 сум' }
+        { name: 'Рубашки и поло', price: '1 150 000 сум', priceUzs: 1_150_000 },
+        { name: 'Куртки и пальто', price: '4 200 000 сум', priceUzs: 4_200_000 },
+        { name: 'Брюки и деним', price: '1 890 000 сум', priceUzs: 1_890_000 },
+        { name: 'Аксессуары', price: '450 000 сум', priceUzs: 450_000 },
+        { name: 'Спортивная одежда', price: '2 100 000 сум', priceUzs: 2_100_000 },
+        { name: 'Кожаные изделия', price: '3 500 000 сум', priceUzs: 3_500_000 },
+        { name: 'Свитеры и худи', price: '2 450 000 сум', priceUzs: 2_450_000 },
+        { name: 'Костюмы и пиджаки', price: '8 900 000 сум', priceUzs: 8_900_000 },
+        { name: 'Футболки и база', price: '890 000 сум', priceUzs: 890_000 },
+        { name: 'Шорты и лето', price: '1 650 000 сум', priceUzs: 1_650_000 },
+        { name: 'Кашемир и вязка', price: '5 200 000 сум', priceUzs: 5_200_000 }
       ]
     },
     dailyLooks: {
       label: "Образ дня",
       title: "Сегодняшний образ",
-      body: "Сегодняшний look: zip-куртка, поло и брюки в спортивно-casual сочетании.",
+      body: 'Сегодняшний образ: куртка на молнии, поло и брюки в спортивно-кэжуальном стиле.',
       priceLabel: "Цены от",
       updatedLabel: "Обновляется ежедневно",
       items: [
-        { name: "Жилет", price: "299,000 сум", kind: 'vest' },
-        { name: "Свитер", price: "399,000 сум", kind: 'sweater' },
-        { name: "Брюки", price: "349,000 сум", kind: 'pants' },
-        { name: "Кроссовки", price: "499,000 сум", kind: 'sneakers' }
+        { name: "Жилет", price: "299,000 сум", kind: 'vest', priceUzs: 299_000 },
+        { name: "Свитер", price: "399,000 сум", kind: 'sweater', priceUzs: 399_000 },
+        { name: "Брюки", price: "349,000 сум", kind: 'pants', priceUzs: 349_000 },
+        { name: "Кроссовки", price: "499,000 сум", kind: 'sneakers', priceUzs: 499_000 }
       ]
     },
     branches: {
@@ -374,7 +452,19 @@ const TRANSLATIONS: Record<Language, Translations> = {
   en: {
     ui: {
       addToCart: "Add to basket",
-      contactCall: "Contact"
+      contactCall: "Contact",
+      cart: "Basket",
+      yourCart: "Your basket",
+      cartEmpty: "Nothing here yet. Add items from the cards.",
+      removeItem: "Remove",
+      close: "Close",
+      cartLineCount: '{n} items',
+      cartTotal: 'Total',
+      qtyDecrease: 'Decrease quantity',
+      qtyIncrease: 'Increase quantity',
+      skipToContent: 'Skip to main content',
+      openMenu: 'Open menu',
+      closeMenu: 'Close menu'
     },
     nav: {
       home: "Home",
@@ -422,12 +512,17 @@ const TRANSLATIONS: Record<Language, Translations> = {
       brandsBody: "In our clothing section, we work with original collections from global brands. Each model is selected for quality, comfort, and a modern style direction.",
       brandsNote: "Original brands with a regularly refreshed assortment",
       items: [
-        { name: 'Shirts & polos', price: '1,150,000 UZS' },
-        { name: 'Jackets & coats', price: '4,200,000 UZS' },
-        { name: 'Trousers & denim', price: '1,890,000 UZS' },
-        { name: 'Accessories', price: 'from 450,000 UZS' },
-        { name: 'Sportswear', price: '2,100,000 UZS' },
-        { name: 'Leather goods', price: 'from 3,500,000 UZS' }
+        { name: 'Shirts & polos', price: '1,150,000 UZS', priceUzs: 1_150_000 },
+        { name: 'Jackets & coats', price: '4,200,000 UZS', priceUzs: 4_200_000 },
+        { name: 'Trousers & denim', price: '1,890,000 UZS', priceUzs: 1_890_000 },
+        { name: 'Accessories', price: '450,000 UZS', priceUzs: 450_000 },
+        { name: 'Sportswear', price: '2,100,000 UZS', priceUzs: 2_100_000 },
+        { name: 'Leather goods', price: '3,500,000 UZS', priceUzs: 3_500_000 },
+        { name: 'Sweaters & hoodies', price: '2,450,000 UZS', priceUzs: 2_450_000 },
+        { name: 'Suits & blazers', price: '8,900,000 UZS', priceUzs: 8_900_000 },
+        { name: 'Tees & essentials', price: '890,000 UZS', priceUzs: 890_000 },
+        { name: 'Shorts & summer', price: '1,650,000 UZS', priceUzs: 1_650_000 },
+        { name: 'Cashmere & knitwear', price: '5,200,000 UZS', priceUzs: 5_200_000 }
       ]
     },
     dailyLooks: {
@@ -437,10 +532,10 @@ const TRANSLATIONS: Record<Language, Translations> = {
       priceLabel: "Prices from",
       updatedLabel: "Updated daily",
       items: [
-        { name: "Vest", price: "299,000 UZS", kind: 'vest' },
-        { name: "Sweater", price: "399,000 UZS", kind: 'sweater' },
-        { name: "Pants", price: "349,000 UZS", kind: 'pants' },
-        { name: "Sneakers", price: "499,000 UZS", kind: 'sneakers' }
+        { name: "Vest", price: "299,000 UZS", kind: 'vest', priceUzs: 299_000 },
+        { name: "Sweater", price: "399,000 UZS", kind: 'sweater', priceUzs: 399_000 },
+        { name: "Pants", price: "349,000 UZS", kind: 'pants', priceUzs: 349_000 },
+        { name: "Sneakers", price: "499,000 UZS", kind: 'sneakers', priceUzs: 499_000 }
       ]
     },
     branches: {
@@ -492,14 +587,46 @@ const DailyLookItemIcon: React.FC<{ kind: DailyLookItemKind; className?: string 
   );
 };
 
-// --- Context for Language ---
-const LangContext = React.createContext<{ lang: Language; setLang: (l: Language) => void }>({ lang: 'uz', setLang: () => {} });
+// --- Cart ---
+const CartContext = React.createContext<{
+  lines: readonly CartLine[];
+  addLine: (payload: { name: string; price: string; priceUzs: number; source: CartSource }) => void;
+  removeLine: (id: string) => void;
+  /** delta +1 / -1; line removed when quantity would go below 1 */
+  adjustLineQuantity: (id: string, delta: number) => void;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  totalQuantity: number;
+  totalUzs: number;
+}>({
+  lines: [],
+  addLine: () => {},
+  removeLine: () => {},
+  adjustLineQuantity: () => {},
+  open: false,
+  setOpen: () => {},
+  totalQuantity: 0,
+  totalUzs: 0
+});
+
+function cartLineId(source: CartSource, name: string, priceUzs: number) {
+  return `${source}::${name}::${priceUzs}`;
+}
+
+function formatUzsInLang(lang: Language, amount: number): string {
+  const n = Math.max(0, Math.round(amount));
+  if (lang === 'en') return `${n.toLocaleString('en-US')} UZS`;
+  const spaced = n.toLocaleString('ru-RU').replace(/\u00a0/g, ' ');
+  if (lang === 'ru') return `${spaced} сум`;
+  return `${spaced} so'm`;
+}
 
 // --- Components ---
 
 const Navbar = () => {
   const sectionIds = ['spotlight', 'partner-brands', 'daily-looks', 'clothes', 'branches'] as const;
   const [activeSection, setActiveSection] = useState<(typeof sectionIds)[number]>('spotlight');
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const visibleRatiosRef = useRef<Record<(typeof sectionIds)[number], number>>({
     spotlight: 0,
     'partner-brands': 0,
@@ -557,6 +684,24 @@ const Navbar = () => {
     return () => observer.disconnect();
   }, [activeSection]);
 
+  useEffect(() => {
+    if (!mobileNavOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMobileNavOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [mobileNavOpen]);
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    const prev = document.body.style.overflow;
+    if (mobileNavOpen) document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [mobileNavOpen]);
+
   const navLinkInBar = (id: (typeof sectionIds)[number]) =>
     cn(
       'inline-flex items-center justify-center rounded-full px-2.5 py-1.5 text-[11px] font-medium uppercase leading-none tracking-[0.08em] antialiased transition-all duration-200 lg:px-3 lg:text-xs lg:tracking-[0.1em]',
@@ -564,12 +709,10 @@ const Navbar = () => {
         ? 'bg-black/12 text-black'
         : 'text-black/75 hover:bg-black/8 hover:text-black'
     );
-  const navLinkMobilePill = (id: (typeof sectionIds)[number]) =>
+  const navLinkMobileSheet = (id: (typeof sectionIds)[number]) =>
     cn(
-      'inline-flex shrink-0 items-center justify-center rounded-full px-2 py-1.5 text-[8px] font-medium uppercase leading-none tracking-[0.06em] antialiased transition-all duration-200 min-[400px]:px-2.5 min-[400px]:text-[9px] sm:text-[10px]',
-      activeSection === id
-        ? 'bg-black/12 text-black'
-        : 'text-black/75 active:bg-black/8'
+      'block w-full rounded-xl px-3 py-2.5 text-left text-[11px] font-medium uppercase leading-none tracking-[0.08em] antialiased transition-colors min-[400px]:text-xs',
+      activeSection === id ? 'bg-black/12 text-black' : 'text-black/75 active:bg-black/8'
     );
   const logoSep = 'text-black/30';
 
@@ -578,101 +721,141 @@ const Navbar = () => {
       initial={false}
       className="relative z-40 bg-transparent"
     >
-      {/* Mobile / small tablet: same structure as desktop — logo | scrollable nav+lang pill | contact */}
-      <div className="pointer-events-none fixed inset-x-0 top-0 z-[95] flex items-center gap-1.5 px-2 pt-2 sm:gap-2 sm:px-3 md:hidden">
-        <motion.a
-          href="#"
-          className="pointer-events-auto flex shrink-0 items-center gap-1 rounded-full border border-black/12 bg-white/95 px-2 py-1.5 shadow-[0_6px_24px_-6px_rgba(0,0,0,0.18)] ring-1 ring-black/[0.06] backdrop-blur-md min-[400px]:gap-1.5 min-[400px]:px-2.5"
-          whileTap={{ scale: 0.98 }}
-          aria-label="210 × Anpa Limited"
-        >
-          <img
-            src={LOGO_210_SRC}
-            alt="210 Sports Wear"
-            className="h-5 w-auto max-h-7 object-contain object-left min-[400px]:h-6 min-[400px]:max-h-8"
-            loading="eager"
-            decoding="async"
-            referrerPolicy="no-referrer"
-          />
-          <span className={cn('text-xs font-light leading-none select-none min-[400px]:text-sm', logoSep)} aria-hidden>
-            |
-          </span>
-          <img
-            src={LOGO_COLLECTIONS_SRC}
-            alt="Anpa Limited"
-            className="h-4 w-auto max-h-6 object-contain object-left min-[400px]:h-5 min-[400px]:max-h-7"
-            loading="eager"
-            decoding="async"
-            referrerPolicy="no-referrer"
-          />
-        </motion.a>
+      {/* Mobile: compact bar — logo | menu (⋯) | contact; links + language in sheet */}
+      {mobileNavOpen ? (
+        <button
+          type="button"
+          className="fixed inset-0 z-[94] bg-black/25 backdrop-blur-[2px] md:hidden"
+          aria-label={ui.closeMenu}
+          onClick={() => setMobileNavOpen(false)}
+        />
+      ) : null}
 
-        <nav
-          aria-label="Main"
-          className="pointer-events-auto min-h-[2.5rem] min-w-0 flex-1 overflow-x-auto overflow-y-hidden overscroll-x-contain scroll-smooth touch-pan-x [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-        >
-          <div className="inline-flex min-h-[2.5rem] w-max max-w-none items-center gap-0.5 rounded-full border border-black/12 bg-white/92 py-1 pl-1.5 pr-1.5 shadow-[0_8px_30px_-10px_rgba(0,0,0,0.2)] ring-1 ring-black/[0.06] backdrop-blur-xl supports-[backdrop-filter]:bg-white/85 min-[400px]:gap-1 min-[400px]:px-2">
-            <a href="#spotlight" className={navLinkMobilePill('spotlight')}>
-              {t.home}
-            </a>
-            <a href="#daily-looks" className={navLinkMobilePill('daily-looks')}>
-              {t.dailyLooks}
-            </a>
-            <a href="#clothes" className={navLinkMobilePill('clothes')}>
-              {t.clothes}
-            </a>
-            <a href="#partner-brands" className={navLinkMobilePill('partner-brands')}>
-              {t.brands}
-            </a>
-            <a href="#branches" className={navLinkMobilePill('branches')}>
-              {t.branches}
-            </a>
-            <div className="mx-0.5 h-4 w-px shrink-0 bg-black/20" aria-hidden />
-            <div className="flex shrink-0 items-center gap-0.5 pr-0.5">
-              {(['uz', 'ru', 'en'] as const).map((l) => (
-                <button
-                  key={l}
-                  type="button"
-                  onClick={() => setLang(l)}
-                  className={cn(
-                    'h-7 min-w-[1.75rem] rounded-full text-[9px] font-semibold uppercase leading-none tracking-normal text-black/65 transition-colors min-[400px]:h-8 min-[400px]:min-w-[2rem] min-[400px]:text-[10px]',
-                    lang === l && 'bg-black/12 text-black'
-                  )}
-                >
-                  {l}
-                </button>
-              ))}
-            </div>
+      <div className="pointer-events-none fixed inset-x-0 top-0 z-[95] flex flex-col px-2 pt-2 sm:px-3 md:hidden">
+        <div className="pointer-events-none flex items-center gap-1.5 sm:gap-2">
+          <motion.a
+            href="#spotlight"
+            className="pointer-events-auto flex shrink-0 items-center gap-1 rounded-full border border-black/12 bg-white/95 px-2 py-1.5 shadow-[0_6px_24px_-6px_rgba(0,0,0,0.18)] ring-1 ring-black/[0.06] backdrop-blur-md min-[400px]:gap-1.5 min-[400px]:px-2.5"
+            whileTap={{ scale: 0.98 }}
+            aria-label="210 × Anba Limited"
+          >
+            <img
+              src={LOGO_210_SRC}
+              alt="210 Sports Wear"
+              className="h-[1.125rem] w-auto max-h-6 object-contain object-left min-[400px]:h-5 min-[400px]:max-h-7"
+              loading="eager"
+              decoding="async"
+              referrerPolicy="no-referrer"
+            />
+            <span className={cn('text-xs font-light leading-none select-none min-[400px]:text-sm', logoSep)} aria-hidden>
+              |
+            </span>
+            <img
+              src={LOGO_COLLECTIONS_SRC}
+              alt="Anba Limited"
+              className="h-3.5 w-auto max-h-5 object-contain object-left min-[400px]:h-4 min-[400px]:max-h-6"
+              loading="eager"
+              decoding="async"
+              referrerPolicy="no-referrer"
+            />
+          </motion.a>
+
+          <div className="pointer-events-auto flex min-w-0 flex-1 justify-center">
+            <motion.button
+              type="button"
+              onClick={() => setMobileNavOpen((o) => !o)}
+              className={cn(
+                'inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-black/12 bg-white/95 shadow-[0_6px_22px_-8px_rgba(0,0,0,0.18)] ring-1 ring-black/[0.06] backdrop-blur-md transition-colors',
+                mobileNavOpen && 'bg-black/[0.06] ring-black/20'
+              )}
+              whileTap={{ scale: 0.96 }}
+              aria-expanded={mobileNavOpen}
+              aria-controls="mobile-nav-menu"
+              aria-label={mobileNavOpen ? ui.closeMenu : ui.openMenu}
+            >
+              <MoreHorizontal size={20} strokeWidth={2} className="text-black/80" aria-hidden />
+            </motion.button>
           </div>
-        </nav>
 
-        <motion.a
-          href={CONTACT_PHONE_TEL}
-          className="pointer-events-auto inline-flex h-9 shrink-0 items-center justify-center rounded-full border border-black/12 bg-white/95 px-3 text-[11px] font-bold uppercase tracking-[0.08em] text-black shadow-[0_6px_22px_-8px_rgba(0,0,0,0.18)] ring-1 ring-black/[0.06] backdrop-blur-md transition-colors active:bg-black/[0.04]"
-          whileTap={{ scale: 0.96 }}
-          aria-label={`${ui.contactCall}: ${CONTACT_PHONE_LABEL}`}
-        >
-          <span>{ui.contactCall}</span>
-          <ArrowUpRight size={14} strokeWidth={2} className="ml-1.5 shrink-0" />
-        </motion.a>
+          <motion.a
+            href={CONTACT_PHONE_TEL}
+            className="pointer-events-auto inline-flex h-9 shrink-0 items-center justify-center rounded-full border border-black/12 bg-white/95 px-2.5 text-[10px] font-bold uppercase tracking-[0.08em] text-black shadow-[0_6px_22px_-8px_rgba(0,0,0,0.18)] ring-1 ring-black/[0.06] backdrop-blur-md transition-colors active:bg-black/[0.04] min-[400px]:px-3 min-[400px]:text-[11px]"
+            whileTap={{ scale: 0.96 }}
+            aria-label={`${ui.contactCall}: ${CONTACT_PHONE_LABEL}`}
+          >
+            <span className="max-[360px]:sr-only">{ui.contactCall}</span>
+            <Phone size={16} strokeWidth={2} className="min-[361px]:hidden" aria-hidden />
+            <ArrowUpRight size={14} strokeWidth={2} className="ml-1.5 hidden min-[361px]:inline shrink-0" />
+          </motion.a>
+        </div>
+
+        {mobileNavOpen ? (
+          <motion.nav
+            id="mobile-nav-menu"
+            aria-label="Main"
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            className="pointer-events-auto mt-1.5 rounded-2xl border border-black/12 bg-white/96 shadow-[0_16px_40px_-24px_rgba(0,0,0,0.35)] ring-1 ring-black/[0.06] backdrop-blur-xl supports-[backdrop-filter]:bg-white/92"
+          >
+            <div className="flex flex-col gap-0.5 p-2 sm:p-2.5">
+              {(
+                [
+                  ['spotlight', t.home],
+                  ['daily-looks', t.dailyLooks],
+                  ['clothes', t.clothes],
+                  ['partner-brands', t.brands],
+                  ['branches', t.branches]
+                ] as const
+              ).map(([id, label]) => (
+                <a
+                  key={id}
+                  href={`#${id}`}
+                  className={navLinkMobileSheet(id)}
+                  onClick={() => setMobileNavOpen(false)}
+                >
+                  {label}
+                </a>
+              ))}
+              <div className="my-1 h-px bg-black/10" aria-hidden />
+              <div
+                className="flex flex-wrap gap-1.5 px-2 pb-1 pt-0.5"
+                role="group"
+                aria-label={lang === 'ru' ? 'Язык' : lang === 'uz' ? 'Til' : 'Language'}
+              >
+                {(['uz', 'ru', 'en'] as const).map((l) => (
+                  <button
+                    key={l}
+                    type="button"
+                    onClick={() => setLang(l)}
+                    className={cn(
+                      'h-9 min-w-[2.5rem] rounded-full text-[10px] font-semibold uppercase leading-none tracking-normal text-black/65 transition-colors',
+                      lang === l && 'bg-black/12 text-black'
+                    )}
+                  >
+                    {l}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </motion.nav>
+        ) : null}
       </div>
 
-      <div className="h-[3.65rem] shrink-0 sm:h-[3.75rem] md:hidden" aria-hidden />
-
-      <div className="mx-auto hidden h-[3.75rem] max-w-[1600px] px-4 md:block md:h-[4rem] lg:px-10" aria-hidden />
+      {/* No in-flow spacer: hero (#spotlight) starts at document top so Aurora sits behind the fixed bar */}
 
       {/* md+: fixed logo + centered bar + contact (matches desktop mock) */}
       <motion.a
-        href="#"
+        href="#spotlight"
         className="fixed top-2 left-3 z-[96] hidden items-center gap-2 rounded-full border border-black/12 bg-white/95 px-3 py-2 shadow-[0_6px_24px_-6px_rgba(0,0,0,0.18)] ring-1 ring-black/[0.06] backdrop-blur-md sm:left-6 md:flex md:gap-2.5 lg:left-10"
         whileHover={{ opacity: 0.98, scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
-        aria-label="210 × Anpa Limited"
+        aria-label="210 × Anba Limited"
       >
         <img
           src={LOGO_210_SRC}
           alt="210 Sports Wear"
-          className="h-7 w-auto max-h-9 object-contain object-left md:h-9 md:max-h-9"
+          className="h-6 w-auto max-h-8 object-contain object-left md:h-8 md:max-h-8"
           loading="eager"
           decoding="async"
           referrerPolicy="no-referrer"
@@ -682,8 +865,8 @@ const Navbar = () => {
         </span>
         <img
           src={LOGO_COLLECTIONS_SRC}
-          alt="Anpa Limited"
-          className="h-6 w-auto max-h-8 object-contain object-left md:h-8 md:max-h-8"
+          alt="Anba Limited"
+          className="h-5 w-auto max-h-7 object-contain object-left md:h-7 md:max-h-7"
           loading="eager"
           decoding="async"
           referrerPolicy="no-referrer"
@@ -803,7 +986,7 @@ const SpotlightCrossfadeSlideshow: React.FC<{
         />
       ))}
       {slides.length > 1 && (
-        <div className="pointer-events-none absolute bottom-10 left-0 right-0 z-[12] flex justify-center gap-1.5 px-2 sm:bottom-16 lg:bottom-[4.25rem]">
+        <div className="pointer-events-none absolute bottom-8 left-0 right-0 z-[12] flex justify-center gap-1.5 px-2 sm:bottom-12 lg:bottom-[3.5rem]">
           {slides.map((_, idx) => (
             <span
               key={idx}
@@ -844,9 +1027,9 @@ const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number; className?
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.08, type: 'spring', stiffness: 76, damping: 22 }}
       whileTap={{ scale: 0.992 }}
-      whileHover={{ y: -6 }}
+      whileHover={{ y: -4 }}
       className={cn(
-        'group relative h-full w-full min-h-0 overflow-hidden rounded-3xl border border-white/70 bg-white/22 shadow-[0_22px_60px_-34px_rgba(0,0,0,0.45)] backdrop-blur-xl touch-pan-y',
+        'group relative h-full w-full min-h-0 overflow-hidden rounded-2xl border border-white/70 bg-white/22 shadow-[0_18px_48px_-28px_rgba(0,0,0,0.42)] backdrop-blur-xl touch-pan-y',
         className
       )}
     >
@@ -916,18 +1099,18 @@ const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number; className?
             referrerPolicy="no-referrer"
           />
         )}
-        <div className="pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-inset ring-white/35" />
+        <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/35" />
       </div>
-      <div className={cn('pointer-events-none absolute inset-x-0 bottom-0 z-[2]', isCompactCard ? 'p-2 sm:p-2.5' : 'p-2.5 sm:p-3 lg:p-4')}>
+      <div className={cn('pointer-events-none absolute inset-x-0 bottom-0 z-[2]', isCompactCard ? 'p-1.5 sm:p-2' : 'p-2 sm:p-2.5 lg:p-3')}>
         {isCompactCard ? (
           <div className="flex">
-            <span className="inline-flex max-w-[92%] items-center rounded-full border border-white/45 bg-white/20 px-2.5 py-1 text-[10px] font-black uppercase leading-tight tracking-[0.08em] text-white backdrop-blur-[7px] sm:px-3 sm:py-1.5 sm:text-[11px]">
+            <span className="inline-flex max-w-[92%] items-center rounded-full border border-white/45 bg-white/20 px-2 py-0.5 text-[9px] font-black uppercase leading-tight tracking-[0.08em] text-white backdrop-blur-[7px] sm:px-2.5 sm:py-1 sm:text-[10px]">
               <span className="line-clamp-1">{copy.title}</span>
             </span>
           </div>
         ) : (
-          <div className="inline-flex max-w-[95%] items-center rounded-full border border-white/70 bg-white/35 px-3 py-1.5 text-white shadow-[0_10px_30px_-18px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:px-3.5 sm:py-2 lg:px-4">
-            <span className="line-clamp-1 text-[11px] font-black uppercase leading-tight tracking-[0.09em] sm:text-[13px] lg:text-[14px]">
+          <div className="inline-flex max-w-[95%] items-center rounded-full border border-white/70 bg-white/35 px-2.5 py-1 text-white shadow-[0_8px_24px_-14px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:px-3 sm:py-1.5 lg:px-3.5">
+            <span className="line-clamp-1 text-[10px] font-black uppercase leading-tight tracking-[0.09em] sm:text-[11px] lg:text-[12px]">
               {copy.title}
             </span>
           </div>
@@ -942,50 +1125,61 @@ const SpotlightSection = () => {
   const tPhilosophy = TRANSLATIONS[lang].philosophy;
 
   return (
-    <section id="spotlight" className="scroll-mt-20 bg-gradient-to-b from-white to-neutral-50/50 min-h-0 overflow-x-hidden lg:min-h-screen lg:scroll-mt-24">
-      <div className="mx-auto flex min-h-0 w-full max-w-[1600px] flex-col px-3 pb-3 pt-[3.15rem] sm:px-4 sm:pb-5 sm:pt-[3.75rem] md:px-6 md:pb-6 md:pt-[4.2rem] lg:min-h-[calc(100dvh-4rem)] lg:px-8 lg:pb-10 lg:pt-[3.65rem]">
-        <div className="grid min-h-0 w-full flex-1 grid-cols-1 items-stretch gap-4 sm:gap-5 lg:grid-cols-[minmax(0,3fr)_minmax(260px,2fr)] lg:gap-7">
+    <section
+      id="spotlight"
+      className="relative min-h-[100dvh] scroll-mt-20 overflow-x-hidden bg-transparent lg:min-h-screen lg:scroll-mt-24"
+    >
+      <div className="pointer-events-none absolute inset-0 z-0 min-h-[100dvh] overflow-hidden lg:min-h-full">
+        <Aurora
+          className="min-h-full min-w-full"
+          colorStops={SPOTLIGHT_AURORA_STOPS}
+          amplitude={1.7}
+          blend={0.45}
+        />
+      </div>
+      <div className="relative z-10 mx-auto flex min-h-0 w-full max-w-[1600px] flex-col px-3 pb-2 pt-[max(3.95rem,calc(env(safe-area-inset-top,0px)+5.15rem))] sm:px-4 sm:pb-5 sm:pt-[max(4.5rem,calc(env(safe-area-inset-top,0px)+5.85rem))] md:px-6 md:pb-6 md:pt-[max(4.85rem,calc(env(safe-area-inset-top,0px)+6rem))] lg:min-h-[calc(100dvh-4rem)] lg:px-8 lg:pb-10 lg:pt-[max(4.25rem,calc(env(safe-area-inset-top,0px)+5.65rem))]">
+        <div className="grid min-h-0 w-full flex-1 grid-cols-1 items-stretch gap-2.5 sm:gap-4 lg:grid-cols-[minmax(0,3fr)_minmax(260px,2fr)] lg:gap-5">
           {/* Spotlight: full-width stack below lg (no squeezed side column); desktop keeps editorial split */}
-          <div className="grid min-h-0 grid-cols-1 items-stretch gap-2.5 sm:gap-3 max-lg:min-h-0 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.82fr)] lg:gap-5 lg:-translate-x-6 xl:-translate-x-10 2xl:-translate-x-14">
+          <div className="grid min-h-0 grid-cols-1 items-stretch gap-1.5 sm:gap-2.5 max-lg:min-h-0 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.82fr)] lg:gap-4 lg:-translate-x-6 xl:-translate-x-10 2xl:-translate-x-14">
             <SpotlightCard
               cardKey="spring"
               index={0}
-              className="max-lg:aspect-[5/4] max-lg:min-h-[11.5rem] max-lg:w-full lg:aspect-auto lg:min-h-0 h-full w-full"
+              className="max-lg:aspect-[5/4] max-lg:min-h-[8.85rem] max-lg:w-full lg:aspect-auto lg:min-h-0 h-full w-full"
             />
-            <div className="grid min-h-0 auto-rows-fr gap-2 sm:gap-2.5 max-sm:grid-cols-1 max-sm:grid-rows-3 sm:max-lg:grid-cols-3 sm:max-lg:grid-rows-1 lg:grid-cols-1 lg:grid-rows-3 lg:gap-5">
-              <SpotlightCard cardKey="newDrop" index={1} className="min-h-0 max-sm:min-h-[7.25rem] sm:max-lg:min-h-[9.5rem]" />
-              <SpotlightCard cardKey="featured" index={2} className="min-h-0 max-sm:min-h-[7.25rem] sm:max-lg:min-h-[9.5rem]" />
-              <SpotlightCard cardKey="special" index={3} className="min-h-0 max-sm:min-h-[7.25rem] sm:max-lg:min-h-[9.5rem]" />
+            <div className="grid min-h-0 auto-rows-fr gap-1 sm:gap-2 max-sm:grid-cols-1 max-sm:grid-rows-3 sm:max-lg:grid-cols-3 sm:max-lg:grid-rows-1 lg:grid-cols-1 lg:grid-rows-3 lg:gap-4">
+              <SpotlightCard cardKey="newDrop" index={1} className="min-h-0 max-sm:min-h-[5.75rem] sm:max-lg:min-h-[8rem]" />
+              <SpotlightCard cardKey="featured" index={2} className="min-h-0 max-sm:min-h-[5.75rem] sm:max-lg:min-h-[8rem]" />
+              <SpotlightCard cardKey="special" index={3} className="min-h-0 max-sm:min-h-[5.75rem] sm:max-lg:min-h-[8rem]" />
             </div>
           </div>
 
-          <div className="flex min-h-0 w-full min-w-0 flex-col items-stretch gap-3 sm:gap-4 lg:h-full lg:gap-5">
+          <div className="flex min-h-0 w-full min-w-0 flex-col items-stretch gap-2.5 sm:gap-3 lg:h-full lg:gap-4">
             <SectionReveal className="w-full shrink-0 lg:translate-x-5 xl:translate-x-8 2xl:translate-x-10">
               <div
                 id="philosophy"
-                className="scroll-mt-24 relative overflow-hidden rounded-3xl border border-white/80 bg-[linear-gradient(160deg,rgba(255,255,255,0.62),rgba(219,234,254,0.38))] px-5 py-6 text-center shadow-[0_24px_72px_-40px_rgba(0,0,0,0.32)] backdrop-blur-2xl sm:px-7 sm:py-8 md:px-9 md:py-10 lg:px-10 lg:py-11"
+                className="scroll-mt-24 relative overflow-hidden rounded-2xl border border-white/80 bg-[linear-gradient(160deg,rgba(255,255,255,0.62),rgba(219,234,254,0.38))] px-4 py-5 text-center shadow-[0_20px_56px_-32px_rgba(0,0,0,0.3)] backdrop-blur-2xl sm:px-6 sm:py-6 md:px-7 md:py-8 lg:px-8 lg:py-9"
               >
                 <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(90%_80%_at_50%_0%,rgba(255,255,255,0.38),transparent_60%)]" aria-hidden />
 
-                <div className="mb-3 flex items-center justify-center sm:mb-5">
-                  <p className="inline-flex rounded-full border border-white/80 bg-white/50 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-black/65 shadow-[0_8px_24px_-16px_rgba(0,0,0,0.28)] backdrop-blur-xl sm:px-4 sm:text-[11px] sm:tracking-[0.24em]">
+                <div className="mb-2.5 flex items-center justify-center sm:mb-4">
+                  <p className="inline-flex rounded-full border border-white/80 bg-white/50 px-2.5 py-0.5 text-[9px] font-semibold uppercase tracking-[0.18em] text-black/65 shadow-[0_6px_20px_-14px_rgba(0,0,0,0.26)] backdrop-blur-xl sm:px-3 sm:py-1 sm:text-[10px] sm:tracking-[0.22em]">
                     {tPhilosophy.label}
                   </p>
                 </div>
 
-                <h2 className="mx-auto mb-4 max-w-[15ch] text-balance text-[1.55rem] font-black uppercase leading-[1.08] tracking-tight text-black sm:mb-5 sm:text-[2rem] md:text-[2.2rem] lg:text-[2.45rem]">
+                <h2 className="mx-auto mb-3 max-w-[15ch] text-balance text-[1.35rem] font-black uppercase leading-[1.08] tracking-tight text-black sm:mb-4 sm:text-[1.7rem] md:text-[1.9rem] lg:text-[2.1rem]">
                   {tPhilosophy.title}
                 </h2>
-                <div className="mx-auto mb-4 h-px w-14 bg-black/15 sm:mb-6 sm:w-20" aria-hidden />
-                <p className="mx-auto max-w-[62ch] whitespace-pre-line text-sm leading-relaxed text-black/68 sm:text-[15px] lg:text-[1.02rem]">
+                <div className="mx-auto mb-3 h-px w-12 bg-black/15 sm:mb-5 sm:w-16" aria-hidden />
+                <p className="mx-auto max-w-[62ch] whitespace-pre-line text-[13px] leading-relaxed text-black/68 sm:text-sm lg:text-[0.95rem]">
                   {tPhilosophy.body}
                 </p>
 
-                <div className="mt-4 flex flex-wrap justify-center gap-1.5 sm:mt-6 sm:gap-2.5 md:gap-3">
+                <div className="mt-3 flex flex-wrap justify-center gap-1.5 sm:mt-5 sm:gap-2 md:gap-2.5">
                   {PHILOSOPHY_BADGES_BY_LANG[lang].map((item) => (
                     <span
                       key={`${lang}-${item}`}
-                      className="inline-flex items-center rounded-full border border-white/65 bg-white/55 px-2.5 py-1.5 text-[9px] font-semibold uppercase tracking-[0.1em] text-black/65 backdrop-blur-md sm:px-3.5 sm:py-2 sm:text-[11px] sm:tracking-[0.12em] md:px-4"
+                      className="inline-flex items-center rounded-full border border-white/65 bg-white/55 px-2 py-1 text-[8px] font-semibold uppercase tracking-[0.1em] text-black/65 backdrop-blur-md sm:px-3 sm:py-1.5 sm:text-[10px] sm:tracking-[0.11em] md:px-3.5"
                     >
                       {item}
                     </span>
@@ -995,27 +1189,27 @@ const SpotlightSection = () => {
             </SectionReveal>
 
             <SectionReveal className="flex min-h-0 flex-1 flex-col basis-0">
-              <div className="flex min-h-0 flex-1 items-center justify-center py-2 sm:py-4">
+              <div className="flex min-h-0 flex-1 items-center justify-center py-1 sm:py-3">
                 <div
-                  className="flex w-full max-w-none flex-nowrap items-center justify-center gap-5 sm:gap-8 lg:translate-x-6 lg:gap-12 xl:gap-16 xl:translate-x-10 2xl:translate-x-12"
-                  aria-label="210 × Anpa Limited"
+                  className="flex w-full max-w-none flex-nowrap items-center justify-center gap-3 sm:gap-6 lg:translate-x-6 lg:gap-9 xl:gap-12 xl:translate-x-10 2xl:translate-x-12"
+                  aria-label="210 × Anba Limited"
                 >
                   <img
                     src={LOGO_210_SRC}
                     alt="210 Sports Wear"
-                    className="h-[clamp(3.25rem,min(14vw,5.5rem),5.5rem)] w-auto max-w-[44%] object-contain object-center sm:h-[clamp(4.5rem,min(22vw,8rem),8rem)] lg:h-[clamp(7.5rem,min(32vh,15rem),15rem)] xl:h-[clamp(8.5rem,min(36vh,17rem),17rem)]"
+                    className="h-[clamp(2.75rem,min(12vw,4.75rem),4.75rem)] w-auto max-w-[44%] object-contain object-center sm:h-[clamp(3.85rem,min(19vw,6.75rem),6.75rem)] lg:h-[clamp(6.35rem,min(27vh,12.75rem),12.75rem)] xl:h-[clamp(7.15rem,min(31vh,14.5rem),14.5rem)]"
                     loading="eager"
                     decoding="async"
                     referrerPolicy="no-referrer"
                   />
                   <span
-                    className="h-[clamp(2.75rem,min(12vw,4.75rem),4.75rem)] w-px shrink-0 bg-black/15 sm:h-[clamp(4rem,min(20vw,7rem),7rem)] lg:h-[clamp(6.5rem,min(28vh,13rem),13rem)] xl:h-[clamp(7.5rem,min(32vh,15rem),15rem)]"
+                    className="h-[clamp(2.35rem,min(10vw,4rem),4rem)] w-px shrink-0 bg-black/15 sm:h-[clamp(3.4rem,min(17vw,6rem),6rem)] lg:h-[clamp(5.5rem,min(24vh,11rem),11rem)] xl:h-[clamp(6.35rem,min(27vh,12.75rem),12.75rem)]"
                     aria-hidden
                   />
                   <img
                     src={LOGO_COLLECTIONS_SRC}
-                    alt="Anpa Limited"
-                    className="h-[clamp(3rem,min(14vw,5.75rem),5.75rem)] w-auto max-w-[44%] object-contain object-center sm:h-[clamp(4.75rem,min(22vw,8.25rem),8.25rem)] lg:h-[clamp(7rem,min(28vh,13.5rem),13.5rem)] xl:h-[clamp(8rem,min(32vh,15.5rem),15.5rem)]"
+                    alt="Anba Limited"
+                    className="h-[clamp(2.55rem,min(12vw,4.9rem),4.9rem)] w-auto max-w-[44%] object-contain object-center sm:h-[clamp(4.05rem,min(19vw,7rem),7rem)] lg:h-[clamp(5.95rem,min(24vh,11.5rem),11.5rem)] xl:h-[clamp(6.8rem,min(27vh,13.25rem),13.25rem)]"
                     loading="eager"
                     decoding="async"
                     referrerPolicy="no-referrer"
@@ -1062,7 +1256,7 @@ const BrandMarquee = () => {
   return (
     <div
       id="brand-marquee"
-      className="brand-marquee relative py-7 md:py-9 bg-gradient-to-b from-black via-neutral-950 to-black border-y border-white/10 overflow-hidden scroll-mt-24"
+      className="brand-marquee relative pt-9 pb-6 md:pt-11 md:pb-8 bg-gradient-to-b from-black via-neutral-950 to-black border-y border-white/10 overflow-hidden scroll-mt-24"
     >
       <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-black via-black/80 to-transparent z-10 pointer-events-none" />
       <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-black via-black/80 to-transparent z-10 pointer-events-none" />
@@ -1077,27 +1271,39 @@ const BrandMarquee = () => {
 
 const DailyLooksSection = () => {
   const { lang } = React.useContext(LangContext);
+  const { addLine } = React.useContext(CartContext);
   const t = TRANSLATIONS[lang].dailyLooks;
   const ui = TRANSLATIONS[lang].ui;
 
   return (
-    <section id="daily-looks" className="scroll-mt-24 border-t border-black/5 bg-white py-10 min-[480px]:py-12 lg:min-h-screen lg:py-0">
-      <div className="mx-auto flex max-w-[1600px] flex-col px-4 pb-8 pt-2 sm:px-6 sm:pb-10 sm:pt-3 lg:min-h-[calc(100dvh-4rem)] lg:justify-center lg:px-8 lg:pb-8 lg:pt-[4.4rem]">
+    <section
+      id="daily-looks"
+      className="relative scroll-mt-24 overflow-x-hidden border-t border-white/15 bg-transparent py-8 min-[480px]:py-10 lg:min-h-screen lg:py-0"
+    >
+      <div className="pointer-events-none absolute inset-0 z-0 min-h-[100dvh] overflow-hidden lg:min-h-full [transform:scaleY(-1)]">
+        <Aurora
+          className="min-h-full min-w-full"
+          colorStops={SPOTLIGHT_AURORA_STOPS}
+          amplitude={1.7}
+          blend={0.45}
+        />
+      </div>
+      <div className="relative z-10 mx-auto flex max-w-[1600px] flex-col items-center px-4 pb-7 pt-1.5 sm:px-6 sm:pb-10 sm:pt-3 lg:min-h-[calc(100dvh-4rem)] lg:justify-center lg:px-8 lg:pb-8 lg:pt-[4.4rem]">
         {/* No SectionReveal here: spring y-overshoot made the card feel like it grew then shrank */}
-        <div className="w-full">
-          <p className="mb-2 text-center text-xs font-bold uppercase tracking-[0.28em] text-black/45 sm:text-left sm:tracking-[0.3em]">
+        <div className="flex w-full flex-col items-center">
+          <p className="mb-2 text-center text-xs font-bold uppercase tracking-[0.28em] text-black/45 sm:tracking-[0.3em]">
             {t.label}
           </p>
-          <div className="grid flex-1 grid-cols-1 items-start gap-6 md:gap-6 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:gap-8">
+          <div className="flex w-full max-w-6xl flex-col items-center justify-center gap-6 md:gap-8 lg:flex-row lg:items-start lg:gap-10">
             <motion.div
-              className="mx-auto flex w-full max-w-[min(100%,min(96vw,calc((100dvh-12rem)*1.04)))] items-center justify-center gap-3 sm:mx-0 sm:justify-start sm:gap-4 lg:-ml-8"
+              className="flex w-full max-w-[min(100%,min(96vw,calc((100dvh-12rem)*1.04)))] items-center justify-center gap-2.5 sm:gap-4"
               initial={{ opacity: 0, y: 18 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-60px 0px -80px 0px' }}
               transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
             >
               <motion.article
-                className="relative z-20 aspect-[9/16] w-[min(76vw,342px)] shrink-0 overflow-hidden rounded-2xl border border-white/40 shadow-[0_14px_45px_-28px_rgba(0,0,0,0.32)] sm:w-[min(47vw,368px)] lg:w-[min(31vw,410px)]"
+                className="relative z-20 aspect-[9/16] w-[min(70vw,318px)] shrink-0 overflow-hidden rounded-2xl border border-white/40 shadow-[0_14px_45px_-28px_rgba(0,0,0,0.32)] sm:w-[min(47vw,368px)] lg:w-[min(31vw,410px)]"
                 initial={{ opacity: 0, x: -16, scale: 0.98 }}
                 whileInView={{ opacity: 1, x: 0, scale: 1 }}
                 viewport={{ once: true, margin: '-60px 0px -80px 0px' }}
@@ -1123,14 +1329,14 @@ const DailyLooksSection = () => {
               </motion.article>
 
               <motion.div
-                className="relative flex flex-col justify-center gap-3 sm:gap-4"
+                className="relative flex flex-col justify-center gap-2.5 sm:gap-4"
                 initial={{ opacity: 0, x: 16 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, margin: '-60px 0px -80px 0px' }}
                 transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: 0.14 }}
               >
                 <motion.article
-                  className="relative aspect-[3/4] w-[min(36vw,190px)] overflow-hidden rounded-2xl border border-white/45 shadow-[0_12px_36px_-25px_rgba(0,0,0,0.3)] sm:w-[min(28vw,220px)] lg:w-[min(20vw,255px)]"
+                  className="relative aspect-[3/4] w-[min(32vw,170px)] overflow-hidden rounded-2xl border border-white/45 shadow-[0_12px_36px_-25px_rgba(0,0,0,0.3)] sm:w-[min(28vw,220px)] lg:w-[min(20vw,255px)]"
                   animate={{ y: [0, -3, 0] }}
                   transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut' }}
                   whileHover={{ x: -3, scale: 1.02 }}
@@ -1149,7 +1355,7 @@ const DailyLooksSection = () => {
                   />
                 </motion.article>
                 <motion.article
-                  className="relative aspect-[3/4] w-[min(36vw,190px)] overflow-hidden rounded-2xl border border-white/45 shadow-[0_12px_36px_-25px_rgba(0,0,0,0.3)] sm:w-[min(28vw,220px)] lg:w-[min(20vw,255px)]"
+                  className="relative aspect-[3/4] w-[min(32vw,170px)] overflow-hidden rounded-2xl border border-white/45 shadow-[0_12px_36px_-25px_rgba(0,0,0,0.3)] sm:w-[min(28vw,220px)] lg:w-[min(20vw,255px)]"
                   animate={{ y: [0, 3, 0] }}
                   transition={{ duration: 4.6, repeat: Infinity, ease: 'easeInOut', delay: 0.2 }}
                   whileHover={{ x: -3, scale: 1.02 }}
@@ -1170,33 +1376,41 @@ const DailyLooksSection = () => {
               </motion.div>
             </motion.div>
 
-            <article className="w-full max-w-[680px] rounded-2xl border border-white/80 bg-[linear-gradient(160deg,rgba(255,255,255,0.58),rgba(226,232,240,0.36))] p-4 shadow-[0_22px_56px_-34px_rgba(0,0,0,0.28)] backdrop-blur-2xl sm:p-5 lg:max-w-[620px] lg:p-5">
-              <h2 className="text-balance text-center text-[1.55rem] font-black uppercase leading-tight text-black sm:text-left md:text-[1.75rem]">
+            <article className="w-full max-w-[680px] rounded-2xl border border-white/80 bg-[linear-gradient(160deg,rgba(255,255,255,0.58),rgba(226,232,240,0.36))] p-3.5 text-center shadow-[0_22px_56px_-34px_rgba(0,0,0,0.28)] backdrop-blur-2xl sm:p-5 lg:max-w-[620px] lg:p-5">
+              <h2 className="text-balance text-[1.55rem] font-black uppercase leading-tight text-black md:text-[1.75rem]">
                 {t.title}
               </h2>
               {t.body.trim() ? (
-                <p className="mt-2.5 text-center text-sm leading-relaxed text-black/65 sm:text-left">{t.body}</p>
+                <p className="mt-2.5 text-sm leading-relaxed text-black/65">{t.body}</p>
               ) : null}
               <div
-                className={cn(
-                  'mx-auto h-px w-24 bg-black/15 sm:mx-0',
-                  t.body.trim() ? 'mt-4' : 'mt-3'
-                )}
+                className={cn('mx-auto h-px w-24 bg-black/15', t.body.trim() ? 'mt-4' : 'mt-3')}
                 aria-hidden
               />
 
-              <div className="mt-3.5 space-y-2 sm:space-y-2.5">
+              <div className="mx-auto mt-3.5 w-full max-w-md space-y-2 sm:space-y-2.5">
                 {t.items.map((item) => (
-                  <div key={item.name} className="grid min-h-[2.9rem] grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2 rounded-xl border border-white/80 bg-white/45 px-3 py-2 backdrop-blur-xl sm:min-h-[3.1rem] sm:gap-2.5 sm:px-3.5 sm:py-2.5">
-                    <span className="min-w-0 flex items-center gap-2 text-sm font-semibold leading-snug text-black md:text-[15px]">
+                  <div
+                    key={item.name}
+                    className="flex min-h-[2.9rem] flex-wrap items-center justify-center gap-x-3 gap-y-2 rounded-xl border border-white/80 bg-white/45 px-3 py-2 backdrop-blur-xl sm:min-h-[3.1rem] sm:gap-x-4 sm:px-3.5 sm:py-2.5"
+                  >
+                    <span className="flex min-w-0 max-w-full items-center justify-center gap-2 text-sm font-semibold leading-snug text-black md:text-[15px]">
                       <DailyLookItemIcon kind={item.kind} className="h-4 w-4 shrink-0 text-black" />
                       <span className="truncate">{item.name}</span>
                     </span>
-                    <span className="shrink-0 text-right text-sm font-bold tabular-nums text-black md:text-[15px]">{item.price}</span>
+                    <span className="shrink-0 text-sm font-bold tabular-nums text-black md:text-[15px]">{item.price}</span>
                     <button
                       type="button"
                       className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/80 bg-white/70 p-1.5 text-black transition-colors backdrop-blur-md hover:bg-white/90 sm:h-10 sm:w-10"
                       aria-label={`${ui.addToCart}: ${item.name}`}
+                      onClick={() =>
+                        addLine({
+                          name: item.name,
+                          price: item.price,
+                          priceUzs: item.priceUzs,
+                          source: 'daily-look'
+                        })
+                      }
                     >
                       <ShoppingBag size={16} strokeWidth={1.75} />
                     </button>
@@ -1204,7 +1418,7 @@ const DailyLooksSection = () => {
                 ))}
               </div>
 
-              <p className="mt-3 text-[11px] font-bold uppercase tracking-[0.14em] text-black/45">{t.priceLabel}</p>
+              <p className="mt-3 text-center text-[11px] font-bold uppercase tracking-[0.14em] text-black/45">{t.priceLabel}</p>
             </article>
           </div>
         </div>
@@ -1215,6 +1429,7 @@ const DailyLooksSection = () => {
 
 const ClothesSection = () => {
   const { lang } = React.useContext(LangContext);
+  const { addLine } = React.useContext(CartContext);
   const t = TRANSLATIONS[lang].clothes;
   const ui = TRANSLATIONS[lang].ui;
 
@@ -1236,40 +1451,61 @@ const ClothesSection = () => {
         </SectionReveal>
       </div>
 
-      {/* Horizontal row: equal space at start/end when row is shorter than viewport; scroll when needed */}
-      <div
-        className="touch-pan-x overscroll-x-contain overflow-x-auto overflow-y-hidden scroll-smooth pb-2 [scrollbar-width:thin] [-webkit-overflow-scrolling:touch] [scroll-padding-inline:1rem] sm:[scroll-padding-inline:1.5rem] lg:[scroll-padding-inline:2.5rem]"
-        role="region"
-        aria-label={t.title}
-      >
-        <div className="flex w-max min-w-full snap-x snap-mandatory justify-start gap-3 px-4 pb-1 sm:justify-evenly sm:gap-5 sm:px-6 lg:px-10">
-          {t.items.map((item) => (
-            <article
-              key={item.name}
-              className="relative aspect-[13/15] w-[min(80vw,268px)] shrink-0 snap-center overflow-hidden rounded-2xl border border-white/30 bg-[linear-gradient(160deg,rgba(75,85,99,0.42),rgba(17,24,39,0.34))] shadow-[0_24px_56px_-30px_rgba(0,0,0,0.45)] backdrop-blur-2xl md:w-[280px]"
-            >
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_15%,rgba(255,255,255,0.2),transparent_45%)]" aria-hidden />
-              <div className="relative flex h-full min-h-0 flex-col p-4">
-                <div className="flex flex-1 flex-col items-center justify-center text-center">
-                  <span className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/35 text-xl text-white/80">
-                    +
-                  </span>
-                  <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-white/90">{item.name}</p>
-                  <p className="mt-2 text-[12px] text-white/70">Photo placeholder</p>
+      {/* Swipeable row: snap cards, edge fades hint more content */}
+      <div className="relative">
+        <div
+          className="pointer-events-none absolute inset-y-0 left-0 z-[2] w-8 bg-gradient-to-r from-white via-white/90 to-transparent sm:w-12 md:w-16"
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute inset-y-0 right-0 z-[2] w-8 bg-gradient-to-l from-white via-white/90 to-transparent sm:w-12 md:w-16"
+          aria-hidden
+        />
+        <div
+          className="touch-pan-x overscroll-x-contain overflow-x-auto overflow-y-hidden scroll-smooth pb-3 [-webkit-overflow-scrolling:touch] [scrollbar-width:thin] [scroll-padding-inline:max(1rem,env(safe-area-inset-left))] sm:[scroll-padding-inline:max(1.5rem,env(safe-area-inset-left))] lg:[scroll-padding-inline:max(2.5rem,env(safe-area-inset-left))] snap-x snap-mandatory"
+          role="region"
+          aria-roledescription="carousel"
+          aria-label={t.title}
+        >
+          <div className="flex w-max min-w-full justify-start gap-2.5 px-3 pb-1 sm:gap-4 sm:px-6 lg:gap-5 lg:px-10">
+            {t.items.map((item) => (
+              <article
+                key={item.name}
+                className="relative aspect-[13/15] w-[min(66vw,232px)] shrink-0 snap-center snap-always overflow-hidden rounded-2xl border border-white/30 bg-[linear-gradient(160deg,rgba(75,85,99,0.42),rgba(17,24,39,0.34))] shadow-[0_24px_56px_-30px_rgba(0,0,0,0.45)] backdrop-blur-2xl sm:w-[min(70vw,268px)] md:w-[276px]"
+              >
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_15%,rgba(255,255,255,0.2),transparent_45%)]" aria-hidden />
+                <div className="relative flex h-full min-h-0 flex-col p-3.5 sm:p-4">
+                  <div className="flex flex-1 flex-col items-center justify-center text-center">
+                    <span className="mb-2.5 inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/35 text-lg text-white/80 sm:mb-3 sm:h-10 sm:w-10 sm:text-xl">
+                      +
+                    </span>
+                    <p className="text-[10px] font-bold uppercase leading-snug tracking-[0.14em] text-white/90 sm:text-[11px]">{item.name}</p>
+                    <p className="mt-1.5 text-[10px] text-white/50 sm:mt-2 sm:text-[11px]">Photo</p>
+                  </div>
+                  <div className="mt-auto shrink-0 border-t border-white/20 pt-3 sm:pt-3.5">
+                    <motion.button
+                      type="button"
+                      whileTap={{ scale: 0.985 }}
+                      onClick={() =>
+                        addLine({
+                          name: item.name,
+                          price: item.price,
+                          priceUzs: item.priceUzs,
+                          source: 'clothes'
+                        })
+                      }
+                      className="group w-full rounded-xl border border-black/80 bg-black px-2.5 py-2 text-center transition-colors duration-200 hover:border-white/25 hover:bg-neutral-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-0 sm:rounded-[0.9rem] sm:px-3 sm:py-2"
+                      aria-label={`${ui.addToCart}: ${item.name}, ${item.price}`}
+                    >
+                      <span className="block text-[11px] font-semibold tabular-nums leading-snug tracking-normal text-white sm:text-xs">
+                        {item.price}
+                      </span>
+                    </motion.button>
+                  </div>
                 </div>
-                <div className="mt-auto flex shrink-0 items-center justify-between gap-2 border-t border-white/25 pt-3">
-                  <span className="text-[12px] font-bold tabular-nums text-white sm:text-[13px]">{item.price}</span>
-                  <button
-                    type="button"
-                    className="inline-flex shrink-0 items-center justify-center rounded-full border border-white/40 bg-white/20 p-2 text-white transition-colors backdrop-blur-md hover:bg-white/30"
-                    aria-label={`${ui.addToCart}: ${item.name}`}
-                  >
-                    <ShoppingBag size={18} strokeWidth={1.75} />
-                  </button>
-                </div>
-              </div>
-            </article>
-          ))}
+              </article>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -1360,7 +1596,7 @@ const BranchCard: React.FC<{
       </motion.a>
 
       <div className="w-full">
-        <div className="relative w-full h-[200px] sm:h-[220px] bg-neutral-50 overflow-hidden">
+        <div className="relative w-full h-[178px] sm:h-[220px] bg-neutral-50 overflow-hidden">
           {branch.photoSrc ? (
             <img
               src={branch.photoSrc}
@@ -1467,32 +1703,172 @@ const BranchesSection = () => {
 };
 
 const CartFloatingButton: React.FC = () => {
+  const { lang } = React.useContext(LangContext);
+  const ui = TRANSLATIONS[lang].ui;
+  const { totalQuantity, setOpen, open } = React.useContext(CartContext);
+
   return (
     <motion.button
       type="button"
       className="fixed bottom-[max(1.25rem,env(safe-area-inset-bottom,0px))] right-[max(1.25rem,env(safe-area-inset-right,0px))] z-[60] inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-black text-white shadow-[0_18px_50px_-18px_rgba(0,0,0,0.7)] transition-colors hover:bg-neutral-900"
       whileTap={{ scale: 0.95 }}
-      aria-label="Cart"
+      aria-label={ui.cart}
+      aria-expanded={open}
+      onClick={() => setOpen(true)}
     >
       <ShoppingBag size={20} strokeWidth={1.75} />
-      <span className="absolute top-2 right-2 min-w-[14px] h-[14px] px-0.5 flex items-center justify-center bg-white text-black text-[9px] font-bold rounded-full leading-none">
-        0
-      </span>
+      {totalQuantity > 0 ? (
+        <span className="absolute top-1.5 right-1.5 min-h-[18px] min-w-[18px] px-0.5 flex items-center justify-center bg-white text-black text-[9px] font-bold rounded-full leading-none tabular-nums">
+          {totalQuantity > 99 ? '99+' : totalQuantity}
+        </span>
+      ) : null}
     </motion.button>
+  );
+};
+
+const CartDrawer: React.FC = () => {
+  const { lang } = React.useContext(LangContext);
+  const ui = TRANSLATIONS[lang].ui;
+  const { lines, removeLine, adjustLineQuantity, open, setOpen, totalQuantity, totalUzs } =
+    React.useContext(CartContext);
+
+  React.useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [open]);
+
+  React.useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [open, setOpen]);
+
+  if (!open) return null;
+
+  return (
+    <div className="fixed inset-0 z-[110] md:flex md:items-end md:justify-end" role="dialog" aria-modal="true" aria-labelledby="cart-drawer-title">
+      <button
+        type="button"
+        className="absolute inset-0 bg-black/45 backdrop-blur-[2px] md:bg-black/35"
+        aria-label={ui.close}
+        onClick={() => setOpen(false)}
+      />
+      <motion.aside
+        id="cart-drawer"
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ type: 'spring', stiffness: 320, damping: 30 }}
+        className="absolute bottom-0 left-0 right-0 max-h-[min(88dvh,640px)] w-full overflow-hidden rounded-t-2xl border border-black/10 bg-white shadow-[0_-24px_60px_-20px_rgba(0,0,0,0.35)] md:bottom-[max(1rem,env(safe-area-inset-bottom,0px))] md:right-[max(1rem,env(safe-area-inset-right,0px))] md:left-auto md:max-h-[min(82dvh,520px)] md:w-[min(100%,380px)] md:rounded-2xl"
+      >
+        <div className="flex items-center justify-between border-b border-black/10 px-4 py-3.5">
+          <h2 id="cart-drawer-title" className="text-sm font-black uppercase tracking-[0.12em] text-black">
+            {ui.yourCart}
+          </h2>
+          <button
+            type="button"
+            onClick={() => setOpen(false)}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-black/10 text-black/70 transition-colors hover:bg-black/5 hover:text-black"
+            aria-label={ui.close}
+          >
+            <X size={18} strokeWidth={2} />
+          </button>
+        </div>
+        <div className="max-h-[calc(min(88dvh,640px)-4rem)] overflow-y-auto overscroll-contain px-4 py-3 md:max-h-[calc(min(82dvh,520px)-4rem)]">
+          {lines.length === 0 ? (
+            <p className="py-8 text-center text-sm leading-relaxed text-black/55">{ui.cartEmpty}</p>
+          ) : (
+            <ul className="space-y-0 divide-y divide-black/8">
+              {lines.map((line) => {
+                const lineSum = line.priceUzs * line.quantity;
+                return (
+                  <li key={line.id} className="flex gap-3 py-3 first:pt-0">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-semibold leading-snug text-black">{line.name}</p>
+                      <p className="mt-0.5 text-xs text-black/55">
+                        {line.source === 'daily-look' ? TRANSLATIONS[lang].dailyLooks.label : TRANSLATIONS[lang].clothes.label}
+                      </p>
+                      <p className="mt-1 text-xs text-black/45">{line.price}</p>
+                      <div className="mt-2 inline-flex items-center rounded-full border border-black/12 bg-neutral-100/90 p-0.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]">
+                        <motion.button
+                          type="button"
+                          whileTap={{ scale: 0.9 }}
+                          onClick={() => adjustLineQuantity(line.id, -1)}
+                          className="inline-flex h-8 w-8 items-center justify-center rounded-full text-black/70 transition-colors hover:bg-white hover:text-black"
+                          aria-label={`${ui.qtyDecrease}: ${line.name}`}
+                        >
+                          <Minus size={16} strokeWidth={2.25} aria-hidden />
+                        </motion.button>
+                        <span className="min-w-[2.25rem] px-1 text-center text-sm font-black tabular-nums text-black">
+                          {line.quantity}
+                        </span>
+                        <motion.button
+                          type="button"
+                          whileTap={{ scale: 0.9 }}
+                          onClick={() => adjustLineQuantity(line.id, 1)}
+                          className="inline-flex h-8 w-8 items-center justify-center rounded-full text-black/70 transition-colors hover:bg-white hover:text-black"
+                          aria-label={`${ui.qtyIncrease}: ${line.name}`}
+                        >
+                          <Plus size={16} strokeWidth={2.25} aria-hidden />
+                        </motion.button>
+                      </div>
+                      <p className="mt-2 text-base font-black tabular-nums leading-tight text-black">
+                        {formatUzsInLang(lang, lineSum)}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => removeLine(line.id)}
+                      className="shrink-0 self-start inline-flex h-9 w-9 items-center justify-center rounded-full border border-black/12 text-black/50 transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-700"
+                      aria-label={`${ui.removeItem}: ${line.name}`}
+                    >
+                      <X size={16} strokeWidth={2} />
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </div>
+        {totalQuantity > 0 ? (
+          <div className="border-t border-black/10 bg-neutral-50/90 px-4 py-4">
+            <p className="text-center text-[10px] font-semibold uppercase tracking-[0.16em] text-black/40">
+              {ui.cartLineCount.replace('{n}', String(totalQuantity))}
+            </p>
+            <div className="mt-3 flex items-end justify-between gap-3">
+              <span className="text-xs font-black uppercase tracking-[0.14em] text-black/55">{ui.cartTotal}</span>
+              <span className="text-right text-xl font-black tabular-nums tracking-tight text-black sm:text-2xl">
+                {formatUzsInLang(lang, totalUzs)}
+              </span>
+            </div>
+          </div>
+        ) : null}
+      </motion.aside>
+    </div>
   );
 };
 
 const Footer = () => {
   const { lang } = React.useContext(LangContext);
 
-  const legalText: Record<Language, { privacy: { title: string }; terms: { title: string } }> = {
+  const legalText: Record<
+    Language,
+    { privacy: { title: string }; terms: { title: string }; rightsReserved: string }
+  > = {
     uz: {
       privacy: {
         title: 'Maxfiylik siyosati'
       },
       terms: {
         title: 'Foydalanish shartlari'
-      }
+      },
+      rightsReserved: 'Barcha huquqlar himoyalangan.'
     },
     ru: {
       privacy: {
@@ -1500,7 +1876,8 @@ const Footer = () => {
       },
       terms: {
         title: 'Пользовательские условия'
-      }
+      },
+      rightsReserved: 'Все права защищены.'
     },
     en: {
       privacy: {
@@ -1508,7 +1885,8 @@ const Footer = () => {
       },
       terms: {
         title: 'Terms of Use'
-      }
+      },
+      rightsReserved: 'All rights reserved.'
     }
   };
 
@@ -1521,7 +1899,7 @@ const Footer = () => {
       className="bg-neutral-100 text-black py-16 md:py-20 border-t border-black/12 shadow-[0_-18px_42px_-34px_rgba(0,0,0,0.32)]"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center gap-10">
-        <div className="flex items-center gap-5 md:gap-8" aria-label="210 × Anpa Limited">
+        <div className="flex items-center gap-5 md:gap-8" aria-label="210 × Anba Limited">
           <img
             src={LOGO_210_SRC}
             alt="210 Sports Wear"
@@ -1533,7 +1911,7 @@ const Footer = () => {
           <span className="shrink-0 w-px h-11 md:h-14 bg-black/15 rounded-full" aria-hidden />
           <img
             src={LOGO_COLLECTIONS_SRC}
-            alt="Anpa Limited"
+            alt="Anba Limited"
             className="h-10 md:h-12 w-auto max-h-12 object-contain object-center"
             loading="lazy"
             decoding="async"
@@ -1577,17 +1955,17 @@ const Footer = () => {
 
         <div className="mt-2 flex w-full flex-col items-center gap-4 border-t border-black/10 pt-6 sm:flex-row sm:justify-between sm:gap-6">
           <span className="order-2 text-center text-[12px] text-black/50 select-none sm:order-1 sm:text-left">
-            © {new Date().getFullYear()} 210 Sports Wear. Все права защищены.
+            © {new Date().getFullYear()} 210 Sports Wear. {legalText[lang].rightsReserved}
           </span>
           <div className="order-1 flex items-center gap-6 sm:order-2">
             <a
-              href="/privacy"
+              href={LEGAL_LINKS.privacy}
               className="text-[12px] text-black/50 hover:text-black transition-colors"
             >
               {legalText[lang].privacy.title}
             </a>
             <a
-              href="/terms"
+              href={LEGAL_LINKS.terms}
               className="text-[12px] text-black/50 hover:text-black transition-colors"
             >
               {legalText[lang].terms.title}
@@ -1602,15 +1980,91 @@ const Footer = () => {
 // --- Main App ---
 
 export default function App() {
-  const [lang, setLang] = React.useState<Language>('uz');
+  const { lang, setLang } = React.useContext(LangContext);
+  const [cartLines, setCartLines] = React.useState<CartLine[]>([]);
+  const [cartOpen, setCartOpen] = React.useState(false);
+
+  const addLine = React.useCallback(
+    (payload: { name: string; price: string; priceUzs: number; source: CartSource }) => {
+      const id = cartLineId(payload.source, payload.name, payload.priceUzs);
+      setCartLines((prev) => {
+        const i = prev.findIndex((l) => l.id === id);
+        if (i >= 0) {
+          const next = [...prev];
+          next[i] = { ...next[i], quantity: next[i].quantity + 1 };
+          return next;
+        }
+        return [
+          ...prev,
+          {
+            id,
+            name: payload.name,
+            price: payload.price,
+            priceUzs: Math.max(0, payload.priceUzs),
+            source: payload.source,
+            quantity: 1
+          }
+        ];
+      });
+    },
+    []
+  );
+
+  const removeLine = React.useCallback((id: string) => {
+    setCartLines((prev) => prev.filter((l) => l.id !== id));
+  }, []);
+
+  const adjustLineQuantity = React.useCallback((id: string, delta: number) => {
+    if (delta === 0) return;
+    setCartLines((prev) =>
+      prev
+        .map((l) => {
+          if (l.id !== id) return l;
+          const nextQty = l.quantity + delta;
+          if (nextQty < 1) return null;
+          return { ...l, quantity: nextQty };
+        })
+        .filter((l): l is CartLine => l !== null)
+    );
+  }, []);
+
+  const totalQuantity = React.useMemo(() => cartLines.reduce((s, l) => s + l.quantity, 0), [cartLines]);
+
+  const totalUzs = React.useMemo(
+    () => cartLines.reduce((s, l) => s + l.priceUzs * l.quantity, 0),
+    [cartLines]
+  );
+
+  const cartContextValue = React.useMemo(
+    () => ({
+      lines: cartLines,
+      addLine,
+      removeLine,
+      adjustLineQuantity,
+      open: cartOpen,
+      setOpen: setCartOpen,
+      totalQuantity,
+      totalUzs
+    }),
+    [cartLines, addLine, removeLine, adjustLineQuantity, cartOpen, totalQuantity, totalUzs]
+  );
+
+  const landingUi = TRANSLATIONS[lang].ui;
 
   return (
-    <LangContext.Provider value={{ lang, setLang }}>
-      <div className="relative min-h-screen bg-white">
+    <CartContext.Provider value={cartContextValue}>
+      <div className="landing-ui-scale relative min-h-screen bg-transparent">
+        <a
+          href="#main-content"
+          className="fixed left-4 z-[200] rounded-lg border border-black/15 bg-white px-3 py-2 text-xs font-bold uppercase tracking-wide text-black shadow-[0_8px_24px_-8px_rgba(0,0,0,0.35)] transition-transform duration-200 focus:top-4 focus:translate-y-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-black/25 -translate-y-[150%] top-0"
+        >
+          {landingUi.skipToContent}
+        </a>
         <Navbar />
         <CartFloatingButton />
+        <CartDrawer />
 
-        <main>
+        <main id="main-content" tabIndex={-1}>
           <SpotlightSection />
           <BrandMarquee />
           <DailyLooksSection />
@@ -1647,6 +2101,6 @@ export default function App() {
           }
         `}</style>
       </div>
-    </LangContext.Provider>
+    </CartContext.Provider>
   );
 }
