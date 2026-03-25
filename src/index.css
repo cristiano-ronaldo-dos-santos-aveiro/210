@@ -45,7 +45,6 @@
     overflow-x: hidden;
     font-family: var(--font-sans);
     overscroll-behavior-x: none;
-    touch-action: pan-y;
   }
   html,
   body,

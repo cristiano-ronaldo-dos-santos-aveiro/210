@@ -9,6 +9,7 @@ import {
   Clock,
   ArrowRight,
   MoreHorizontal,
+  Ellipsis,
   X,
   Plus,
   Minus
@@ -732,9 +733,6 @@ const Navbar = () => {
         />
       ) : null}
 
-      {/* Mobile: solid white header background so the top pills don't sit on content */}
-      <div className="fixed inset-x-0 top-0 z-[94] h-14 bg-white pointer-events-none md:hidden" aria-hidden />
-
       <div className="pointer-events-none fixed inset-x-0 top-0 z-[95] flex flex-col px-2 pt-2 sm:px-3 md:hidden">
         <div className="pointer-events-none flex items-center gap-1.5 sm:gap-2">
           <motion.a
@@ -778,7 +776,7 @@ const Navbar = () => {
               aria-controls="mobile-nav-menu"
               aria-label={mobileNavOpen ? ui.closeMenu : ui.openMenu}
             >
-              <MoreHorizontal size={20} strokeWidth={2} className="text-black/80" aria-hidden />
+              <Ellipsis size={20} strokeWidth={2} className="text-black/80" aria-hidden />
             </motion.button>
           </div>
         </div>
@@ -1022,14 +1020,14 @@ const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number; className?
       whileTap={{ scale: 0.992 }}
       whileHover={{ y: -4 }}
       className={cn(
-        'group relative h-full w-full min-h-0 overflow-hidden rounded-2xl border border-white/70 bg-white/22 shadow-[0_18px_48px_-28px_rgba(0,0,0,0.42)] backdrop-blur-xl touch-pan-y',
+        'group relative h-full w-full min-h-0 overflow-hidden rounded-2xl border border-white/70 bg-white/22 shadow-[0_18px_48px_-28px_rgba(0,0,0,0.42)] backdrop-blur-xl',
         className
       )}
     >
       {/* Mobile/Touch: the card should swipe between slides, but must not navigate to Telegram on tap */}
       <button
         type="button"
-        className="absolute inset-0 z-[1] touch-pan-y bg-transparent p-0 border-0"
+        className="absolute inset-0 z-[1] bg-transparent p-0 border-0"
         aria-label={`${copy.title} — swipe to change`}
         onTouchStart={
           swipeable
@@ -1063,7 +1061,7 @@ const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number; className?
       />
       <div className="absolute inset-0">
         {slideSet && slideSet.length > 0 ? (
-          <div className="absolute inset-0 overflow-hidden touch-pan-y">
+          <div className="absolute inset-0 overflow-hidden">
             <SpotlightCrossfadeSlideshow
               slides={slideSet}
               label={copy.title}
@@ -1137,7 +1135,7 @@ const SpotlightSection = () => {
           </div>
 
           <div className="flex min-h-0 w-full min-w-0 flex-col items-stretch gap-2.5 sm:gap-3 lg:h-full lg:gap-4">
-            <SectionReveal className="w-full shrink-0 lg:translate-x-5 xl:translate-x-8 2xl:translate-x-10">
+            <SectionReveal className="order-2 md:order-1 w-full shrink-0 lg:translate-x-5 xl:translate-x-8 2xl:translate-x-10">
               <div
                 id="philosophy"
                 className="scroll-mt-24 relative overflow-hidden rounded-2xl border border-white/80 bg-[linear-gradient(160deg,rgba(255,255,255,0.62),rgba(219,234,254,0.38))] px-4 py-5 text-center shadow-[0_20px_56px_-32px_rgba(0,0,0,0.3)] backdrop-blur-2xl sm:px-6 sm:py-6 md:px-7 md:py-8 lg:px-8 lg:py-9"
@@ -1171,7 +1169,7 @@ const SpotlightSection = () => {
               </div>
             </SectionReveal>
 
-            <SectionReveal className="flex min-h-0 flex-1 flex-col basis-0">
+            <SectionReveal className="order-1 md:order-2 flex min-h-0 flex-1 flex-col basis-0">
               <div className="flex min-h-0 flex-1 items-center justify-center py-1 sm:py-3">
                 <div
                   className="flex w-full max-w-none flex-nowrap items-center justify-center gap-3 sm:gap-6 lg:translate-x-6 lg:gap-9 xl:gap-12 xl:translate-x-10 2xl:translate-x-12"
@@ -1257,6 +1255,13 @@ const DailyLooksSection = () => {
   const { addLine } = React.useContext(CartContext);
   const t = TRANSLATIONS[lang].dailyLooks;
   const ui = TRANSLATIONS[lang].ui;
+  const mobileSlides = [DAILY_LOOK_IMAGE_SRC, DAILY_LOOK_SIDE_CARD_1_SRC, DAILY_LOOK_SIDE_CARD_2_SRC] as const;
+  const [mobileSlideIndex, setMobileSlideIndex] = React.useState(0);
+  const mobileSwipeTouchRef = React.useRef<{ x: number; y: number } | null>(null);
+
+  React.useEffect(() => {
+    setMobileSlideIndex(0);
+  }, [lang]);
 
   return (
     <section
@@ -1278,6 +1283,91 @@ const DailyLooksSection = () => {
             {t.label}
           </p>
           <div className="flex w-full max-w-6xl flex-col items-center justify-center gap-6 md:gap-8 lg:flex-row lg:items-start lg:gap-10">
+            {/* Mobile: single swipeable slide show (1 card instead of 3) */}
+            <motion.div
+              className="md:hidden flex w-full items-center justify-center"
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-60px 0px -80px 0px' }}
+              transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <motion.article
+                className="relative z-20 aspect-[9/16] w-[min(70vw,318px)] shrink-0 overflow-hidden rounded-2xl border border-white/40 shadow-[0_14px_45px_-28px_rgba(0,0,0,0.32)] sm:w-[min(47vw,368px)]"
+                initial={{ opacity: 0, x: -10, scale: 0.99 }}
+                whileInView={{ opacity: 1, x: 0, scale: 1 }}
+                viewport={{ once: true, margin: '-60px 0px -80px 0px' }}
+                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                whileHover={{ y: -2 }}
+                whileTap={{ scale: 0.995 }}
+                aria-roledescription="carousel"
+                aria-label="Today's look images"
+                onTouchStart={(e) => {
+                  if (e.touches.length !== 1) return;
+                  const t0 = e.touches[0];
+                  mobileSwipeTouchRef.current = { x: t0.clientX, y: t0.clientY };
+                }}
+                onTouchEnd={(e) => {
+                  if (!mobileSwipeTouchRef.current) return;
+                  const start = mobileSwipeTouchRef.current;
+                  mobileSwipeTouchRef.current = null;
+                  const end = e.changedTouches[0];
+                  const dx = end.clientX - start.x;
+                  const dy = end.clientY - start.y;
+                  if (Math.abs(dx) < SPOTLIGHT_SWIPE_MIN_PX) return;
+                  if (Math.abs(dx) < Math.abs(dy) * SPOTLIGHT_SWIPE_DOMINANCE) return;
+                  if (dx < 0) {
+                    setMobileSlideIndex((i) => (i + 1) % mobileSlides.length);
+                  } else {
+                    setMobileSlideIndex((i) => (i - 1 + mobileSlides.length) % mobileSlides.length);
+                  }
+                }}
+              >
+                {/* Slides */}
+                {mobileSlides.map((src, idx) => (
+                  <motion.img
+                    key={src}
+                    src={src}
+                    alt={t.title}
+                    className={cn(
+                      'absolute inset-0 h-full w-full object-cover',
+                      idx === 0 ? 'object-[50%_24%]' : 'object-center'
+                    )}
+                    loading={idx === 0 ? 'eager' : 'lazy'}
+                    decoding="async"
+                    initial={false}
+                    animate={{
+                      opacity: idx === mobileSlideIndex ? 1 : 0,
+                      scale: idx === mobileSlideIndex ? 1 : 1.04
+                    }}
+                    transition={{ duration: SPOTLIGHT_FADE_S, ease: [0.22, 0.61, 0.36, 1] }}
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = DAILY_LOOK_FALLBACK_SRC;
+                    }}
+                  />
+                ))}
+
+                <p className="absolute left-4 bottom-4 text-white text-[11px] font-semibold uppercase tracking-[0.18em]">
+                  {t.updatedLabel}
+                </p>
+
+                {/* Dots */}
+                {mobileSlides.length > 1 && (
+                  <div className="pointer-events-none absolute bottom-3 left-0 right-0 z-[5] flex justify-center gap-1.5 px-2">
+                    {mobileSlides.map((_, idx) => (
+                      <span
+                        key={idx}
+                        className={cn(
+                          'h-1 rounded-full transition-all duration-300 ease-out',
+                          idx === mobileSlideIndex ? 'w-3.5 bg-white shadow-sm' : 'w-1.5 bg-white/45'
+                        )}
+                      />
+                    ))}
+                  </div>
+                )}
+              </motion.article>
+            </motion.div>
+
             <motion.div
               className="hidden md:flex w-full max-w-[min(100%,min(96vw,calc((100dvh-12rem)*1.04)))] items-center justify-center gap-2.5 sm:gap-4"
               initial={{ opacity: 0, y: 18 }}
@@ -1445,7 +1535,7 @@ const ClothesSection = () => {
           aria-hidden
         />
         <div
-          className="touch-pan-x overscroll-x-contain overflow-x-auto overflow-y-hidden scroll-smooth pb-3 [-webkit-overflow-scrolling:touch] [scrollbar-width:thin] [scroll-padding-inline:max(1rem,env(safe-area-inset-left))] sm:[scroll-padding-inline:max(1.5rem,env(safe-area-inset-left))] lg:[scroll-padding-inline:max(2.5rem,env(safe-area-inset-left))] snap-x snap-mandatory"
+          className="md:touch-pan-x overscroll-x-contain overflow-x-auto md:overflow-y-hidden scroll-smooth pb-3 [-webkit-overflow-scrolling:touch] [scrollbar-width:thin] [scroll-padding-inline:max(1rem,env(safe-area-inset-left))] sm:[scroll-padding-inline:max(1.5rem,env(safe-area-inset-left))] lg:[scroll-padding-inline:max(2.5rem,env(safe-area-inset-left))] snap-x snap-mandatory"
           role="region"
           aria-roledescription="carousel"
           aria-label={t.title}
