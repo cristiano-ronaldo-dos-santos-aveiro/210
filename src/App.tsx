@@ -25,6 +25,20 @@ const LOGO_210_SRC = new URL('../photo/logolar/IMG_2657.PNG', import.meta.url).h
 const LOGO_COLLECTIONS_SRC = new URL('../photo/logolar/logo-collections.png', import.meta.url).href;
 const FOOTER_LOGO_COLLECTIONS_SRC = new URL('../photo/logolar/IMG_2749.PNG', import.meta.url).href;
 
+/** Clothes carousel images (uploaded by user) */
+const CLOTHES_CARD_IMAGE_SRCS = [
+  '/clothes/c__Users_Dell_AppData_Roaming_Cursor_User_workspaceStorage_bbc6ae318afc930501dd60c6044d578c_images_photo_2026-03-25_10-54-02-718ea601-f804-4ad1-9ab7-2f6a1f4734d0.png',
+  '/clothes/c__Users_Dell_AppData_Roaming_Cursor_User_workspaceStorage_bbc6ae318afc930501dd60c6044d578c_images_photo_2026-03-25_10-54-03__2_-b51d7758-84e0-4ceb-828d-b36c4373e072.png',
+  '/clothes/c__Users_Dell_AppData_Roaming_Cursor_User_workspaceStorage_bbc6ae318afc930501dd60c6044d578c_images_photo_2026-03-25_10-54-03__3_-ff0f9e8a-5a47-4dee-a752-4b2603757f74.png',
+  '/clothes/c__Users_Dell_AppData_Roaming_Cursor_User_workspaceStorage_bbc6ae318afc930501dd60c6044d578c_images_photo_2026-03-25_10-54-03-5002c985-e71b-4bda-8b8d-2bd9b93f679c.png',
+  '/clothes/c__Users_Dell_AppData_Roaming_Cursor_User_workspaceStorage_bbc6ae318afc930501dd60c6044d578c_images_photo_2026-03-25_10-54-05-6748bf2b-7eec-4705-ba20-ea20b4347ad5.png',
+  '/clothes/c__Users_Dell_AppData_Roaming_Cursor_User_workspaceStorage_bbc6ae318afc930501dd60c6044d578c_images_photo_2026-03-25_10-54-06-5ac0353b-0f8f-463f-ab41-55a0dc4d86c0.png',
+  '/clothes/c__Users_Dell_AppData_Roaming_Cursor_User_workspaceStorage_bbc6ae318afc930501dd60c6044d578c_images_photo_2026-03-25_10-54-07__2_-3b7367ab-9861-4cd2-bcb8-ff0d94112421.png',
+  '/clothes/c__Users_Dell_AppData_Roaming_Cursor_User_workspaceStorage_bbc6ae318afc930501dd60c6044d578c_images_photo_2026-03-25_10-54-07-70dbf4de-2717-4080-85a1-839ed34d12c8.png',
+  '/clothes/c__Users_Dell_AppData_Roaming_Cursor_User_workspaceStorage_bbc6ae318afc930501dd60c6044d578c_images_photo_2026-03-25_10-54-08-88210658-2461-4549-844a-61501cecd6f3.png',
+  '/clothes/c__Users_Dell_AppData_Roaming_Cursor_User_workspaceStorage_bbc6ae318afc930501dd60c6044d578c_images_photo_2026-03-25_10-54-09-e16f093e-66fa-4fb2-95cb-14ee4e738801.png'
+] as const;
+
 /** Spotlight card backgrounds (replace with your own photos anytime) */
 /** Brand strip: logos from /public/brands/{slug}.png */
 const BRAND_MARQUEE_ITEMS = [
@@ -1534,7 +1548,7 @@ const ClothesSection = () => {
           aria-label={t.title}
         >
           <div className="flex w-max min-w-full justify-start gap-2.5 px-3 pb-1 sm:gap-4 sm:px-6 lg:gap-5 lg:px-10">
-            {t.items.map((item) => (
+            {t.items.map((item, idx) => (
               <article
                 key={item.name}
                 className="relative aspect-[13/15] w-[min(66vw,232px)] shrink-0 snap-center snap-always overflow-hidden rounded-2xl border border-white/30 bg-[linear-gradient(160deg,rgba(75,85,99,0.42),rgba(17,24,39,0.34))] shadow-[0_24px_56px_-30px_rgba(0,0,0,0.45)] backdrop-blur-2xl sm:w-[min(70vw,268px)] md:w-[276px]"
@@ -1542,11 +1556,14 @@ const ClothesSection = () => {
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_15%,rgba(255,255,255,0.2),transparent_45%)]" aria-hidden />
                 <div className="relative flex h-full min-h-0 flex-col p-3.5 sm:p-4">
                   <div className="flex flex-1 flex-col items-center justify-center text-center">
-                    <span className="mb-2.5 inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/35 text-lg text-white/80 sm:mb-3 sm:h-10 sm:w-10 sm:text-xl">
-                      +
-                    </span>
+                    <img
+                      src={CLOTHES_CARD_IMAGE_SRCS[idx % CLOTHES_CARD_IMAGE_SRCS.length]}
+                      alt={item.name}
+                      className="mb-2.5 max-h-[60%] w-auto max-w-[92%] object-contain sm:mb-3"
+                      loading="lazy"
+                      decoding="async"
+                    />
                     <p className="text-[10px] font-bold uppercase leading-snug tracking-[0.14em] text-white/90 sm:text-[11px]">{item.name}</p>
-                    <p className="mt-1.5 text-[10px] text-white/50 sm:mt-2 sm:text-[11px]">Photo</p>
                   </div>
                   <div className="mt-auto shrink-0 border-t border-white/20 pt-3 sm:pt-3.5">
                     <motion.button
