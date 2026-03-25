@@ -1158,7 +1158,7 @@ const SpotlightSection = () => {
               </div>
             </div>
 
-            <SectionReveal className="order-2 md:order-1 w-full shrink-0 lg:translate-x-5 xl:translate-x-8 2xl:translate-x-10">
+            <SectionReveal className="order-2 md:order-1 w-full shrink-0 mt-3 sm:mt-0 lg:translate-x-5 xl:translate-x-8 2xl:translate-x-10">
               <div
                 id="philosophy"
                 className="scroll-mt-24 relative overflow-hidden rounded-2xl border border-white/80 bg-[linear-gradient(160deg,rgba(255,255,255,0.62),rgba(219,234,254,0.38))] px-3 py-4 text-center shadow-[0_20px_56px_-32px_rgba(0,0,0,0.3)] backdrop-blur-2xl sm:px-6 sm:py-6 md:px-7 md:py-8 lg:px-8 lg:py-9"
