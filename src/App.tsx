@@ -1134,9 +1134,9 @@ const SpotlightSection = () => {
             </div>
           </div>
 
-          <div className="flex min-h-0 w-full min-w-0 flex-col items-stretch gap-2.5 sm:gap-3 lg:h-full lg:gap-4">
+          <div className="flex min-h-0 w-full min-w-0 flex-col items-stretch justify-center gap-2.5 sm:gap-3 md:justify-start lg:h-full lg:gap-4">
             {/* Mobile: logos first, philosophy below */}
-            <div className="order-1 md:hidden flex w-full items-center justify-center pb-2">
+            <div className="order-1 md:hidden flex w-full items-center justify-center pb-0">
               <div className="flex items-center gap-3">
                 <img
                   src={LOGO_210_SRC}
@@ -1776,7 +1776,7 @@ const CartFloatingButton: React.FC = () => {
   return (
     <motion.button
       type="button"
-      className="fixed bottom-[max(1.25rem,env(safe-area-inset-bottom,0px))] right-[max(1.25rem,env(safe-area-inset-right,0px))] z-[60] inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-white/15 text-white shadow-[0_18px_50px_-18px_rgba(0,0,0,0.7)] backdrop-blur-xl transition-colors hover:bg-white/22"
+      className="fixed bottom-[max(1.25rem,env(safe-area-inset-bottom,0px))] right-[max(1.25rem,env(safe-area-inset-right,0px))] z-[60] inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/30 bg-white/20 text-black/80 shadow-[0_18px_50px_-18px_rgba(0,0,0,0.7)] backdrop-blur-xl transition-colors hover:bg-white/26"
       whileTap={{ scale: 0.95 }}
       aria-label={ui.cart}
       aria-expanded={open}
