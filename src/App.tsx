@@ -155,7 +155,7 @@ const STORE_BRANCHES: readonly StoreBranch[] = [
     instagram: CONTACT_INSTAGRAM,
     phoneTel: 'tel:+998332101111',
     phoneLabel: '+998 33 210-11-11',
-    mapsUrl: 'https://www.google.com/maps/search/?api=1&query=210+Gulzor%2C+Uzbekistan',
+    mapsUrl: 'https://maps.app.goo.gl/SD4w5QqUqCuJbqu47?g_st=ic',
     photoSrc: GULZOR_BRANCH_PHOTO_SRC,
     openHours: '10:00-22:00',
     addressLineByLang: {
@@ -169,7 +169,7 @@ const STORE_BRANCHES: readonly StoreBranch[] = [
     instagram: CONTACT_INSTAGRAM,
     phoneTel: 'tel:+998957177777',
     phoneLabel: '+998 95 717-77-77',
-    mapsUrl: 'https://www.google.com/maps/search/?api=1&query=210+Nukus%2C+Uzbekistan',
+    mapsUrl: 'https://maps.app.goo.gl/y1pybTw6cmxogJbQA?g_st=ic',
     photoSrc: NUKUS_BRANCH_PHOTO_SRC,
     openHours: '10:00-22:00',
     addressLineByLang: {
@@ -364,7 +364,7 @@ const TRANSLATIONS: Record<Language, Translations> = {
       body: "Uchta filial — Nurafshon, Gulzor va Nukus. Pastdagi kartochkalardan aloqa va manzilni oching.",
       actionInstagram: "Instagram",
       actionPhone: "Telefon",
-      actionMaps: "Xarita"
+      actionMaps: "Yonalishlar"
     },
   },
   ru: {
@@ -462,7 +462,7 @@ const TRANSLATIONS: Record<Language, Translations> = {
       body: "Три точки — Нурафшон, Гульзор и Нукус. Откройте контакты и карту в карточках ниже.",
       actionInstagram: "Instagram",
       actionPhone: "Телефон",
-      actionMaps: "Карта"
+      actionMaps: "Направления"
     },
   },
   en: {
@@ -560,7 +560,7 @@ const TRANSLATIONS: Record<Language, Translations> = {
       body: "Three locations — Nurafshon, Gulzor, and Nukus. Use the cards below for Instagram, phone, and maps.",
       actionInstagram: "Instagram",
       actionPhone: "Phone",
-      actionMaps: "Location"
+      actionMaps: "Directions"
     },
   }
 };
@@ -1672,7 +1672,7 @@ const BranchCard: React.FC<{
         className="absolute top-3 right-3 z-20 inline-flex items-center justify-center rounded-full border border-white/70 bg-white/70 text-black p-2.5 backdrop-blur-md transition-colors hover:bg-white/90"
       >
         <span className="text-[10px] font-bold uppercase tracking-[0.12em] leading-none">
-          OPEN
+          {actionMaps}
         </span>
       </motion.a>
 
