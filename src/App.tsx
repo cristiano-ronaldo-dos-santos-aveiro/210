@@ -1135,6 +1135,29 @@ const SpotlightSection = () => {
           </div>
 
           <div className="flex min-h-0 w-full min-w-0 flex-col items-stretch gap-2.5 sm:gap-3 lg:h-full lg:gap-4">
+            {/* Mobile: logos first, philosophy below */}
+            <div className="order-1 md:hidden flex w-full items-center justify-center pb-1">
+              <div className="flex items-center gap-2">
+                <img
+                  src={LOGO_210_SRC}
+                  alt="210 Sports Wear"
+                  className="h-9 w-auto max-h-9 object-contain object-center sm:h-10 sm:max-h-10"
+                  loading="eager"
+                  decoding="async"
+                  referrerPolicy="no-referrer"
+                />
+                <span className="h-8 w-px shrink-0 bg-black/15 sm:h-9" aria-hidden />
+                <img
+                  src={FOOTER_LOGO_COLLECTIONS_SRC}
+                  alt="Anba Limited"
+                  className="h-8 w-auto max-h-8 object-contain object-center sm:h-9 sm:max-h-9"
+                  loading="eager"
+                  decoding="async"
+                  referrerPolicy="no-referrer"
+                />
+              </div>
+            </div>
+
             <SectionReveal className="order-2 md:order-1 w-full shrink-0 lg:translate-x-5 xl:translate-x-8 2xl:translate-x-10">
               <div
                 id="philosophy"
