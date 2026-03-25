@@ -764,7 +764,8 @@ const Navbar = () => {
             />
           </motion.a>
 
-          <div className="pointer-events-auto flex min-w-0 flex-1 justify-center">
+            {/* Mobile: put the menu (⋯) on the far right */}
+            <div className="pointer-events-auto flex min-w-0 flex-1 justify-end">
             <motion.button
               type="button"
               onClick={() => setMobileNavOpen((o) => !o)}
@@ -780,17 +781,6 @@ const Navbar = () => {
               <MoreHorizontal size={20} strokeWidth={2} className="text-black/80" aria-hidden />
             </motion.button>
           </div>
-
-          <motion.a
-            href={CONTACT_PHONE_TEL}
-            className="pointer-events-auto inline-flex h-9 shrink-0 items-center justify-center rounded-full border border-black/12 bg-white px-2.5 text-[10px] font-bold uppercase tracking-[0.08em] text-black shadow-[0_6px_22px_-8px_rgba(0,0,0,0.18)] ring-1 ring-black/[0.06] backdrop-blur-md transition-colors active:bg-black/[0.04] min-[400px]:px-3 min-[400px]:text-[11px]"
-            whileTap={{ scale: 0.96 }}
-            aria-label={`${ui.contactCall}: ${CONTACT_PHONE_LABEL}`}
-          >
-            <span className="max-[360px]:sr-only">{ui.contactCall}</span>
-            <Phone size={16} strokeWidth={2} className="min-[361px]:hidden" aria-hidden />
-            <ArrowUpRight size={14} strokeWidth={2} className="ml-1.5 hidden min-[361px]:inline shrink-0" />
-          </motion.a>
         </div>
 
         {mobileNavOpen ? (
@@ -1132,7 +1122,8 @@ const SpotlightSection = () => {
       <div className="relative z-10 mx-auto flex min-h-0 w-full max-w-[1600px] flex-col px-3 pb-2 pt-[max(3.95rem,calc(env(safe-area-inset-top,0px)+5.15rem))] sm:px-4 sm:pb-5 sm:pt-[max(4.5rem,calc(env(safe-area-inset-top,0px)+5.85rem))] md:px-6 md:pb-6 md:pt-[max(4.85rem,calc(env(safe-area-inset-top,0px)+6rem))] lg:min-h-[calc(100dvh-4rem)] lg:px-8 lg:pb-10 lg:pt-[max(4.25rem,calc(env(safe-area-inset-top,0px)+5.65rem))]">
         <div className="grid min-h-0 w-full flex-1 grid-cols-1 items-stretch gap-2.5 sm:gap-4 lg:grid-cols-[minmax(0,3fr)_minmax(260px,2fr)] lg:gap-5">
           {/* Spotlight: full-width stack below lg (no squeezed side column); desktop keeps editorial split */}
-          <div className="grid min-h-0 grid-cols-1 items-stretch gap-1.5 sm:gap-2.5 max-lg:min-h-0 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.82fr)] lg:gap-4 lg:-translate-x-6 xl:-translate-x-10 2xl:-translate-x-14">
+          {/* Mobile: hide image-heavy spotlight cards to prevent cramped layout */}
+          <div className="hidden lg:grid min-h-0 grid-cols-1 items-stretch gap-1.5 sm:gap-2.5 max-lg:min-h-0 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.82fr)] lg:gap-4 lg:-translate-x-6 xl:-translate-x-10 2xl:-translate-x-14">
             <SpotlightCard
               cardKey="spring"
               index={0}
@@ -1288,7 +1279,7 @@ const DailyLooksSection = () => {
           </p>
           <div className="flex w-full max-w-6xl flex-col items-center justify-center gap-6 md:gap-8 lg:flex-row lg:items-start lg:gap-10">
             <motion.div
-              className="flex w-full max-w-[min(100%,min(96vw,calc((100dvh-12rem)*1.04)))] items-center justify-center gap-2.5 sm:gap-4"
+              className="hidden md:flex w-full max-w-[min(100%,min(96vw,calc((100dvh-12rem)*1.04)))] items-center justify-center gap-2.5 sm:gap-4"
               initial={{ opacity: 0, y: 18 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-60px 0px -80px 0px' }}
