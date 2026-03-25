@@ -1138,7 +1138,7 @@ const SpotlightSection = () => {
             <SectionReveal className="order-2 md:order-1 w-full shrink-0 lg:translate-x-5 xl:translate-x-8 2xl:translate-x-10">
               <div
                 id="philosophy"
-                className="scroll-mt-24 relative overflow-hidden rounded-2xl border border-white/80 bg-[linear-gradient(160deg,rgba(255,255,255,0.62),rgba(219,234,254,0.38))] px-4 py-5 text-center shadow-[0_20px_56px_-32px_rgba(0,0,0,0.3)] backdrop-blur-2xl sm:px-6 sm:py-6 md:px-7 md:py-8 lg:px-8 lg:py-9"
+                className="scroll-mt-24 relative overflow-hidden rounded-2xl border border-white/80 bg-[linear-gradient(160deg,rgba(255,255,255,0.62),rgba(219,234,254,0.38))] px-3 py-4 text-center shadow-[0_20px_56px_-32px_rgba(0,0,0,0.3)] backdrop-blur-2xl sm:px-6 sm:py-6 md:px-7 md:py-8 lg:px-8 lg:py-9"
               >
                 <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(90%_80%_at_50%_0%,rgba(255,255,255,0.38),transparent_60%)]" aria-hidden />
 
@@ -1148,11 +1148,11 @@ const SpotlightSection = () => {
                   </p>
                 </div>
 
-                <h2 className="mx-auto mb-3 max-w-[15ch] text-balance text-[1.35rem] font-black uppercase leading-[1.08] tracking-tight text-black sm:mb-4 sm:text-[1.7rem] md:text-[1.9rem] lg:text-[2.1rem]">
+                <h2 className="mx-auto mb-2 max-w-[15ch] text-balance text-[1.2rem] font-black uppercase leading-[1.08] tracking-tight text-black sm:mb-4 sm:text-[1.7rem] md:text-[1.9rem] lg:text-[2.1rem]">
                   {tPhilosophy.title}
                 </h2>
                 <div className="mx-auto mb-3 h-px w-12 bg-black/15 sm:mb-5 sm:w-16" aria-hidden />
-                <p className="mx-auto max-w-[62ch] whitespace-pre-line text-[13px] leading-relaxed text-black/68 sm:text-sm lg:text-[0.95rem]">
+                <p className="mx-auto max-w-[62ch] whitespace-pre-line text-[12px] leading-relaxed text-black/68 sm:text-sm lg:text-[0.95rem]">
                   {tPhilosophy.body}
                 </p>
 
@@ -1165,36 +1165,6 @@ const SpotlightSection = () => {
                       {item}
                     </span>
                   ))}
-                </div>
-              </div>
-            </SectionReveal>
-
-            <SectionReveal className="order-1 md:order-2 flex min-h-0 flex-1 flex-col basis-0">
-              <div className="flex min-h-0 flex-1 items-center justify-center py-1 sm:py-3">
-                <div
-                  className="flex w-full max-w-none flex-nowrap items-center justify-center gap-3 sm:gap-6 lg:translate-x-6 lg:gap-9 xl:gap-12 xl:translate-x-10 2xl:translate-x-12"
-                  aria-label="210 × Anba Limited"
-                >
-                  <img
-                    src={LOGO_210_SRC}
-                    alt="210 Sports Wear"
-                    className="h-[clamp(2.75rem,min(12vw,4.75rem),4.75rem)] w-auto max-w-[44%] object-contain object-center sm:h-[clamp(3.85rem,min(19vw,6.75rem),6.75rem)] lg:h-[clamp(6.35rem,min(27vh,12.75rem),12.75rem)] xl:h-[clamp(7.15rem,min(31vh,14.5rem),14.5rem)]"
-                    loading="eager"
-                    decoding="async"
-                    referrerPolicy="no-referrer"
-                  />
-                  <span
-                    className="h-[clamp(2.35rem,min(10vw,4rem),4rem)] w-px shrink-0 bg-black/15 sm:h-[clamp(3.4rem,min(17vw,6rem),6rem)] lg:h-[clamp(5.5rem,min(24vh,11rem),11rem)] xl:h-[clamp(6.35rem,min(27vh,12.75rem),12.75rem)]"
-                    aria-hidden
-                  />
-                  <img
-                    src={FOOTER_LOGO_COLLECTIONS_SRC}
-                    alt="Anba Limited"
-                    className="h-[clamp(2.55rem,min(12vw,4.9rem),4.9rem)] w-auto max-w-[44%] object-contain object-center sm:h-[clamp(4.05rem,min(19vw,7rem),7rem)] lg:h-[clamp(5.95rem,min(24vh,11.5rem),11.5rem)] xl:h-[clamp(6.8rem,min(27vh,13.25rem),13.25rem)]"
-                    loading="eager"
-                    decoding="async"
-                    referrerPolicy="no-referrer"
-                  />
                 </div>
               </div>
             </SectionReveal>
