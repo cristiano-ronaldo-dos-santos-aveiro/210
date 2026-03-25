@@ -22,6 +22,7 @@ import Aurora from './Aurora';
 /** PNG exports in /photo (210 stack + partner / signature mark) */
 const LOGO_210_SRC = new URL('../photo/logolar/IMG_2657.PNG', import.meta.url).href;
 const LOGO_COLLECTIONS_SRC = new URL('../photo/logolar/logo-collections.png', import.meta.url).href;
+const FOOTER_LOGO_COLLECTIONS_SRC = new URL('../photo/logolar/IMG_2749.PNG', import.meta.url).href;
 
 /** Spotlight card backgrounds (replace with your own photos anytime) */
 /** Brand strip: logos from /public/brands/{slug}.png */
@@ -731,11 +732,14 @@ const Navbar = () => {
         />
       ) : null}
 
+      {/* Mobile: solid white header background so the top pills don't sit on content */}
+      <div className="fixed inset-x-0 top-0 z-[94] h-14 bg-white pointer-events-none md:hidden" aria-hidden />
+
       <div className="pointer-events-none fixed inset-x-0 top-0 z-[95] flex flex-col px-2 pt-2 sm:px-3 md:hidden">
         <div className="pointer-events-none flex items-center gap-1.5 sm:gap-2">
           <motion.a
             href="#spotlight"
-            className="pointer-events-auto flex shrink-0 items-center gap-1 rounded-full border border-black/12 bg-white/95 px-2 py-1.5 shadow-[0_6px_24px_-6px_rgba(0,0,0,0.18)] ring-1 ring-black/[0.06] backdrop-blur-md min-[400px]:gap-1.5 min-[400px]:px-2.5"
+            className="pointer-events-auto flex shrink-0 items-center gap-1 rounded-full border border-black/12 bg-white px-2 py-1.5 shadow-[0_6px_24px_-6px_rgba(0,0,0,0.18)] ring-1 ring-black/[0.06] backdrop-blur-md min-[400px]:gap-1.5 min-[400px]:px-2.5"
             whileTap={{ scale: 0.98 }}
             aria-label="210 × Anba Limited"
           >
@@ -765,7 +769,7 @@ const Navbar = () => {
               type="button"
               onClick={() => setMobileNavOpen((o) => !o)}
               className={cn(
-                'inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-black/12 bg-white/95 shadow-[0_6px_22px_-8px_rgba(0,0,0,0.18)] ring-1 ring-black/[0.06] backdrop-blur-md transition-colors',
+                'inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-black/12 bg-white shadow-[0_6px_22px_-8px_rgba(0,0,0,0.18)] ring-1 ring-black/[0.06] backdrop-blur-md transition-colors',
                 mobileNavOpen && 'bg-black/[0.06] ring-black/20'
               )}
               whileTap={{ scale: 0.96 }}
@@ -779,7 +783,7 @@ const Navbar = () => {
 
           <motion.a
             href={CONTACT_PHONE_TEL}
-            className="pointer-events-auto inline-flex h-9 shrink-0 items-center justify-center rounded-full border border-black/12 bg-white/95 px-2.5 text-[10px] font-bold uppercase tracking-[0.08em] text-black shadow-[0_6px_22px_-8px_rgba(0,0,0,0.18)] ring-1 ring-black/[0.06] backdrop-blur-md transition-colors active:bg-black/[0.04] min-[400px]:px-3 min-[400px]:text-[11px]"
+            className="pointer-events-auto inline-flex h-9 shrink-0 items-center justify-center rounded-full border border-black/12 bg-white px-2.5 text-[10px] font-bold uppercase tracking-[0.08em] text-black shadow-[0_6px_22px_-8px_rgba(0,0,0,0.18)] ring-1 ring-black/[0.06] backdrop-blur-md transition-colors active:bg-black/[0.04] min-[400px]:px-3 min-[400px]:text-[11px]"
             whileTap={{ scale: 0.96 }}
             aria-label={`${ui.contactCall}: ${CONTACT_PHONE_LABEL}`}
           >
@@ -847,7 +851,7 @@ const Navbar = () => {
       {/* md+: fixed logo + centered bar + contact (matches desktop mock) */}
       <motion.a
         href="#spotlight"
-        className="fixed top-2 left-3 z-[96] hidden items-center gap-2 rounded-full border border-black/12 bg-white/95 px-3 py-2 shadow-[0_6px_24px_-6px_rgba(0,0,0,0.18)] ring-1 ring-black/[0.06] backdrop-blur-md sm:left-6 md:flex md:gap-2.5 lg:left-10"
+        className="fixed top-2 left-3 z-[96] hidden items-center gap-2 rounded-full border border-black/12 bg-white px-3 py-2 shadow-[0_6px_24px_-6px_rgba(0,0,0,0.18)] ring-1 ring-black/[0.06] backdrop-blur-md sm:left-6 md:flex md:gap-2.5 lg:left-10"
         whileHover={{ opacity: 0.98, scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
         aria-label="210 × Anba Limited"
@@ -1013,7 +1017,6 @@ const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number; className?
   const isCompactCard = index > 0;
   const [slideIndex, setSlideIndex] = useState(0);
   const swipeTouchRef = useRef<{ x: number; y: number } | null>(null);
-  const blockTelegramClickRef = useRef(false);
 
   useEffect(() => {
     setSlideIndex(0);
@@ -1033,12 +1036,11 @@ const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number; className?
         className
       )}
     >
-      <a
-        href={CONTACT_TELEGRAM}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="absolute inset-0 z-[1] touch-pan-y"
-        aria-label={`${copy.title} — open in Telegram`}
+      {/* Mobile/Touch: the card should swipe between slides, but must not navigate to Telegram on tap */}
+      <button
+        type="button"
+        className="absolute inset-0 z-[1] touch-pan-y bg-transparent p-0 border-0"
+        aria-label={`${copy.title} — swipe to change`}
         onTouchStart={
           swipeable
             ? (e) => {
@@ -1059,7 +1061,6 @@ const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number; className?
                 const dy = t.clientY - start.y;
                 if (Math.abs(dx) < SPOTLIGHT_SWIPE_MIN_PX) return;
                 if (Math.abs(dx) < Math.abs(dy) * SPOTLIGHT_SWIPE_DOMINANCE) return;
-                blockTelegramClickRef.current = true;
                 if (dx < 0) {
                   setSlideIndex((i) => (i + 1) % slideSet.length);
                 } else {
@@ -1068,16 +1069,7 @@ const SpotlightCard: React.FC<{ cardKey: SpotlightKey; index: number; className?
               }
             : undefined
         }
-        onClick={
-          swipeable
-            ? (e) => {
-                if (blockTelegramClickRef.current) {
-                  e.preventDefault();
-                  blockTelegramClickRef.current = false;
-                }
-              }
-            : undefined
-        }
+        // No click action: tapping the card should never open Telegram.
       />
       <div className="absolute inset-0">
         {slideSet && slideSet.length > 0 ? (
@@ -1207,7 +1199,7 @@ const SpotlightSection = () => {
                     aria-hidden
                   />
                   <img
-                    src={LOGO_COLLECTIONS_SRC}
+                    src={FOOTER_LOGO_COLLECTIONS_SRC}
                     alt="Anba Limited"
                     className="h-[clamp(2.55rem,min(12vw,4.9rem),4.9rem)] w-auto max-w-[44%] object-contain object-center sm:h-[clamp(4.05rem,min(19vw,7rem),7rem)] lg:h-[clamp(5.95rem,min(24vh,11.5rem),11.5rem)] xl:h-[clamp(6.8rem,min(27vh,13.25rem),13.25rem)]"
                     loading="eager"
@@ -1910,9 +1902,9 @@ const Footer = () => {
           />
           <span className="shrink-0 w-px h-11 md:h-14 bg-black/15 rounded-full" aria-hidden />
           <img
-            src={LOGO_COLLECTIONS_SRC}
+            src={FOOTER_LOGO_COLLECTIONS_SRC}
             alt="Anba Limited"
-            className="h-10 md:h-12 w-auto max-h-12 object-contain object-center"
+            className="h-11 md:h-14 w-auto max-h-14 object-contain object-center"
             loading="lazy"
             decoding="async"
             referrerPolicy="no-referrer"
