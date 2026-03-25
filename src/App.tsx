@@ -1672,7 +1672,7 @@ const BranchCard: React.FC<{
         className="absolute top-3 right-3 z-20 inline-flex items-center justify-center rounded-full border border-white/70 bg-white/70 text-black p-2.5 backdrop-blur-md transition-colors hover:bg-white/90"
       >
         <span className="text-[10px] font-bold uppercase tracking-[0.12em] leading-none">
-          {actionMaps}
+          {lang === 'uz' ? 'OCHIQ' : lang === 'ru' ? 'ОТКРЫТО' : 'OPEN'}
         </span>
       </motion.a>
 
@@ -2036,7 +2036,7 @@ const Footer = () => {
 
         <div className="mt-2 flex w-full flex-col items-center gap-4 border-t border-black/10 pt-6 sm:flex-row sm:justify-between sm:gap-6">
           <span className="order-2 text-center text-[12px] text-black/50 select-none sm:order-1 sm:text-left">
-            © {new Date().getFullYear()} 210 Sports Wear. {legalText[lang].rightsReserved}
+            © 2016 210 Sports Wear. {legalText[lang].rightsReserved}
           </span>
           <div className="order-1 flex items-center gap-6 sm:order-2">
             <a
