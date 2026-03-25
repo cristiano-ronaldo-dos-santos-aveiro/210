@@ -621,11 +621,11 @@ const Navbar = () => {
             <a href="#clothes" className={navLinkMobilePill('clothes')}>
               {t.clothes}
             </a>
-            <a href="#branches" className={navLinkMobilePill('branches')}>
-              {t.branches}
-            </a>
             <a href="#partner-brands" className={navLinkMobilePill('partner-brands')}>
               {t.brands}
+            </a>
+            <a href="#branches" className={navLinkMobilePill('branches')}>
+              {t.branches}
             </a>
             <div className="mx-0.5 h-4 w-px shrink-0 bg-black/20" aria-hidden />
             <div className="flex shrink-0 items-center gap-0.5 pr-0.5">
@@ -701,11 +701,11 @@ const Navbar = () => {
           <a href="#clothes" className={navLinkInBar('clothes')}>
             {t.clothes}
           </a>
-          <a href="#branches" className={navLinkInBar('branches')}>
-            {t.branches}
-          </a>
           <a href="#partner-brands" className={navLinkInBar('partner-brands')}>
             {t.brands}
+          </a>
+          <a href="#branches" className={navLinkInBar('branches')}>
+            {t.branches}
           </a>
           <div className="h-5 w-px shrink-0 bg-black/20" aria-hidden />
           <div className="flex items-center gap-0.5">
@@ -1601,38 +1601,8 @@ const Footer = () => {
 
 // --- Main App ---
 
-const SPLASH_HOLD_MS = 1000;
-const SPLASH_EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
-
 export default function App() {
   const [lang, setLang] = React.useState<Language>('uz');
-  const [splashVisible, setSplashVisible] = React.useState(true);
-  const [splashClosing, setSplashClosing] = React.useState(false);
-  const splashClosingRef = React.useRef(false);
-
-  useEffect(() => {
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const hold = reduce ? 0 : SPLASH_HOLD_MS;
-    const id = window.setTimeout(() => {
-      if (reduce) {
-        setSplashVisible(false);
-      } else {
-        splashClosingRef.current = true;
-        setSplashClosing(true);
-      }
-    }, hold);
-    return () => window.clearTimeout(id);
-  }, []);
-
-  useEffect(() => {
-    if (!splashClosing) return;
-    const safety = window.setTimeout(() => setSplashVisible(false), 2500);
-    return () => window.clearTimeout(safety);
-  }, [splashClosing]);
-
-  const splashReduceMotion =
-    typeof window !== 'undefined' &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   return (
     <LangContext.Provider value={{ lang, setLang }}>
@@ -1649,66 +1619,6 @@ export default function App() {
         </main>
 
         <Footer />
-
-        {splashVisible && (
-          <motion.div
-            role="presentation"
-            aria-hidden
-            className="fixed inset-0 z-[200] flex items-center justify-center bg-black"
-            initial={false}
-            animate={
-              splashClosing
-                ? { opacity: 0 }
-                : { opacity: 1 }
-            }
-            transition={{
-              duration: splashReduceMotion ? 0.1 : splashClosing ? 0.55 : 0,
-              ease: SPLASH_EASE_OUT
-            }}
-            onAnimationComplete={() => {
-              if (splashClosingRef.current) {
-                setSplashVisible(false);
-              }
-            }}
-          >
-            <div
-              className="pointer-events-none absolute inset-0 opacity-40"
-              style={{
-                background:
-                  'radial-gradient(ellipse 80% 60% at 50% 45%, rgba(255,255,255,0.08) 0%, transparent 55%)'
-              }}
-            />
-            <motion.img
-              src={LOGO_210_SRC}
-              alt="210"
-              fetchPriority="high"
-              decoding="async"
-              className="relative z-[1] h-auto w-[min(52vw,220px)] max-w-[90vw] object-contain select-none shadow-[0_0_36px_rgba(255,255,255,0.14)]"
-              initial={
-                splashReduceMotion ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.88 }
-              }
-              animate={
-                splashClosing
-                  ? {
-                      opacity: 0,
-                      scale: 1.06,
-                      transition: { duration: splashReduceMotion ? 0.1 : 0.5, ease: SPLASH_EASE_OUT }
-                    }
-                  : {
-                      opacity: 1,
-                      scale: 1,
-                      transition: splashReduceMotion
-                        ? { duration: 0 }
-                        : {
-                            duration: 0.75,
-                            ease: SPLASH_EASE_OUT,
-                            opacity: { duration: 0.65 }
-                          }
-                    }
-              }
-            />
-          </motion.div>
-        )}
 
         <style>{`
           @keyframes marquee {
