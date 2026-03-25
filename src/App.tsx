@@ -141,7 +141,7 @@ const STORE_BRANCHES: readonly StoreBranch[] = [
     instagram: CONTACT_INSTAGRAM,
     phoneTel: 'tel:+998952100000',
     phoneLabel: '+998 95 210-00-00',
-    mapsUrl: 'https://www.google.com/maps/search/?api=1&query=210+Nurafshon%2C+Uzbekistan',
+    mapsUrl: 'https://maps.app.goo.gl/Gn2TNj3TrJHfg5RRA?g_st=ic',
     photoSrc: NURAFSHON_BRANCH_PHOTO_SRC,
     openHours: '10:00-22:00',
     addressLineByLang: {
